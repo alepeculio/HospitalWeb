@@ -67,6 +67,29 @@ function initMapa () {
     };
     mapa = new google.maps.Map (document.getElementById ("mapa"), opciones);
     
+    var iconos = {
+        hospital_ingresado: {
+          name: 'Hospital Ingresado',
+          icon: "img/icono_h.png"
+        },
+        hospital_nuevo: {
+          name: 'Hospital Nuevo',
+          icon: "img/icono_mas.png"
+        }
+    };
+
+    var leyenda = document.getElementById ("leyenda");
+    for (var i in iconos) {
+        var type = iconos[i];
+        var name = type.name;
+        var icon = type.icon;
+        var div = document.createElement ('div');
+        div.innerHTML = '<img src="' + icon + '" class="imgLeyenda"> ' + name;
+        leyenda.appendChild (div);
+    }
+
+    mapa.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push (leyenda);
+    
     var geocoder = new google.maps.Geocoder;
 
     mapa.addListener ("click", function (event) {
@@ -74,11 +97,11 @@ function initMapa () {
             marcador.setMap (null);
 
         marcador = new google.maps.Marker ({
-            position: event.latLng
+            position: event.latLng,
+            animation: google.maps.Animation.DROP
         });
         marcador.setMap (mapa);
         mapa.setCenter (event.latLng);
-        mapa.setZoom (18);
         recomendar(geocoder, event.latLng);
         
         $("#btnConfirmar").prop ("disabled", false);
@@ -87,6 +110,7 @@ function initMapa () {
     for (var i = 0; i < hospitales.length; i++)
         new google.maps.Marker ({
             position: new google.maps.LatLng (hospitales[i][1], hospitales[i][2]),
+            title: hospitales[i][0],
             map: mapa
         });
 }

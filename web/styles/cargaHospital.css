@@ -22,3 +22,24 @@
 #btnConfirmar {
     width: 50%;
 }
+
+#leyenda {
+    background-color: #fff;
+    padding: 1vw;
+    margin-bottom: 1vw;
+    margin-right: 1vw;
+    font-size: 1.2em;
+}
+
+#leyenda h3 {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 2vh;
+    text-align: center;
+}
+
+.imgLeyenda {
+    width: 2.8vw;
+    height: 5vh;
+    margin: 0 1vw 1vh 0;
+}

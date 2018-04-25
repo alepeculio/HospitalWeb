@@ -14,6 +14,7 @@
     <body background="img/fondo.png">
         <div class="fondo mapa">
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
+            <div id="leyenda"><h3>Leyenda</h3></div>
         </div>
         
         <div class="fondo boton">
