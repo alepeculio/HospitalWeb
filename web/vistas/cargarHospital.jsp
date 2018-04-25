@@ -12,6 +12,9 @@
         
     </head>
     <body background="img/fondo.png">
+         <!-- Header -->
+         <jsp:include page="header.jsp"/>
+         
         <div class="fondo mapa">
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
             <div id="leyenda"><h3>Leyenda</h3></div>

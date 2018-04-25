@@ -5,11 +5,8 @@
  */
 package Servlets;
 
-import Clases.Hospital;
-import Controladores.CHospital;
-import Controladores.Singleton;
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,29 +15,32 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Jorge
+ * @author Ale
  */
-@WebServlet(name = "SHospital", urlPatterns = {"/SHospital"})
-public class SHospital extends HttpServlet {
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding ("UTF-8");
-        if (request.getParameter("cargar") != null) {
-            request.setAttribute ("hospitales", CHospital.obtenerHospitales());
-            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
-        } else if (request.getParameter("ingresarNuevo") != null) {
-            Hospital h = new Hospital ();
-            h.setNombre (URLDecoder.decode (request.getParameter("nombre"), "UTF-8"));
-            h.setPublico (request.getParameter("tipo").equals ("on"));
-            h.setDepartamento (URLDecoder.decode (request.getParameter("departamento"), "UTF-8"));
-            h.setCalle (URLDecoder.decode (request.getParameter("calle"), "UTF-8"));
-            h.setNumero (Integer.valueOf (request.getParameter("nro")));
-            h.setLatitud (Double.valueOf (request.getParameter("lat")));
-            h.setLongitud (Double.valueOf (request.getParameter("lng")));
-            Singleton.getInstance().persist(h);
-            request.setAttribute ("hospitales", CHospital.obtenerHospitales());
-            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
+@WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
+public class SUsuario extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        
+        String accion = request.getParameter("accion");
+        if(accion != null){
+           switch(accion){
+               case "perfil":request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
+               case "registro": request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
+           }
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

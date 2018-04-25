@@ -23,9 +23,9 @@ public class SInicio extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //request.setAttribute("mensaje", "Estamos en inicio");
         if (request.getParameter("perfil") != null) {
-            request.getRequestDispatcher("vista/perfil.jsp").forward(request, response);
+            request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("vista/login.jsp").forward(request, response);
+            request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
         }
 
     }
