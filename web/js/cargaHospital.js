@@ -78,18 +78,17 @@ function initMapa () {
         });
         marcador.setMap (mapa);
         mapa.setCenter (event.latLng);
-        //mapa.setZoom (18);
+        mapa.setZoom (18);
         recomendar(geocoder, event.latLng);
         
         $("#btnConfirmar").prop ("disabled", false);
     });
     
-    for (var i = 0; i < hospitales.length; i++) {
+    for (var i = 0; i < hospitales.length; i++)
         new google.maps.Marker ({
             position: new google.maps.LatLng (hospitales[i][1], hospitales[i][2]),
             map: mapa
         });
-    }
 }
 
 function recomendar (geocoder, posicion) {
@@ -98,11 +97,11 @@ function recomendar (geocoder, posicion) {
             if (results[0]) {
                 var dep = results[0].formatted_address.split (",");
                 dep = dep[dep.length - 2];
-                if (dep.split (" ").length === 3) {
+                
+                if (dep.split (" ").length === 3)
                     dep = "Montevideo";
-                } else {
+                else
                     dep = dep.split ("Departamento de ")[1];
-                }
                 
                 var dir = results[0].formatted_address.split (",")[0];
                 
@@ -119,9 +118,9 @@ function recomendar (geocoder, posicion) {
                     direccion = dir;
                     num = "";
                 }
-                if (direccion.charAt(direccion.length - 1) == ' ') {
+                if (direccion.charAt(direccion.length - 1) == ' ')
                     direccion = direccion.substr(0, direccion.length - 1);
-                }
+                    
                 $("#departamento").val (dep);
                 $("#calle").val (direccion);
                 $("#numero").val (num);
@@ -132,37 +131,6 @@ function recomendar (geocoder, posicion) {
             }
         } else {
             window.alert('Geocoder failed due to: ' + status);
-        }
-    });
-}
-
-function cargarHospital () {
-    var nombre = document.getElementById ("nombre").value;
-
-    if (nombre == "") {
-        alert ("Ingrese un nombre");
-        return;
-    }
-
-    if (marcador == null) {
-        alert ("Seleccione una posicion en el mapa");
-        return;
-    }
-
-    $.ajax ({
-        type: "POST",
-        url: "php/hospital/addHospital.php",
-        dataType: "JSON",
-        data: {
-            "nombre": nombre,
-            "lat": marcador.position.lat (),
-            "lng": marcador.position.lng ()
-        },
-        success: function (data) {
-            alert ("Agregado!");
-
-            marcador.setMap (null);
-            document.getElementById ("nombre").value = "";
         }
     });
 }
