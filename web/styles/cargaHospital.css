@@ -1,0 +1,24 @@
+.fondo {
+    background-color: #FFF;
+    border-radius: 5px;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    padding: 1vw;
+}
+
+.mapa {
+    margin-top: 5vh;
+}
+
+.form {
+    margin-top: 2vh;
+}
+
+.boton {
+    margin-top: 2vh;
+    text-align: center;
+}
+
+#btnConfirmar {
+    width: 50%;
+}

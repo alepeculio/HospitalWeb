@@ -1,0 +1,50 @@
+<!--<%@page contentType="text/html" pageEncoding="UTF-8"%>-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../bootstrap/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../bootstrap/sticky-footer-navbar.css">
+        <title></title>
+
+    </head>
+    <body>
+
+        <nav class="navbar navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <img class="img-circle" style="margin-top: 3pt" src="../img/hospital.jpg" alt="icono" width="70px" height="70px" align="left"/>
+                    <a class="navbar-brand navbar-text" style="font-size: 1cm; margin-left: 5pt; color: white" href="">Hospital Web</a>
+                </div>
+
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="navbar-text navbar-toggle" style="color: white; font-size: 13pt">Inicio</li>
+                        <li class="navbar-text navbar-toggle" style="color: white; font-size: 13pt">¿Por qué Hospital Web? </li>
+                        <li class="navbar-text navbar-toggle" style="color: white; font-size: 13pt">Ayuda</li>
+                        <li class="navbar-text" style="margin-right: 100pt"></li>
+                        <li>
+                            <div class="dropdown navbar-text">
+                                <button class="btn btn-default" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><span class="caret"></span></button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li class="centrar negrita">Nombre Apellido</li>
+                                    <li class="centrar">Datos </li>
+                                    <li class="centrar">Datos</li>
+                                    <li class="divider"></li>
+                                    <li class="centrar"><a href="editar.php">Editar perfil <span class="glyphicon glyphicon-edit"></span></a></li>
+                                    <li class="centrar"><a id="logout" class="negrita" href="#" onclick="removeUser('<?= $_SESSION['mail'] ?>')">Darse de baja <span class="glyphicon glyphicon-remove"></span></a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="centrar"><a id="logout" href="#" onclick="cerrarSesion()">Cerrar sesión <span class="glyphicon glyphicon-log-out"></span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <script src="../bootstrap/jquery.min.js"></script>
+        <script src="../bootstrap/bootstrap.min.js"></script>
+    </body>
+</html>

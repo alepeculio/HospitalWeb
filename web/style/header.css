@@ -1,0 +1,28 @@
+#icono{
+    width:9%; 
+    height:9%;
+    margin-left: 2%;
+}
+
+#barra{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#titulo{
+    margin-top: 6px;
+    margin-left: 3px;
+    font-size: 30px;
+    color: white;
+}
+
+#menu{
+  font-size: 15px;
+  color: white;  
+}
+
+#c-menu{
+    margin-top: 12px;
+}
+
+
