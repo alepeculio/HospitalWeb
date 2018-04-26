@@ -24,6 +24,7 @@
 }
 
 #leyenda {
+    width: 25%;
     background-color: #fff;
     padding: 1vw;
     margin-bottom: 1vw;
@@ -38,8 +39,16 @@
     text-align: center;
 }
 
+#leyenda text {
+    font-weight: bold;
+}
+
+#leyenda p {
+    margin-top: 1vh;
+}
+
 .imgLeyenda {
-    width: 2.8vw;
-    height: 5vh;
-    margin: 0 1vw 1vh 0;
+    width: 28pt;
+    height: 33pt;
+    margin: 0 1vw 0 0;
 }

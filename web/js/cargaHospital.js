@@ -66,29 +66,7 @@ function initMapa () {
         ]
     };
     mapa = new google.maps.Map (document.getElementById ("mapa"), opciones);
-    
-    var iconos = {
-        hospital_ingresado: {
-          name: 'Hospital Ingresado',
-          icon: "img/icono_h.png"
-        },
-        hospital_nuevo: {
-          name: 'Hospital Nuevo',
-          icon: "img/icono_mas.png"
-        }
-    };
-
-    var leyenda = document.getElementById ("leyenda");
-    for (var i in iconos) {
-        var type = iconos[i];
-        var name = type.name;
-        var icon = type.icon;
-        var div = document.createElement ('div');
-        div.innerHTML = '<img src="' + icon + '" class="imgLeyenda"> ' + name;
-        leyenda.appendChild (div);
-    }
-
-    mapa.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push (leyenda);
+    mapa.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push (document.getElementById ("leyenda"));
     
     var geocoder = new google.maps.Geocoder;
 
@@ -98,7 +76,11 @@ function initMapa () {
 
         marcador = new google.maps.Marker ({
             position: event.latLng,
-            animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP,
+            icon: {
+                url: "img/icono_mas.png",
+                scaledSize: new google.maps.Size(29, 35)
+            }
         });
         marcador.setMap (mapa);
         mapa.setCenter (event.latLng);
@@ -108,11 +90,25 @@ function initMapa () {
     });
     
     for (var i = 0; i < hospitales.length; i++)
-        new google.maps.Marker ({
+       new google.maps.Marker ({
             position: new google.maps.LatLng (hospitales[i][1], hospitales[i][2]),
             title: hospitales[i][0],
+            icon: {
+                url: "img/icono_h.png",
+                scaledSize: new google.maps.Size(29, 35)
+            },
             map: mapa
+        }).addListener ("click", function () {
+            clickHospital (this);
         });
+}
+
+var hospitalABorrar;
+
+function clickHospital (hospital) {
+    hospitalABorrar = hospital;
+    $("#borrarNombre").html (hospitalABorrar.title);
+    $("#modalBorrar").modal("show");
 }
 
 function recomendar (geocoder, posicion) {
@@ -159,6 +155,26 @@ function recomendar (geocoder, posicion) {
     });
 }
 
-$("#myModal").on ("shown.bs.modal", function () {
+$("#btnBorrarConfirmar").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "nombre": $("#borrarNombre").html ()
+        },
+        success: function (data) {
+            $("#modalBorrado").modal ("show");
+        },
+        error: function () {
+            alert ("Error: No se pudo borrar el hospital " + $("#borrarNombre").html ());
+        }
+    });
+});
+
+$("#modalIngresar").on ("shown.bs.modal", function () {
     $("#nombre").focus ();
+});
+
+$("#btnBorrado").click (function () {
+    location.reload ();
 });
