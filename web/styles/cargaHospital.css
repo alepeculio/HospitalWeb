@@ -48,7 +48,16 @@
 }
 
 .imgLeyenda {
-    width: 28pt;
-    height: 33pt;
+    width: 25pt;
+    height: 30pt;
     margin: 0 1vw 0 0;
+}
+
+#hospitalBorrar {
+    margin: 0;
+}
+
+#borrarNombre {
+    margin: 0;
+    padding: 0;
 }
