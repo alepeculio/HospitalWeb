@@ -8,7 +8,6 @@ package Servlets;
 import Clases.Usuario;
 import Controladores.CUsuario;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -45,10 +44,10 @@ public class SUsuario extends HttpServlet {
                         CUsuario cu = new CUsuario();
                         Usuario u = cu.login(ci, contrasenia);
                         if (u != null) {
-                            request.getSession().setAttribute(ci, u.getUsuario());
+                            request.getSession().setAttribute("ci", u.getUsuario());
                             if (recordarme != null) {
-                                Cookie userCookie = new Cookie("ci_HospitalWeb", ci);
-                                Cookie passCookie = new Cookie("contrasenia_HospitalWeb", contrasenia);
+                                Cookie userCookie = new Cookie("ci_HospitalWeb", u.getUsuario());
+                                Cookie passCookie = new Cookie("contrasenia_HospitalWeb", u.getContrasenia());
                                 userCookie.setMaxAge(60 * 60 * 24 * 365); //Store cookie for 1 year
                                 passCookie.setMaxAge(60 * 60 * 24 * 365);
                                 response.addCookie(userCookie);
@@ -61,8 +60,20 @@ public class SUsuario extends HttpServlet {
                         }
                     }
                     break;
-                case "registro":
+                case "logout":
+                    request.getSession().removeAttribute("ci");
+                    Cookie userCookie = new Cookie("ci_HospitalWeb", null);
+                    Cookie passCookie = new Cookie("contrasenia_HospitalWeb", null);
+                    userCookie.setMaxAge(0);
+                    passCookie.setMaxAge(0);
+                    response.addCookie(userCookie);
+                    response.addCookie(passCookie);
+                    request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
+                case "perfil":
+                    request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
+                    break;
+
             }
         }
 

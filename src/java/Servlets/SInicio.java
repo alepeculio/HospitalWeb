@@ -22,27 +22,37 @@ public class SInicio extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String ci = "";
-        String contrasenia = "";
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("ci_HospitalWeb".equals(cookie.getName())) {
-                    ci = cookie.getValue();
-                } else if ("contrasenia_HospitalWeb".equals(cookie.getName())) {
-                    contrasenia = cookie.getValue();
-                }
-            }
-            if (!ci.equals("") && !contrasenia.equals("")) {
-                request.setAttribute("ci", ci);
-                request.setAttribute("contrasenia", contrasenia);
-                request.getRequestDispatcher("/SUsuario?accion=login").forward(request, response);
+        String accion = request.getParameter("accion");
 
+        if (accion == null) {
+            String ci = "";
+            String contrasenia = "";
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("ci_HospitalWeb".equals(cookie.getName())) {
+                        ci = cookie.getValue();
+                    } else if ("contrasenia_HospitalWeb".equals(cookie.getName())) {
+                        contrasenia = cookie.getValue();
+                    }
+                }
+                if (!ci.equals("") && !contrasenia.equals("")) {
+                    request.setAttribute("ci", ci);
+                    request.setAttribute("contrasenia", contrasenia);
+                    request.getRequestDispatcher("/SUsuario?accion=login").forward(request, response);
+
+                } else {
+                    request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
+                }
             } else {
                 request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
             }
         } else {
-            request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
+            switch (accion) {
+                case "inicio":
+                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                    break;
+            }
         }
     }
 
