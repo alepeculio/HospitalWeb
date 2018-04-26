@@ -17,14 +17,72 @@
          
         <div class="fondo mapa">
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
-            <div id="leyenda"><h3>Leyenda</h3></div>
+            <div id="leyenda">
+                <h3>Leyenda</h3>
+                <img src="img/icono_h.png" class="imgLeyenda"><text>Hospital Registrado</text>
+                <p>Click en un hospital registrado para borrarlo.</p>
+                <hr>
+                <img src="img/icono_mas.png" class="imgLeyenda"><text>Nuevo Hospital</text>
+                <p>Click en alguna parte del mapa para agregar un nuevo hospital, luego click en el boton 'Cargar Hospital'.</p>
+            </div>
+        </div>
+        
+        <!-- Panel confirmacion para borrar un hospital -->
+        <div class="modal fade" id="modalBorrar" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Borrar Hospital?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h2 id="borrarNombre">Nombre</h2>
+                        <h3 id="borrarDireccion">Direcion</h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success" data-dismiss="modal" id="btnBorrarConfirmar">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje de borrado con exito -->
+        <div class="modal fade" id="modalBorrado" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Hospital Borrado</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" id="btnBorrado">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje de ingresado con exito -->
+        <div class="modal fade" id="modalIngresado" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Hospital Ingresado!</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="fondo boton">
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="btnConfirmar" disabled>Cargar Hospital</button>
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalIngresar" id="btnConfirmar" disabled>Cargar Hospital</button>
         </div>
         
-        <div class="modal fade" id="myModal" role="dialog">
+        <!-- Panel ingresar informacion de nuevo hospital -->
+        <div class="modal fade" id="modalIngresar" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -97,5 +155,14 @@
         <%}
         %>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv3TfTf8HC_onB7FyU3cQ1n8ckH4uE5rs&callback=initMapa" async defer></script>
+        <%
+        if (request.getAttribute ("ingresado") != null) {
+            %>
+            <script>
+                $("#modalIngresado").modal ("show");
+            </script>
+        <%
+        }
+        %>
     </body>
 </html>
