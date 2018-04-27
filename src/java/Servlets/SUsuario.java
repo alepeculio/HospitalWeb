@@ -5,6 +5,8 @@
  */
 package Servlets;
 
+import Clases.Cliente;
+import Clases.Empleado;
 import Clases.Usuario;
 import Controladores.CUsuario;
 import java.io.IOException;
@@ -41,12 +43,11 @@ public class SUsuario extends HttpServlet {
                     String contrasenia = (request.getParameter("contrasenia") != null) ? request.getParameter("contrasenia") : (String) request.getAttribute("contrasenia");
                     String recordarme = request.getParameter("recordarme");
                     if (ci != null && contrasenia != null) {
-                        CUsuario cu = new CUsuario();
-                        Usuario u = cu.login(ci, contrasenia);
+                        Usuario u = (new CUsuario()).login(ci, contrasenia);
                         if (u != null) {
-                            request.getSession().setAttribute("ci", u.getUsuario());
+                            request.getSession().setAttribute("usuario",u);
                             if (recordarme != null) {
-                                Cookie userCookie = new Cookie("ci_HospitalWeb", u.getUsuario());
+                                Cookie userCookie = new Cookie("ci_HospitalWeb", u.getCi());
                                 Cookie passCookie = new Cookie("contrasenia_HospitalWeb", u.getContrasenia());
                                 userCookie.setMaxAge(60 * 60 * 24 * 365); //Store cookie for 1 year
                                 passCookie.setMaxAge(60 * 60 * 24 * 365);
@@ -71,6 +72,8 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "perfil":
+                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario)request.getSession().getAttribute("usuario")).getId());
+                    request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
 
