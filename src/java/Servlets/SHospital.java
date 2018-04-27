@@ -44,10 +44,22 @@ public class SHospital extends HttpServlet {
             h.setLongitud (Double.valueOf (request.getParameter("lng")));
             Singleton.getInstance().persist(h);
             request.setAttribute ("hospitales", CHospital.obtenerHospitales());
-            request.setAttribute ("ingresado", "si");
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         } else if (request.getParameter ("nombre") != null) {
             CHospital.borrarHospital (request.getParameter ("nombre"));
+        } else if (request.getParameter ("existe") != null){
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter ().write (CHospital.obtenerHospital(request.getParameter ("existe")) == null ? "no" : "si");
+        } else if (request.getParameter ("obtener") != null) {
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            
+            Hospital h = CHospital.obtenerHospital(request.getParameter ("obtener"));
+            if (h != null)
+                response.getWriter ().write (String.format ("%s@%s@%s@%s", h.getNombre (), h.isPublico () ? "Publico" : "Privado", h.getDepartamento (), h.getCalle () + ", " + h.getNumero ()));
+            else
+                response.getWriter ().write ("NOPE");
         }
     }
     
