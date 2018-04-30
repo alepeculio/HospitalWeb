@@ -5,15 +5,12 @@
 }
 
 #titulo{
-    margin-top: 6px;
-    margin-left: 3px;
+    margin-top: 0px;
+    margin-left: 2px;
     font-size: 30px;
     color: white;
 }
-#barra{
-    padding-top: 3px;
-   
-}
+
 #menu{
   font-size: 15px;
   color: white;
@@ -21,15 +18,15 @@
 
 #c-menu{
     margin-left: 10pt;
-    padding-left: 10pt;
+}
+
+#menu-boton{
+  margin-top:0.4%;
 }
 
 .navbar-nav.padding{
     margin-left: 20%;
 }
 
-micuenta_icono{
-    padding-left: 5pt;
-}
 
 
