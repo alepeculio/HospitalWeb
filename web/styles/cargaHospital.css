@@ -61,3 +61,11 @@
     margin: 0;
     padding: 0;
 }
+
+#btnBorrarHospital {
+    float: left;
+}
+
+#divBtnConfirmar {
+    text-align: center;
+}
