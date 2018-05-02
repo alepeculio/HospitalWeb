@@ -45,7 +45,7 @@ public class SUsuario extends HttpServlet {
                     if (ci != null && contrasenia != null) {
                         Usuario u = (new CUsuario()).login(ci, contrasenia);
                         if (u != null) {
-                            request.getSession().setAttribute("usuario",u);
+                            request.getSession().setAttribute("usuario", u);
                             if (recordarme != null) {
                                 Cookie userCookie = new Cookie("ci_HospitalWeb", u.getCi());
                                 Cookie passCookie = new Cookie("contrasenia_HospitalWeb", u.getContrasenia());
@@ -54,7 +54,8 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-                            request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                            //request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                            request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
                             request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
@@ -72,7 +73,7 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "perfil":
-                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario)request.getSession().getAttribute("usuario")).getId());
+                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario) request.getSession().getAttribute("usuario")).getId());
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;

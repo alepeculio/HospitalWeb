@@ -15,7 +15,7 @@
         <jsp:include page="header.jsp"/>
         <hr>
 
-        <%
+        <%  
             Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
             Empleado empleado = (Empleado) request.getAttribute("empleado");
         %>
