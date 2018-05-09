@@ -4,6 +4,8 @@
     Author     : Brian
 --%>
 
+<%@page import="Clases.Empleado"%>
+<%@page import="java.util.List"%>
 <%@page import="Clases.Hospital"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="include_css.html"/>
@@ -18,8 +20,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <%
-            Hospital h = request.getAttribute("hospital");
-            List<Empleado> empleados = request.getAttribute("empleados");
+            Hospital h = (Hospital)request.getAttribute("hospital");
+            List<Empleado> empleados = (List<Empleado>)request.getAttribute("empleados");
         %>
 
     </head>
@@ -46,9 +48,9 @@
                         <a><%=h.getNombre()%></a> </div>
 
                     <div class="panel-body" id="div2">
-                        <h5>Directoro/a: <a class="negrita"> <%=h.getDirector()%></a></h5>
-                        <h5>Direccin: <%h.getCalle() %>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
-                        <h5>Teléfono: <%=h.geTelefono()%> </h5>
+                        <h5>Directoro/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
+                        <h5>Direccin: <%=h.getCalle() %>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
+                        <h5>Teléfono: <%=h.getTelefono() %> </h5>
                         <h5>Correo electrónico institucional:<a class="negrita" href="mailto:<%=h.getCorreo()%>"><%=h.getCorreo()%></a> </h5> 
                     </div>
                 </div>
@@ -63,20 +65,13 @@
                         <a>Lista De Doctores</a>
                     </div>
                     <div id="div1">
-                        <% for(Empleado e : empleados){  }%>
                         <div class="row" >
+                            <% for (Empleado e : empleados) { %>
                             <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
                                 <img src="img/doctor  5.png" alt="Avatar" id="foto" >
-                                <h4><b><%=e.getNombre() %> <%=e.getApellido() %></b></h4> 
-                                <p><%=e.getEspecialida() %></p></div>
-                            <div class="col-md-4 col-sm-12" id="doctor" align="center" >                                  
-                                <img src="img/doctor  5.png" alt="Avatar"id="foto" >
-                                <h4><b>John Doe</b></h4> 
-                                <p>Architect & Engineer</p> </div>
-                            <div class="col-md-4 col-sm-12 " id="doctor" align="center" >                                    
-                                <img src="img/doctor  5.png" alt="Avatar" id="foto">
-                                <h4><b>John Doe</b></h4> 
-                                <p>Architect & Engineer</p> </div>
+                                <h4><b><%=e.getNombre()%> <%=e.getApellido()%></b></h4> 
+                                
+                                <%}%>
                         </div>
                     </div>
                 </div>
