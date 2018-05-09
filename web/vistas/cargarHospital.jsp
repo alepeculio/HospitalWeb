@@ -27,7 +27,7 @@
             </div>
         </div>
         
-        <div class="fondo boton">
+        <div id="divBotones" class="fondo boton">
             <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalIngresar" id="btnConfirmar" disabled>Cargar Hospital</button>
         </div>
         
@@ -90,6 +90,7 @@
                     <form onsubmit="return false">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="btn btn-info" data-dismiss="modal" id="btnAdministradore">Administradores</button>
                             <h3 class="modal-title">Informacion Hospital</h3>
                         </div>
                         <div class="modal-body">
@@ -138,6 +139,43 @@
                 </div>
             </div>
         </div>
+         
+        <!-- Panel Administradores -->
+        <div class="modal fade" id="modalAdministradores" role="dialog" style="margin-top: 10vh">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Administradores</h4>
+                    </div>
+                        <div class="modal-body">
+                            <div id="divListadoAdministradores">
+                                <p id="msjUsuario">
+                                    Click en un administrador para elimminarlo.
+                                </p>
+                                <label>Administradores</label>
+                                <div class="list-group" id="listadoAdministradores">
+
+                                </div>
+                            </div>
+                    <form onsubmit="return false">
+                            <label>C.I.</label>
+                            <div class="form-group">
+                                <input required class="form-control" placeholder="C.I." type="text" id="ciNuevoAdmin" name="ciAdmin">
+                            </div>
+                            <label>Correo</label>
+                            <div class="form-group">
+                                <input required class="form-control" placeholder="Correo" type="text" id="correoNuevoAdmin" name="correoAdmin">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button role="button" class="btn btn-danger" data-dismiss="modal" id="btnCerrarAdministradores">Atras</button>
+                            <button class="btn btn-success" id="btnAgregarNuevoAdministradores">Agregar Nuevo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         
         <!-- Panel ya existe -->
         <div class="modal fade" id="modalExiste" role="dialog" style="margin-top: 10vh">
@@ -149,6 +187,22 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel confirmacion para borrar un administrador -->
+        <div class="modal fade" id="modalPregBorrarAdmin" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title">Eliminar el Administrador?</h2>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success" data-dismiss="modal" id="btnPregBorrarAdminConfirmar">Confirmar</button>
                     </div>
                 </div>
             </div>
@@ -200,6 +254,51 @@
             </div>
         </div>
         
+        <!-- Panel mensaje admin borrado con exito -->
+        <div class="modal fade" id="modalAdminBorradoConExito" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Administrador Borrado!</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" id="btnABCE">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje admin agregado con exito -->
+        <div class="modal fade" id="modalAdministradorIngresadoConExito" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Admin Asignado!</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" id="btnAceptarAdministradorYaAgregado">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje admin ya existe -->
+        <div class="modal fade" id="modalAdministradorYaExiste" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="msjErrorAgregarAdmin"></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Panel mensaje modificado con exito -->
         <div class="modal fade" id="modalModificado" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -218,6 +317,7 @@
         <script src="js/cargaHospital.js"></script>
         <%
         List<Hospital> hospitales = (List<Hospital>) request.getAttribute("hospitales");
+        if (hospitales != null)
         for (Hospital h : hospitales) {%>
         <script>
             agregarHospital ('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);

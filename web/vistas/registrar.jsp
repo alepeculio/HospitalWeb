@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <jsp:include page="includes_css.html"/>
+        <jsp:include page="include_css.html"/>
         <title>Registrar Usuario</title>
     </head>
     <body background="img/fondo.png">
@@ -149,7 +149,7 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="includes_js.html"/>
+        <jsp:include page="include_js.html"/>
         <script src="js/registrar.js"></script>
     </body>
 </html>

@@ -76,7 +76,9 @@ public class SUsuario extends HttpServlet {
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
-
+                case "registrar":
+                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
+                    break;
             }
         }
 
