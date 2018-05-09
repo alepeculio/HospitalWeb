@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
 public class SUsuario extends HttpServlet {
 
+    CUsuario cusuario = new CUsuario();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -43,9 +45,9 @@ public class SUsuario extends HttpServlet {
                     String contrasenia = (request.getParameter("contrasenia") != null) ? request.getParameter("contrasenia") : (String) request.getAttribute("contrasenia");
                     String recordarme = request.getParameter("recordarme");
                     if (ci != null && contrasenia != null) {
-                        Usuario u = (new CUsuario()).login(ci, contrasenia);
+                        Usuario u = cusuario.login(ci, contrasenia);
                         if (u != null) {
-                            request.getSession().setAttribute("usuario",u);
+                            request.getSession().setAttribute("usuario", u);
                             if (recordarme != null) {
                                 Cookie userCookie = new Cookie("ci_HospitalWeb", u.getCi());
                                 Cookie passCookie = new Cookie("contrasenia_HospitalWeb", u.getContrasenia());
@@ -83,13 +85,61 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "perfil":
-                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario)request.getSession().getAttribute("usuario")).getId());
+                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario) request.getSession().getAttribute("usuario")).getId());
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
-                case "registrar":
-                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
+                case "menuAdmin":
+                    request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
                     break;
+                case "altaCliente":
+                    String nombre = request.getParameter("nombre");
+                    String apellido = request.getParameter("apellido");
+                    String ciCliente = request.getParameter("ci");
+                    String correo = request.getParameter("email");
+                    String digitoVer = request.getParameter("digitoVer");
+                    String dia = request.getParameter("dia");
+                    String mes = request.getParameter("mes");
+                    String anio = request.getParameter("anio");
+                    String tels = request.getParameter("telefonos");
+                    String departamento = request.getParameter("departamento");
+                    String ciudad = request.getParameter("cuidad");
+                    String calle = request.getParameter("calle");
+                    String numero = request.getParameter("numero");
+                    String apart = request.getParameter("apartamento");
+
+                    Usuario u = new Usuario();
+                    u.setCi(ciCliente + digitoVer);
+                    u.setCorreo(correo);
+
+                    Cliente c = new Cliente();
+                    c.setUsuario(u);
+                    c.setNombre(nombre);
+                    c.setApellido(apellido);
+                    c.setDiaNacimiento(Integer.parseInt(dia));
+                    c.setMesNacimiento(Integer.parseInt(mes));
+                    c.setAnioNacimiento(Integer.parseInt(anio));
+                    c.setTelefonos(tels.split("|"));
+                    log(departamento);
+                    c.setDepartamento(departamento.trim());
+                    c.setCiudad(ciudad);
+                    c.setCalle(calle);
+                    c.setNumero(Integer.parseInt(numero));
+                    if (!apart.equals("")) {
+                        c.setApartamento(Integer.parseInt(apart));
+                    }
+
+                    String mensaje = "";
+                    if (cusuario.altaCliente(c)) {
+                        mensaje = "Cliente ingresado con exito";
+                    } else {
+                        mensaje = "No se pudo ingresar el cliente debido a un error interno";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensaje);
+                    break;
+
             }
         }
 
