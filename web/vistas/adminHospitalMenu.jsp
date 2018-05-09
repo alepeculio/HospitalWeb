@@ -30,7 +30,7 @@
             <div class="tab-pane active pestania" id="ingresarCliente">
                 <h2>Ingresar cliente</h2>
                 <hr>
-                <form onsubmit="return false">
+                <form onsubmit="return false" id="formIC">
                     <div class="form-group">
                         <input required class="form-control" placeholder="Nombre" type="text" id="nombre">
                         <small id="nombreError" class="text-danger" hidden>
@@ -87,7 +87,7 @@
                     <label>Teléfonos</label>
                     <div class="form-group" id="tel0" hidden>
                         <div class="input-group">
-                            <input required class="form-control telInput" type="text" placeholder="Telefono 1" id="telefono"/>
+                            <input required class="form-control telInput" type="number" placeholder="Telefono 1" id="telefono"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-danger telButton" type="button" onclick="quitarTel(1)" disabled>
                                     <span class="glyphicon glyphicon-minus iconoButton"></span>
@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input required class="form-control" placeholder="Nro." type="text" id="numero">
+                                <input required class="form-control" placeholder="Nro." type="number" id="numero">
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -383,7 +383,21 @@
                     </tbody>
                 </table>
             </div>
+        </div>
 
+        <!--Notificacion de ingresar usuario -->
+        <div class="modal fade" id="modalIngresarUsuario" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="modalIUMensaje"></h4>
+                    </div>
+                    <div class="modal-footer centrarIUBoton">
+                        <button class="btn btn-info" data-dismiss="modal" id="btnPregBorrarAdminConfirmar">Aceptar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <jsp:include page="include_js.html"/>

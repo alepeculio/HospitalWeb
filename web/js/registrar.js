@@ -252,7 +252,22 @@ $("#btnRegistrarUsuario").click(function () {
                 telefonos: telefonos,
             },
             success: function (data) {
-                alert(data);
+                var texto = document.getElementById("modalIUMensaje");
+
+                if (data === "ERR") {
+                    texto.innerHTML = "El cliente no se pudo ingresar al sistema";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "El cliente ha sido ingresado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    $("#formIC")[0].reset();
+                    
+                }
+            },
+            error: function () {
+                window.location.assign("/HospitalWeb/SHospital?Administrador");
             }
         });
     }
