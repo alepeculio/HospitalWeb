@@ -136,6 +136,11 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
                     break;
 
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
+                    break;
+
                 case "vacunas":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);

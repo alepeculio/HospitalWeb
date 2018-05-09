@@ -120,3 +120,4 @@ public class SHospital extends HttpServlet {
             response.getWriter ().write ("OK");
         }
     }
+}

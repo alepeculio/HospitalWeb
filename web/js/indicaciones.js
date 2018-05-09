@@ -1,6 +1,6 @@
 var mapa;
 var posInicial;
-var marcador;
+var marcadores= [];
 var hospitales = [];
 var servicio;
 var direccion;
@@ -8,6 +8,18 @@ var direccion;
 
 function agregarHospital(nombre, lat, lng) {
     hospitales.push([nombre, lat, lng]);
+}
+
+function verMapa(nombre){
+
+    for (var i = 0; i < marcadores.length; i++){
+
+        if(nombre.localeCompare(marcadores[i][0].title) == 0){
+            mapa.setCenter(marcadores[i][0].getPosition());
+            return;
+        }
+    }
+
 }
 
 function initMapa() {
@@ -102,17 +114,17 @@ function initMapa() {
 
 
     }, function() {
-     posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
- });
+       posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
+   });
 
   }else{
 
-   posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
-}
+     posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
+ }
 
-/* FIN OBTENER UBICACION*/
+ /* FIN OBTENER UBICACION*/
 
-for (var i = 0; i < hospitales.length; i++)
+ for (var i = 0; i < hospitales.length; i++)
     new google.maps.Marker({
         position: new google.maps.LatLng(hospitales[i][1], hospitales[i][2]),
         title: hospitales[i][0],
@@ -130,6 +142,8 @@ for (var i = 0; i < hospitales.length; i++)
 var hospitalSeleccionado;
 
 function clickHospital(hospital) {
+
+    marcadores.push(hospital);
 
     var selectedMode = document.getElementById('mode').value;
 
