@@ -18,9 +18,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <%
-            DtHospital h = request.getAttribute("hospital");
-
-
+            Hospital h = request.getAttribute("hospital");
+            List<Empleado> empleados = request.getAttribute("empleados");
         %>
 
     </head>
@@ -43,13 +42,14 @@
             <div class="row"  style="position:relative" >
                 <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%; margin-left: 20% "  >
                     <div class="panel-heading">
-                        <% if %>
-                        <a>HOSPITAL DEPARTAMENTAL DE PAYSANDÚ</a> </div>
+
+                        <a><%=h.getNombre()%></a> </div>
+
                     <div class="panel-body" id="div2">
-                        <h5>Directora: <a class="negrita">Dra. Angela Almeida</a></h5>
-                        <h5>Direccin: Monte Caseros 520 <a href="" > Ver En Mapa</a></h5>
-                        <h5>Teléfonos: 4722 - 4836</h5>
-                        <h5>Correo electrónico institucional:<a class="negrita" href="mailto:yu.moc.essa@udnasyap.noicceri">yu.moc.essa@udnasyap.noicceri</a> </h5> 
+                        <h5>Directoro/a: <a class="negrita"> <%=h.getDirector()%></a></h5>
+                        <h5>Direccin: <%h.getCalle() %>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
+                        <h5>Teléfono: <%=h.geTelefono()%> </h5>
+                        <h5>Correo electrónico institucional:<a class="negrita" href="mailto:<%=h.getCorreo()%>"><%=h.getCorreo()%></a> </h5> 
                     </div>
                 </div>
             </div>
@@ -63,11 +63,12 @@
                         <a>Lista De Doctores</a>
                     </div>
                     <div id="div1">
+                        <% for(Empleado e : empleados){  }%>
                         <div class="row" >
                             <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
                                 <img src="img/doctor  5.png" alt="Avatar" id="foto" >
-                                <h4><b>John Doe</b></h4> 
-                                <p>Architect & Engineer</p></div>
+                                <h4><b><%=e.getNombre() %> <%=e.getApellido() %></b></h4> 
+                                <p><%=e.getEspecialida() %></p></div>
                             <div class="col-md-4 col-sm-12" id="doctor" align="center" >                                  
                                 <img src="img/doctor  5.png" alt="Avatar"id="foto" >
                                 <h4><b>John Doe</b></h4> 

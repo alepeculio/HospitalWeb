@@ -5,7 +5,8 @@ var caracteresNoPermitidos = "~`!@#$%^&*()_+-=[]{};':\",.<>/?\\|0123456789";
 var filtroTelefono = /^([0-9])+$/;
 var filtroCorreo = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-var departamentos = ["Artigas", "Canelones", "Cerro Largo", "Colonia", "Durazno", "Flores", "Florida", "Lavalleja", "Maldonado", "Montevideo", "Paysandú", "Rio Negro", "Rivera", "Salto", "San José", "Soriano", "Tacuarembó", "Treinta y Tres"];
+
+var departamentos = ["Artigas", "Canelones", "Cerro Largo", "Colonia", "Durazno", "Flores", "Florida", "Lavalleja", "Maldonado", "Montevideo", "Paysandú", "Rio Negro", "Rivera", "Rocha", "Salto", "San José", "Soriano", "Tacuarembó", "Treinta y Tres"];
 var ciudades = [
     ["Artigas", "Bella Unión"],
     ["Ciudad de la Costa", "Las Piedras", "Barros Blancos", "Pando", "La Paz", "Canelones", "Santa Lucía", "Progreso", "Paso Carrasco", "Joaquín Suárez", "Toledo", "General Líber Seregni", "Atlántida", "Salinas", "Parque del Plata", "San Ramón", "Sauce", "Tala"],

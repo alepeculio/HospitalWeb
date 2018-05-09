@@ -57,8 +57,18 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-                            request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                            //request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
+                            
+                            switch (CUsuario.obtenerTipo (u)) {
+                                case "General":
+                                    request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
+                                    break;
+                                case "Hospital":
+                                    request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
+                                    break;
+                                default:
+                                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                                    break;
+                            }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
                             request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
