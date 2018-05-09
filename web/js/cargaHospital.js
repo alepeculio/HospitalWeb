@@ -121,6 +121,7 @@ function clickHospital (hospital) {
                 modificar (false);
                 var partes = data.split ("@");
                 $("#detnombre").val (partes[0]);
+                $("#dettipo").attr ("disabled", false);
                 $("#dettipo").bootstrapToggle (partes[1]);
                 $("#detdepartamento").val (partes[2]);
                 $("#detcalle").val (partes[3]);
@@ -393,5 +394,106 @@ $("#btnModificarConrfirmar").click (function () {
 });
 
 $("#btnAceptarModificado").click (function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+var ciABorrar;
+
+function borrarAdministrador (nombre) {
+    ciABorrar = nombre.split ("/")[0].trim ();
+    $("#modalPregBorrarAdmin").modal ("show");
+}
+
+$("#btnPregBorrarAdminConfirmar").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "eliminarAdmin": "si",
+            "nomHospital": hospitalSeleccionado.title,
+            "ciAdmin": ciABorrar
+        },
+        success: function (data) {
+            $("#modalAdminBorradoConExito").modal ("show");
+        },
+        error: function () {
+            alert ("Error: No se pudo borrar el administrador");
+        }
+    });
+});
+
+$("#btnABCE").click (function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+$("#btnAdministradore").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "obtenerAdministradores": "si",
+            "nomHospital": hospitalSeleccionado.title
+        },
+        success: function (data) {
+            if (data == "NOPE") {
+                $("#divListadoAdministradores").hide ();
+            } else {
+                $("#divListadoAdministradores").show ();
+                
+                var administradores = data.split ("#");
+                
+                var listado = document.getElementById("listadoAdministradores");
+                for (var i = 0; i < administradores.length; i++) {
+                    var opt = document.createElement ("button");
+                    opt.setAttribute ("role", "button");
+                    opt.classList.add ("list-group-item");
+                    opt.classList.add ("list-group-item-action");
+                    var p = administradores[i].split ("/");
+                    opt.innerHTML = p[0] + "    /   " + p[1];
+                    
+                    opt.onclick = function () {
+                        borrarAdministrador (this.innerHTML.toString ());
+                    };
+                    
+                    listado.appendChild(opt);
+                }
+            }
+            $("#modalAdministradores").modal ("show");
+        },
+        error: function () {
+            alert ("Error: No se pueden obtener los administradores del hospital " + hospitalSeleccionado.title);
+        }
+    });
+});
+
+$("#btnCerrarAdministradores").click (function () {
+    $("#modalDetallesHospital").modal ("show");
+});
+
+$("#btnAgregarNuevoAdministradores").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "agregarAdmin": "si",
+            "ci": $("#ciNuevoAdmin").val (),
+            "correo": $("#correoNuevoAdmin").val (),
+            "nomHospital": hospitalSeleccionado.title
+        },
+        success: function (data) {
+            if (data == "")
+                $("#modalAdministradorIngresadoConExito").modal ("show");
+            else {
+                $("#msjErrorAgregarAdmin").html (data);
+                $("#modalAdministradorYaExiste").modal ("show");
+            }
+        },
+        error: function () {
+            alert ("Error: No se pudo cargar un nuevo admin");
+        }
+    });
+});
+
+$("#btnAceptarAdministradorYaAgregado").click (function () {
     window.location.assign ("/HospitalWeb/SHospital?Administrador");
 });

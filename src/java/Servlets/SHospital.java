@@ -1,10 +1,12 @@
 package Servlets;
 
 import Clases.Hospital;
+import Clases.Usuario;
 import Controladores.CHospital;
 import Controladores.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +23,7 @@ public class SHospital extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding ("UTF-8");
         if (request.getParameter("Administrador") != null) {
-            request.setAttribute ("hospitales", CHospital.obtenerHospitales());
+            request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         }
     }
@@ -75,25 +77,46 @@ public class SHospital extends HttpServlet {
                     response.getWriter ().write ("existe");
                     return;
                 }
+            
+            Hospital h = new Hospital();
+            h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
+            h.setPublico(request.getParameter("tipo").equals("on"));
+            h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
+            h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
+            h.setNumero(Integer.valueOf(request.getParameter("nro")));
+            h.setLatitud(Double.valueOf(request.getParameter("lat")));
+            h.setLongitud(Double.valueOf(request.getParameter("lng")));
+            
+            CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
+            
+            response.getWriter ().write ("modificado");
+        } else if (request.getParameter ("obtenerAdministradores") != null) {
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            
+            List<Usuario> usuarios = CHospital.obtenerAdministradoresHospital (request.getParameter ("nomHospital"));
+            
+            if (usuarios == null)
+                response.getWriter ().write ("NOPE");
+            else {
+                String data = "";
                 
-                Hospital h = new Hospital();
-                h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
-                h.setPublico(request.getParameter("tipo").equals("on"));
-                h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
-                h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
-                h.setNumero(Integer.valueOf(request.getParameter("nro")));
-                h.setLatitud(Double.valueOf(request.getParameter("lat")));
-                h.setLongitud(Double.valueOf(request.getParameter("lng")));
+                for (int i = 0; i < usuarios.size (); i++)
+                    data += usuarios.get (i).getCi () + "/" + usuarios.get (i).getCorreo () + (i < usuarios.size () - 1 ? "#" : "");
                 
-                CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
-                
-                response.getWriter ().write ("modificado");
+                response.getWriter ().write (data);
             }
-
-        }
-        
-        @Override
-        public String getServletInfo() {
-            return "Short description";
+        } else if (request.getParameter ("agregarAdmin") != null) {
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            Usuario u = new Usuario ();
+            u.setCi (request.getParameter ("ci"));
+            u.setCorreo (request.getParameter ("correo"));
+            response.getWriter ().write (CHospital.agregarAdministrador (URLDecoder.decode(request.getParameter ("nomHospital"), "UTF-8"), u));
+        } else if (request.getParameter ("eliminarAdmin") != null) {
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            CHospital.borrarAdministrador (URLDecoder.decode(request.getParameter ("nomHospital")), URLDecoder.decode(request.getParameter ("ciAdmin")));
+            response.getWriter ().write ("OK");
         }
     }

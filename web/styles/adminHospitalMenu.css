@@ -1,0 +1,29 @@
+.contenido{
+    margin-left:2%;
+    min-height:68vh;
+}
+
+.pestania{
+     padding:0 100px 0 100px;
+}
+
+.panel{
+    padding: 30px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,.5);
+}
+
+.input-group{
+    margin:2%;
+}
+
+#registrarCliente{
+    margin-bottom:1%;
+}
+
+.datosHorarioAtencion{
+    margin-top:20px;
+}
+
+.tablaHA{
+    text-align:center;
+}
