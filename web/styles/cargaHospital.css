@@ -61,3 +61,62 @@
     margin: 0;
     padding: 0;
 }
+
+#btnBorrarHospital {
+    float: left;
+}
+
+#divBtnConfirmar {
+    text-align: center;
+}
+
+#modalDetallesHospital .modal-title {
+    float: left;
+}
+
+#modalDetallesHospital .close {
+    float: right;
+}
+
+#modalDetallesHospital #btnAdministradore {
+    margin-right: 4vw;
+    float: right;
+}
+
+#listadoAdministradores {
+    max-height: 150px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#divBotones::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.separador {
+    margin: 0 auto;
+}
+
+#msjUsuario {
+    background-color: #CCC;
+    border-radius: .3vw;
+    padding: 1vw;
+    text-align: center;
+}
+
+#btnCerrarAdministradores {
+    float: left;
+}
+
+#btnAsignarAdmin {
+    display: none;
+    float: right;
+}
+
+#campoCI,
+#campoCorreo,
+#campoPass {
+    display: none;
+}

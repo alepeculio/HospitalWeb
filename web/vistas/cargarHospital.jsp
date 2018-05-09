@@ -9,28 +9,28 @@
         <jsp:include page="include_js.html"/>
         <title>Registrar Usuario</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
-        
+
     </head>
     <body background="img/fondo.png">
-         <!-- Header -->
-         <jsp:include page="header.jsp"/>
-         
+        <!-- Header -->
+        <jsp:include page="header.jsp"/>
+
         <div class="fondo mapa">
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
             <div id="leyenda">
-                <h3>Leyenda</h3>
+                <h3>Ayuda</h3>
                 <img src="img/icono_h.png" class="imgLeyenda"><text>Hospital Registrado</text>
-                <p>Click en un hospital registrado para borrarlo.</p>
+                <p>Click en un hospital registrado para ver su informacion.</p>
                 <hr>
                 <img src="img/icono_mas.png" class="imgLeyenda"><text>Nuevo Hospital</text>
                 <p>Click en alguna parte del mapa para agregar un nuevo hospital, luego click en el boton 'Cargar Hospital'.</p>
             </div>
         </div>
         
-        <div class="fondo boton">
+        <div id="divBotones" class="fondo boton">
             <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalIngresar" id="btnConfirmar" disabled>Cargar Hospital</button>
         </div>
-        
+
         <!-- Panel ingresar informacion de nuevo hospital -->
         <div class="modal fade" id="modalIngresar" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -44,34 +44,22 @@
                             <label>Nombre</label>
                             <div class="form-group" id="nombreParent">
                                 <input required class="form-control" placeholder="Nombre Hospital" type="text" id="nombre" name="nombre">
-                                <small id="nombreError" class="text-danger" hidden>
-                                    Error!
-                                </small>
                             </div>
                             <label>Tipo</label>
-                                <div class="form-group">
-                                    <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" checked name="tipo" id="tipo">
-                                </div>
+                            <div class="form-group">
+                                <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" checked name="tipo" id="tipo">
+                            </div>
                             <label>Departamento</label>
                             <div class="form-group" id="departamentoParent">
                                 <input required class="form-control" placeholder="Departamento" type="text" id="departamento" name="departamento">
-                                <small id="departamentoError" class="text-danger" hidden>
-                                    Error!
-                                </small>
                             </div>
                             <label>Calle</label>
                             <div class="form-group" id="calleParent">
                                 <input required class="form-control" placeholder="Calle" type="text" id="calle" name="calle">
-                                <small id="calleError" class="text-danger" hidden>
-                                    Error!
-                                </small>
                             </div>
                             <label>Nro. Calle</label>
                             <div class="form-group" id="numeroParent">
                                 <input required class="form-control" placeholder="Nro. Calle" type="text" id="numero" name="nro">
-                                <small id="numeroError" class="text-danger" hidden>
-                                    Error!
-                                </small>
                             </div>
                             <label>Posicion</label>
                             <div class="row">
@@ -94,6 +82,100 @@
                 </div>
             </div>
         </div>
+
+        <!-- Panel detalles hospital -->
+        <div class="modal fade" id="modalDetallesHospital" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form onsubmit="return false">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="btn btn-info" data-dismiss="modal" id="btnAdministradore">Administradores</button>
+                            <h3 class="modal-title">Informacion Hospital</h3>
+                        </div>
+                        <div class="modal-body">
+                            <label>Nombre</label>
+                            <div class="form-group" id="dnombreParent">
+                                <input required class="form-control" placeholder="Nombre Hospital" type="text" id="detnombre" readonly name="nombre">
+                            </div>
+                            <label>Tipo</label>
+                            <div class="form-group">
+                                <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" name="tipo" id="dettipo">
+                            </div>
+                            <label>Departamento</label>
+                            <div class="form-group" id="ddepartamentoParent">
+                                <input required class="form-control" placeholder="Departamento" type="text" id="detdepartamento" readonly name="departamento">
+                            </div>
+                            <label>Calle</label>
+                            <div class="form-group" id="dcalleParent">
+                                <input required class="form-control" placeholder="Calle" type="text" id="detcalle" readonly name="calle">
+                            </div>
+                            <label>Nro. Calle</label>
+                            <div class="form-group" id="dnumeroParent">
+                                <input required class="form-control" placeholder="Nro. Calle" type="text" id="detnumero" readonly name="nro">
+                            </div>
+                            <label>Posicion</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input required class="form-control" placeholder="Latitud" type="text" id="detlat" readonly name="lat">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input required class="form-control" placeholder="Longitud" type="text" id="detlng" readonly name="lng">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" id="btnBorrarHospital">Borrar Hospital</button>
+                            <button class="btn btn-default" id="btnModificarHospital" data-toggle="collapse" data-target="#divBtnConfirmar">Modificar</button>
+                            <div id="divBtnConfirmar" class="collapse">
+                                <button class="btn btn-success" id="btnModificarConrfirmar">Confirmar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+         
+        <!-- Panel Administradores -->
+        <div class="modal fade" id="modalAdministradores" role="dialog" style="margin-top: 10vh">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Administradores</h4>
+                    </div>
+                        <div class="modal-body">
+                            <div id="divListadoAdministradores">
+                                <p id="msjUsuario">
+                                    Click en un administrador para elimminarlo.
+                                </p>
+                                <label>Administradores</label>
+                                <div class="list-group" id="listadoAdministradores">
+
+                                </div>
+                            </div>
+                    <form onsubmit="return false">
+                            <label>C.I.</label>
+                            <div class="form-group">
+                                <input required class="form-control" placeholder="C.I." type="text" id="ciNuevoAdmin" name="ciAdmin">
+                            </div>
+                            <label>Correo</label>
+                            <div class="form-group">
+                                <input required class="form-control" placeholder="Correo" type="text" id="correoNuevoAdmin" name="correoAdmin">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button role="button" class="btn btn-danger" data-dismiss="modal" id="btnCerrarAdministradores">Atras</button>
+                            <button class="btn btn-success" id="btnAgregarNuevoAdministradores">Agregar Nuevo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         
         <!-- Panel ya existe -->
         <div class="modal fade" id="modalExiste" role="dialog" style="margin-top: 10vh">
@@ -110,21 +192,29 @@
             </div>
         </div>
         
+        <!-- Panel confirmacion para borrar un administrador -->
+        <div class="modal fade" id="modalPregBorrarAdmin" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title">Eliminar el Administrador?</h2>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success" data-dismiss="modal" id="btnPregBorrarAdminConfirmar">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Panel confirmacion para borrar un hospital -->
         <div class="modal fade" id="modalBorrar" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Borrar Hospital?</h4>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="list-group" id="hospitalBorrar">
-                            <li class="list-group-item"><h2 id="borrarNombre"></h2></li>
-                            <li class="list-group-item" id="borrarPublico"></li>
-                            <li class="list-group-item" id="borrarDepartamento"></li>
-                            <li class="list-group-item" id="borrarDireccion"></li>
-                        </ul>
+                        <h2 class="modal-title">Borrar Hospital?</h2>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
@@ -133,8 +223,8 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Panel mensaje de borrado con exito -->
+
+        <!-- Panel mensaje borrado con exito -->
         <div class="modal fade" id="modalBorrado" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -148,8 +238,8 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Panel mensaje de ingresado con exito -->
+
+        <!-- Panel mensaje ingresado con exito -->
         <div class="modal fade" id="modalIngresado" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -164,15 +254,76 @@
             </div>
         </div>
         
+        <!-- Panel mensaje admin borrado con exito -->
+        <div class="modal fade" id="modalAdminBorradoConExito" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Administrador Borrado!</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" id="btnABCE">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje admin agregado con exito -->
+        <div class="modal fade" id="modalAdministradorIngresadoConExito" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Admin Asignado!</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" id="btnAceptarAdministradorYaAgregado">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje admin ya existe -->
+        <div class="modal fade" id="modalAdministradorYaExiste" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="msjErrorAgregarAdmin"></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel mensaje modificado con exito -->
+        <div class="modal fade" id="modalModificado" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Hospital Modificado!</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" id="btnAceptarModificado">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="js/cargaHospital.js"></script>
         <%
         List<Hospital> hospitales = (List<Hospital>) request.getAttribute("hospitales");
+        if (hospitales != null)
         for (Hospital h : hospitales) {%>
         <script>
-            agregarHospital ('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
+                        agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
         </script>
         <%}
         %>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv3TfTf8HC_onB7FyU3cQ1n8ckH4uE5rs&callback=initMapa" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
     </body>
 </html>
