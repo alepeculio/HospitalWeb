@@ -103,37 +103,42 @@ function initMapa () {
         });
 }
 
-var hospitalABorrar;
+var hospitalSeleccionado;
 
 function clickHospital (hospital) {
-    hospitalABorrar = hospital;
+    hospitalSeleccionado = hospital;
     
     $.ajax ({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
-            "obtener": hospitalABorrar.title
+            "obtener": hospitalSeleccionado.title
         },
         success: function (data) {
             if (data == "NOPE") {
-                window.location.assign ("/HospitalWeb/SHospital?cargar");
+                window.location.assign ("/HospitalWeb/SHospital?Administrador");
             } else {
+                modificar (false);
                 var partes = data.split ("@");
-                $("#borrarNombre").html (partes[0]);
-                $("#borrarPublico").html (partes[1]);
-                $("#borrarDepartamento").html (partes[2]);
-                $("#borrarDireccion").html (partes[3]);
-                $("#modalBorrar").modal("show");
+                $("#detnombre").val (partes[0]);
+                $("#dettipo").attr ("disabled", false);
+                $("#dettipo").bootstrapToggle (partes[1]);
+                $("#detdepartamento").val (partes[2]);
+                $("#detcalle").val (partes[3]);
+                $("#detnumero").val (partes[4]);
+                $("#detlat").val (partes[5]);
+                $("#detlng").val (partes[6]);
+                $("#modalDetallesHospital").modal("show");
             }
         },
         error: function () {
-            window.location.assign ("/HospitalWeb/SHospital?cargar");
+            window.location.assign ("/HospitalWeb/SHospital?Administrador");
         }
     });
 }
 
 function recomendar (geocoder, posicion) {
-    geocoder.geocode({'location': posicion}, function(results, status) {
+    geocoder.geocode ({'location': posicion}, function (results, status) {
         if (status == 'OK') {
             if (results[0]) {
                 var dep = results[0].formatted_address.split (",");
@@ -145,7 +150,6 @@ function recomendar (geocoder, posicion) {
                     dep = dep.split ("Departamento de ")[1];
                 
                 var dir = results[0].formatted_address.split (",")[0];
-                
                 var num = results[0].formatted_address.split (",")[0].split(" ");
                 num = num[num.length - 1];
                 
@@ -181,7 +185,7 @@ $("#btnBorrarConfirmar").click (function () {
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
-            "nombre": $("#borrarNombre").html ()
+            "nombre": hospitalSeleccionado.title
         },
         success: function (data) {
             $("#modalBorrado").modal ("show");
@@ -196,8 +200,21 @@ $("#modalIngresar").on ("shown.bs.modal", function () {
     $("#nombre").focus ();
 });
 
+$("#modalDetallesHospital").on ("shown.bs.modal", function () {
+    modificar (false);
+});
+
+$("#modalDetallesHospital").on ("hidden.bs.modal", function () {
+    $("#divBtnConfirmar").collapse ("hide");
+    modificando = false;
+});
+
 $("#btnBorrado").click (function () {
     location.reload ();
+});
+
+$("#btnBorrarHospital").click (function () {
+    $("#modalBorrar").modal ("show");
 });
 
 $("#btnIngresarConfirmar").click (function () {
@@ -283,5 +300,200 @@ $("#btnIngresarConfirmar").click (function () {
 });
 
 $("#btnAceptarIngreso").click (function () {
-    window.location.assign ("/HospitalWeb/SHospital?cargar");
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+$("#btnModificarHospital").click (function () {
+    modificar (!modificando);
+});
+
+var modificando = false;
+
+function modificar (modificar) {
+    modificando = modificar;
+    $("#detnombre").prop ("readonly", !modificar);
+    $("#dettipo").prop ("disabled", !modificar);
+    $("#detdepartamento").prop ("readonly", !modificar);
+    $("#detcalle").prop ("readonly", !modificar);
+    $("#detnumero").prop ("readonly", !modificar);
+    $("#detlat").prop ("readonly", !modificar);
+    $("#detlng").prop ("readonly", !modificar);
+}
+
+$("#btnModificarConrfirmar").click (function () {
+    if (!modificando)
+        return;
+    
+    var nombre = $("#detnombre").val();
+    var tipo = $("#dettipo").is(":checked") ? "on" : "off";
+    var departamento = $("#detdepartamento").val();
+    var calle = $("#detcalle").val();
+    var numero = $("#detnumero").val();
+    var lat = $("#detlat").val();
+    var lng = $("#detlng").val();
+
+    var faltaCampos = false;
+
+    if (nombre == "") {
+        $("#nombreParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#nombreParent").removeClass("has-error");
+
+    if (departamento == "") {
+        $("#departamentoParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#departamentoParent").removeClass("has-error");
+
+    if (calle == "") {
+        $("#calleParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#calleParent").removeClass("has-error");
+
+    if (numero == "") {
+        $("#numeroParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#numeroParent").removeClass("has-error");
+
+    if (numero.match(/^[0-9]+$/) == null) {
+        $("#numeroParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#numeroParent").removeClass("has-error");
+
+    if (faltaCampos)
+        return;
+    
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "modificar": "si",
+            "viejo_nombre": hospitalSeleccionado.title,
+            "nuevo_nombre": nombre,
+            "tipo": tipo,
+            "departamento": departamento,
+            "calle": calle,
+            "nro": numero,
+            "lat": lat,
+            "lng": lng
+        },
+        success: function (data) {
+            if (data == "existe")
+                $("#modalExiste").modal ("show");
+            else
+                $("#modalModificado").modal ("show");
+        },
+        error: function () {
+            alert("Error: No se pudo modificar el hospital " + hospitalSeleccionado.title);
+        }
+    });
+});
+
+$("#btnAceptarModificado").click (function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+var ciABorrar;
+
+function borrarAdministrador (nombre) {
+    ciABorrar = nombre.split ("/")[0].trim ();
+    $("#modalPregBorrarAdmin").modal ("show");
+}
+
+$("#btnPregBorrarAdminConfirmar").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "eliminarAdmin": "si",
+            "nomHospital": hospitalSeleccionado.title,
+            "ciAdmin": ciABorrar
+        },
+        success: function (data) {
+            $("#modalAdminBorradoConExito").modal ("show");
+        },
+        error: function () {
+            alert ("Error: No se pudo borrar el administrador");
+        }
+    });
+});
+
+$("#btnABCE").click (function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+$("#btnAdministradore").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "obtenerAdministradores": "si",
+            "nomHospital": hospitalSeleccionado.title
+        },
+        success: function (data) {
+            if (data == "NOPE") {
+                $("#divListadoAdministradores").hide ();
+            } else {
+                $("#divListadoAdministradores").show ();
+                
+                var administradores = data.split ("#");
+                
+                var listado = document.getElementById("listadoAdministradores");
+                for (var i = 0; i < administradores.length; i++) {
+                    var opt = document.createElement ("button");
+                    opt.setAttribute ("role", "button");
+                    opt.classList.add ("list-group-item");
+                    opt.classList.add ("list-group-item-action");
+                    var p = administradores[i].split ("/");
+                    opt.innerHTML = p[0] + "    /   " + p[1];
+                    
+                    opt.onclick = function () {
+                        borrarAdministrador (this.innerHTML.toString ());
+                    };
+                    
+                    listado.appendChild(opt);
+                }
+            }
+            $("#modalAdministradores").modal ("show");
+        },
+        error: function () {
+            alert ("Error: No se pueden obtener los administradores del hospital " + hospitalSeleccionado.title);
+        }
+    });
+});
+
+$("#btnCerrarAdministradores").click (function () {
+    $("#modalDetallesHospital").modal ("show");
+});
+
+$("#btnAgregarNuevoAdministradores").click (function () {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            "agregarAdmin": "si",
+            "ci": $("#ciNuevoAdmin").val (),
+            "correo": $("#correoNuevoAdmin").val (),
+            "nomHospital": hospitalSeleccionado.title
+        },
+        success: function (data) {
+            if (data == "")
+                $("#modalAdministradorIngresadoConExito").modal ("show");
+            else {
+                $("#msjErrorAgregarAdmin").html (data);
+                $("#modalAdministradorYaExiste").modal ("show");
+            }
+        },
+        error: function () {
+            alert ("Error: No se pudo cargar un nuevo admin");
+        }
+    });
+});
+
+$("#btnAceptarAdministradorYaAgregado").click (function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
 });
