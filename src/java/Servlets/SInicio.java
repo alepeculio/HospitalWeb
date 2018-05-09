@@ -5,6 +5,9 @@
  */
 package Servlets;
 
+import Clases.Usuario;
+import Controladores.CAdministradores;
+import Controladores.CUsuario;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 public class SInicio extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        Usuario u = new Usuario();
+        u.setCi("1234");
+        u.setCorreo("admin@correo.com");
+        u.setContrasenia("1234");
+        
+        if (new CUsuario ().login (u.getCi (), u.getContrasenia ()) == null)
+            CAdministradores.agregarAdminGeneral (u);
 
         String accion = request.getParameter("accion");
 

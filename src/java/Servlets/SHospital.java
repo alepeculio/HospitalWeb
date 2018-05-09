@@ -3,6 +3,7 @@ package Servlets;
 import Clases.Hospital;
 import Clases.Usuario;
 import Controladores.CHospital;
+import Controladores.CUsuario;
 import Controladores.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -25,6 +26,16 @@ public class SHospital extends HttpServlet {
         if (request.getParameter("Administrador") != null) {
             request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
+        }else if(request.getParameter("verHospital") != null){
+            Hospital h = CHospital.obtenerHospital( URLDecoder.decode(request.getParameter("verHospital"),"UTF-8"));
+            request.setAttribute("hospital",h);
+            request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
+        }else if(request.getParameter("Vacuna") != null){
+            request.setAttribute("vacuna", "vacuna");
+            request.setAttribute("hospital", "hospital");
+            request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
+        }else if(request.getParameter("verMapa") != null){
+            request.setAttribute("verMap", this);
         }
     }
     
@@ -33,18 +44,27 @@ public class SHospital extends HttpServlet {
         processRequest(request, response);
     }
     
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Chequear si usuario logueado es un administrador
-        if (false) {
-            // Ir al inicio
-            return;
+    private void checkearAdmin (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Usuario u = (Usuario) request.getSession ().getAttribute ("usuario");
+        if (u != null && CUsuario.obtenerTipo (u).equals ("General")) {
+            request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
+            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/SInicio").forward(request, response);
         }
-        
-        if (request.getParameter("ingresarNuevo") != null) {
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+        if (request.getParameter("Administrador") != null) {
+            checkearAdmin (request, response);
+        } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital ();
             h.setNombre (URLDecoder.decode (request.getParameter("nombre"), "UTF-8"));
+            h.setDirectora (URLDecoder.decode (request.getParameter("directora"), "UTF-8"));
             h.setPublico (request.getParameter("tipo").equals ("on"));
+            h.setCorreo (URLDecoder.decode (request.getParameter("correo"), "UTF-8"));
+            h.setTelefono (URLDecoder.decode (request.getParameter("telefono"), "UTF-8"));
             h.setDepartamento (URLDecoder.decode (request.getParameter("departamento"), "UTF-8"));
             h.setCalle (URLDecoder.decode (request.getParameter("calle"), "UTF-8"));
             h.setNumero (Integer.valueOf (request.getParameter("nro")));
@@ -65,7 +85,7 @@ public class SHospital extends HttpServlet {
             
             Hospital h = CHospital.obtenerHospital(request.getParameter ("obtener"));
             if (h != null)
-                response.getWriter ().write (String.format ("%s@%s@%s@%s@%s@%s@%s", h.getNombre (), h.isPublico () ? "on" : "off", h.getDepartamento (), h.getCalle (), h.getNumero (), h.getLatitud (), h.getLongitud ()));
+                response.getWriter ().write (String.format ("%s#%s#%s#%s#%s#%s#%s#%s#%s#%s", h.getNombre (), h.isPublico () ? "on" : "off", h.getDepartamento (), h.getCalle (), h.getNumero (), h.getLatitud (), h.getLongitud (), h.getDirectora (), h.getCorreo (), h.getTelefono ()));
             else
                 response.getWriter ().write ("NOPE");
         } else if (request.getParameter ("modificar") != null) {
@@ -80,12 +100,15 @@ public class SHospital extends HttpServlet {
             
             Hospital h = new Hospital();
             h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
-            h.setPublico(request.getParameter("tipo").equals("on"));
-            h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
-            h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
-            h.setNumero(Integer.valueOf(request.getParameter("nro")));
-            h.setLatitud(Double.valueOf(request.getParameter("lat")));
-            h.setLongitud(Double.valueOf(request.getParameter("lng")));
+            h.setDirectora (URLDecoder.decode(request.getParameter("directora"), "UTF-8"));
+            h.setPublico (request.getParameter("tipo").equals("on"));
+            h.setCorreo (URLDecoder.decode(request.getParameter("correo"), "UTF-8"));
+            h.setTelefono (URLDecoder.decode(request.getParameter("telefono"), "UTF-8"));
+            h.setDepartamento (URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
+            h.setCalle (URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
+            h.setNumero (Integer.valueOf(request.getParameter("nro")));
+            h.setLatitud (Double.valueOf(request.getParameter("lat")));
+            h.setLongitud (Double.valueOf(request.getParameter("lng")));
             
             CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
             

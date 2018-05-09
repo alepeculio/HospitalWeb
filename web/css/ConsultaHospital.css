@@ -1,9 +1,14 @@
 img {
     width: 225px;
     height: 225px;
+    border: 2px solid #1b6d85;
     border-radius: 110px
 }
-
+#foto{
+    max-width: 100%; 
+    height: auto;
+    border-radius: 110px;
+}
 
 #vacuna{
 
@@ -13,10 +18,17 @@ img {
     background-position: center;
 
 }
+#doctor{
+    border: 1px solid black;
+
+}
 #vacuna:hover{
     background-size: 29px;
 }
-
+#margin{   
+    margin-bottom: 5%;
+    position: relative;
+}
 .Tvacuna th{
     text-align: center;
     width:4%;
@@ -54,7 +66,7 @@ img {
 #div1 {
     overflow:scroll;
     overflow-x: hidden;
-    height:591px;
+    margin-left: 1px;
     width:100%;
 }
 .vl {
@@ -79,7 +91,7 @@ img {
 
     #div2 {
         overflow:scroll;
-        
+
     }
     .Tvacuna{
         width: 445px;

@@ -57,8 +57,18 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-                            request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                            //request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
+                            
+                            switch (CUsuario.obtenerTipo (u)) {
+                                case "General":
+                                    request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
+                                    break;
+                                case "Hospital":
+                                    request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
+                                    break;
+                                default:
+                                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                                    break;
+                            }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
                             request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
@@ -122,9 +132,9 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (cusuario.altaCliente(c)) {
-                        mensaje = "Cliente ingresado con exito";
+                        mensaje = "OK";
                     } else {
-                        mensaje = "No se pudo ingresar el cliente debido a un error interno";
+                        mensaje = "ERR";
                     }
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
@@ -149,6 +159,11 @@ public class SUsuario extends HttpServlet {
                 case "registrar":
                     //request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
+                    break;
+
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
             }
         }
