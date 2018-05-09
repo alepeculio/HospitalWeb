@@ -75,24 +75,25 @@ public class SHospital extends HttpServlet {
                     response.getWriter ().write ("existe");
                     return;
                 }
-            
-            Hospital h = new Hospital();
-            h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
-            h.setPublico(request.getParameter("tipo").equals("on"));
-            h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
-            h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
-            h.setNumero(Integer.valueOf(request.getParameter("nro")));
-            h.setLatitud(Double.valueOf(request.getParameter("lat")));
-            h.setLongitud(Double.valueOf(request.getParameter("lng")));
-            
-            CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
-            
-            response.getWriter ().write ("modificado");
+                
+                Hospital h = new Hospital();
+                h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
+                h.setPublico(request.getParameter("tipo").equals("on"));
+                h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
+                h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
+                h.setNumero(Integer.valueOf(request.getParameter("nro")));
+                h.setLatitud(Double.valueOf(request.getParameter("lat")));
+                h.setLongitud(Double.valueOf(request.getParameter("lng")));
+                
+                CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
+                
+                response.getWriter ().write ("modificado");
+            }
+
+        }
+        
+        @Override
+        public String getServletInfo() {
+            return "Short description";
         }
     }
-    
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
-}

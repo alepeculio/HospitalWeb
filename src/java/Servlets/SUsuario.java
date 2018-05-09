@@ -8,6 +8,7 @@ package Servlets;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.Usuario;
+import Controladores.CHospital;
 import Controladores.CUsuario;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -54,8 +55,8 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-                            //request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                            request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
+                            request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                            //request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
                             request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
@@ -77,7 +78,25 @@ public class SUsuario extends HttpServlet {
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
+                    break;
 
+                case "indicaciones":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
+                    break;
+
+                case "vacunas":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);
+                    break;
+
+                case "registrar":
+                    //request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
+                    break;
             }
         }
 
