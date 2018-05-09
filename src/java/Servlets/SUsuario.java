@@ -8,6 +8,7 @@ package Servlets;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.Usuario;
+import Controladores.CHospital;
 import Controladores.CUsuario;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -140,6 +141,20 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensaje);
                     break;
 
+                case "indicaciones":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
+                    break;
+
+                case "vacunas":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);
+                    break;
+
+                case "registrar":
+                    //request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
+                    break;
             }
         }
 

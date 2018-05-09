@@ -9,12 +9,12 @@
         <jsp:include page="include_js.html"/>
         <title>Registrar Usuario</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
-        
+
     </head>
     <body background="img/fondo.png">
-         <!-- Header -->
-         <jsp:include page="header.jsp"/>
-         
+        <!-- Header -->
+        <jsp:include page="header.jsp"/>
+
         <div class="fondo mapa">
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
             <div id="leyenda">
@@ -30,7 +30,7 @@
         <div id="divBotones" class="fondo boton">
             <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalIngresar" id="btnConfirmar" disabled>Cargar Hospital</button>
         </div>
-        
+
         <!-- Panel ingresar informacion de nuevo hospital -->
         <div class="modal fade" id="modalIngresar" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Panel detalles hospital -->
         <div class="modal fade" id="modalDetallesHospital" role="dialog">
             <div class="modal-dialog">
@@ -207,7 +207,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Panel confirmacion para borrar un hospital -->
         <div class="modal fade" id="modalBorrar" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -223,7 +223,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Panel mensaje borrado con exito -->
         <div class="modal fade" id="modalBorrado" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -238,7 +238,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Panel mensaje ingresado con exito -->
         <div class="modal fade" id="modalIngresado" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -313,17 +313,17 @@
                 </div>
             </div>
         </div>
-        
+
         <script src="js/cargaHospital.js"></script>
         <%
         List<Hospital> hospitales = (List<Hospital>) request.getAttribute("hospitales");
         if (hospitales != null)
         for (Hospital h : hospitales) {%>
         <script>
-            agregarHospital ('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
+                        agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
         </script>
         <%}
         %>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv3TfTf8HC_onB7FyU3cQ1n8ckH4uE5rs&callback=initMapa" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
     </body>
 </html>
