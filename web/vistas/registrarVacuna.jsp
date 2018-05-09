@@ -4,9 +4,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Registrar Vacuna</title>
-        <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
     </head>
-    <body background="../img/fondo.png">
+    <body background="img/fondo.png">
 
         <div class="container" style="margin-top: 15vh">
             <div class="row">
@@ -67,8 +67,9 @@
                 </div>
             </div>
         </div>
-        <script src="../bootstrap/jquery.min.js"></script>
-        <script src="../bootstrap/bootstrap.js"></script>
-        <script src="../js/registrar.js"></script>
+        <script src="bootstrap/jquery-3.3.1.slim.js"></script>
+        <script src="bootstrap/jquery-3.3.1.js"></script>
+        <script src="bootstrap/bootstrap.js"></script>
+        <script src="js/registrar.js"></script>
     </body>
 </html>
