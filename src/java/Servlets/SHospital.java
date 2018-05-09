@@ -3,6 +3,7 @@ package Servlets;
 import Clases.Hospital;
 import Clases.Usuario;
 import Controladores.CHospital;
+import Controladores.CUsuario;
 import Controladores.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -21,11 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SHospital extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding ("UTF-8");
-        if (request.getParameter("Administrador") != null) {
-            request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
-            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
-        }
+        if (request.getParameter("Administrador") != null)
+            checkearAdmin (request, response);
     }
     
     @Override
@@ -33,15 +31,21 @@ public class SHospital extends HttpServlet {
         processRequest(request, response);
     }
     
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Chequear si usuario logueado es un administrador
-        if (false) {
-            // Ir al inicio
-            return;
+    private void checkearAdmin (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Usuario u = (Usuario) request.getSession ().getAttribute ("usuario");
+        if (u != null && CUsuario.obtenerTipo (u).equals ("General")) {
+            request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
+            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/SInicio").forward(request, response);
         }
-        
-        if (request.getParameter("ingresarNuevo") != null) {
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+        if (request.getParameter("Administrador") != null) {
+            checkearAdmin (request, response);
+        } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital ();
             h.setNombre (URLDecoder.decode (request.getParameter("nombre"), "UTF-8"));
             h.setPublico (request.getParameter("tipo").equals ("on"));

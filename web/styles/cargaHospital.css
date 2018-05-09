@@ -8,6 +8,7 @@
 
 .mapa {
     margin-top: 2.24vh;
+    box-shadow: 0px 8px 10px 0px rgba(0,0,0,.5);
 }
 
 .form {
@@ -87,6 +88,10 @@
     max-height: 150px;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+#divBotones {
+    box-shadow: 0px 8px 10px 0px rgba(0,0,0,.5);
 }
 
 #divBotones::after {
