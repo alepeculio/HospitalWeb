@@ -1,0 +1,35 @@
+#icono{
+    width:40pt; 
+    height:40pt;
+    margin-left: 1pt;
+}
+
+#titulo{
+    margin-top: 6px;
+    margin-left: 3px;
+    font-size: 30px;
+    color: white;
+}
+#barra{
+    padding-top: 3px;
+   
+}
+#menu{
+  font-size: 15px;
+  color: white;
+}
+
+#c-menu{
+    margin-left: 10pt;
+    padding-left: 10pt;
+}
+
+.navbar-nav.padding{
+    margin-left: 20%;
+}
+
+micuenta_icono{
+    padding-left: 5pt;
+}
+
+

@@ -1,0 +1,63 @@
+.fondo {
+    background-color: #FFF;
+    border-radius: 5px;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    padding: 1vw;
+}
+
+.mapa {
+    margin-top: 2.24vh;
+}
+
+.form {
+    margin-top: 2vh;
+}
+
+.boton {
+    margin-top: 2vh;
+    text-align: center;
+}
+
+#btnConfirmar {
+    width: 50%;
+}
+
+#leyenda {
+    width: 25%;
+    background-color: #fff;
+    padding: 1vw;
+    margin-bottom: 1vw;
+    margin-right: 1vw;
+    font-size: 1.2em;
+}
+
+#leyenda h3 {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 2vh;
+    text-align: center;
+}
+
+#leyenda text {
+    font-weight: bold;
+}
+
+#leyenda p {
+    margin-top: 1vh;
+}
+
+.imgLeyenda {
+    width: 25pt;
+    height: 30pt;
+    margin: 0 1vw 0 0;
+}
+
+#hospitalBorrar {
+    margin: 0;
+}
+
+#borrarNombre {
+    margin: 0;
+    padding: 0;
+}
