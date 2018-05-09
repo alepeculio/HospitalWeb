@@ -22,8 +22,21 @@ import javax.servlet.http.HttpServletResponse;
 public class SHospital extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("Administrador") != null)
-            checkearAdmin (request, response);
+        request.setCharacterEncoding ("UTF-8");
+        if (request.getParameter("Administrador") != null) {
+            request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
+            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
+        }else if(request.getParameter("verHospital") != null){
+            Hospital h = CHospital.obtenerHospital( URLDecoder.decode(request.getParameter("verHospital"),"UTF-8"));
+            request.setAttribute("hospital",h);
+            request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
+        }else if(request.getParameter("Vacuna") != null){
+            request.setAttribute("vacuna", "vacuna");
+            request.setAttribute("hospital", "hospital");
+            request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
+        }else if(request.getParameter("verMapa") != null){
+            request.setAttribute("verMap", this);
+        }
     }
     
     @Override

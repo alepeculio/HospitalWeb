@@ -1,113 +1,91 @@
+<%-- 
+    Document   : newjsp
+    Created on : 26/04/2018, 11:43:48 PM
+    Author     : Brian
+--%>
+
+<%@page import="Clases.Hospital"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:include page="include_css.html"/>
+<jsp:include page="include_js.html"/>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
-        <link rel="stylesheet" href="../bootstrap/bootstrap.min.css" type="text/css"/>
-        <link rel="stylesheet" href="../bootstrap/bootstrap.min.css" type="text/css">
-        <link rel="stylesheet" href="../css/ConsultaHospital.css" type="text/css">
+
+        <link rel="stylesheet" href="css/ConsultaHospital.css" type="text/css">
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-        </style>
+
+        <%
+            Hospital h = request.getAttribute("hospital");
+            List<Empleado> empleados = request.getAttribute("empleados");
+        %>
+
     </head>
 
-    <body background="../img/fondo.png">
+
+    <body background="img/fondo.png">
+
+
+        <div class="vl" style="margin-left: 49%; height:200%; position:absolute;   margin-top: 6%;"></div>
         <!-- Icono Hospital -->
-        <div class="row">
-            <img id="Hlogo" src="../img/hospital.jpg"  alt="Avatar" style="margin-top: 20vh;" >
+        <div id="margin" >
+            <div class="row">
+                <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar" style="margin-top: 5%;" >
+            </div>
         </div>
-        <div class="vl" style="margin-left: 49%; height: 150px;"></div>
+
 
         <!-- Hospital-->
-        <div class="container" style="height:152px" >
-            <div class="row"  >
+        <div id="margin">
+            <div class="row"  style="position:relative" >
                 <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%; margin-left: 20% "  >
                     <div class="panel-heading">
-                        <a>HOSPITAL DEPARTAMENTAL DE PAYSANDÚ</a> </div>
+
+                        <a><%=h.getNombre()%></a> </div>
+
                     <div class="panel-body" id="div2">
-                        <h5>Directora: <a class="negrita">Dra. Angela Almeida</a></h5>
-                        <h5>Dirección: Monte Caseros 520 <a href="" > Ver En Mapa</a></h5>
-                        <h5>Teléfonos: 4722 - 4836</h5>
-                        <h5>Correo electrónico institucional:<a class="negrita" href="mailto:yu.moc.essa@udnasyap.noicceri">yu.moc.essa@udnasyap.noicceri</a> </h5> 
+                        <h5>Directoro/a: <a class="negrita"> <%=h.getDirector()%></a></h5>
+                        <h5>Direccin: <%h.getCalle() %>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
+                        <h5>Teléfono: <%=h.geTelefono()%> </h5>
+                        <h5>Correo electrónico institucional:<a class="negrita" href="mailto:<%=h.getCorreo()%>"><%=h.getCorreo()%></a> </h5> 
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Doctores-->
-        <div class="vl" style="margin-left: 49%; height: 150px;margin-top:2.3% "></div>
-        <div class="container"  >
-            <div class="row" >
+
+        <div id="margin">
+            <div class="row">
                 <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%; margin-left: 20%"  >
                     <div class="panel-heading">
                         <a>Lista De Doctores</a>
                     </div>
                     <div id="div1">
-                        <table cellpadding="3" width="100%"class="lista" >
-                            <tr>
-                                <td align="center" >
-                                    <img src="../img/descarga.png" alt="Avatar" >
-                                    <h4><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td>
-                                <td align="center">
-                                    <img src="../img/asd.png" alt="Avatar" >
-                                    <h4 ><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td >
-                                <td align="center">
-                                    <img src="../img/doctor  5.png" alt="Avatar" >
-                                    <h4><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td>
-                            </tr>
-                            <tr >
-                                <td align="center">
-                                    <img src="../img/doctor  5.png" alt="Avatar" >
-                                    <h4><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td>
-                                <td align="center">
-                                    <img src="../img/doctor.png" alt="Avatar" >
-                                    <h4 ><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td >
-                                <td align="center">
-                                    <img src="../img/asd.png" alt="Avatar" >
-                                    <h4><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td>
-                            </tr>
-                            <tr >
-                                <td align="center">
-                                    <img src="../img/doctor  5.png" alt="Avatar" >
-                                    <h4><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td>
-                                <td align="center">
-                                    <img src="../img/doctor.png" alt="Avatar" >
-                                    <h4 ><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td >
-                                <td align="center">
-                                    <img src="../img/asd.png" alt="Avatar" >
-                                    <h4><b>John Doe</b></h4> 
-                                    <p>Architect & Engineer</p> 
-                                </td>
-                            </tr>
-                        </table>
+                        <% for(Empleado e : empleados){  }%>
+                        <div class="row" >
+                            <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
+                                <img src="img/doctor  5.png" alt="Avatar" id="foto" >
+                                <h4><b><%=e.getNombre() %> <%=e.getApellido() %></b></h4> 
+                                <p><%=e.getEspecialida() %></p></div>
+                            <div class="col-md-4 col-sm-12" id="doctor" align="center" >                                  
+                                <img src="img/doctor  5.png" alt="Avatar"id="foto" >
+                                <h4><b>John Doe</b></h4> 
+                                <p>Architect & Engineer</p> </div>
+                            <div class="col-md-4 col-sm-12 " id="doctor" align="center" >                                    
+                                <img src="img/doctor  5.png" alt="Avatar" id="foto">
+                                <h4><b>John Doe</b></h4> 
+                                <p>Architect & Engineer</p> </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Vacunas -->
-        <div class="container" style="margin-top: 5vh"  >
 
+        <!-- Vacunas -->
+
+        <div id="margin">
             <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%; margin-left: 20% "  >
                 <div class="panel-heading">
                     <a>Vacunas</a>
@@ -117,7 +95,7 @@ and open the template in the editor.
                         <tr id="edad">
                             <th style="border-top: hidden; border-left: hidden"></th>
                             <th style="border-top: hidden;border-left: hidden" COLSPAN=7>Edad en meses</th>
-                            <th style="border-top: hidden;border-left: hidden; border-right: hidden" COLSPAN=3 >Edad en año</th>
+                            <th style="border-top: hidden;border-left: hidden; border-right: hidden" COLSPAN=3 >Edad en aÃ±o</th>
                         </tr>
                         <tr id="numero">
                             <th style="border-left: hidden;border-top: hidden; background-color:white"></th>
@@ -309,9 +287,11 @@ and open the template in the editor.
                     </table>
                 </div>
             </div>
+        </div>
 
-        </div>        
+
 
 
     </body>
 </html>
+
