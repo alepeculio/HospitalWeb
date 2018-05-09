@@ -120,9 +120,9 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (cusuario.altaCliente(c)) {
-                        mensaje = "Cliente ingresado con exito";
+                        mensaje = "OK";
                     } else {
-                        mensaje = "No se pudo ingresar el cliente debido a un error interno";
+                        mensaje = "ERR";
                     }
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
