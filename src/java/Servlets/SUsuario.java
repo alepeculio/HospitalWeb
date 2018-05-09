@@ -57,8 +57,8 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-                            
-                            switch (CUsuario.obtenerTipo (u)) {
+
+                            switch (CUsuario.obtenerTipo(u)) {
                                 case "General":
                                     request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                     break;
@@ -159,11 +159,6 @@ public class SUsuario extends HttpServlet {
                 case "registrar":
                     //request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
-                    break;
-
-                case "cliente":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
             }
         }
