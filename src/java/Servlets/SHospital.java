@@ -48,7 +48,10 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital ();
             h.setNombre (URLDecoder.decode (request.getParameter("nombre"), "UTF-8"));
+            h.setDirectora (URLDecoder.decode (request.getParameter("directora"), "UTF-8"));
             h.setPublico (request.getParameter("tipo").equals ("on"));
+            h.setCorreo (URLDecoder.decode (request.getParameter("correo"), "UTF-8"));
+            h.setTelefono (URLDecoder.decode (request.getParameter("telefono"), "UTF-8"));
             h.setDepartamento (URLDecoder.decode (request.getParameter("departamento"), "UTF-8"));
             h.setCalle (URLDecoder.decode (request.getParameter("calle"), "UTF-8"));
             h.setNumero (Integer.valueOf (request.getParameter("nro")));
@@ -69,7 +72,7 @@ public class SHospital extends HttpServlet {
             
             Hospital h = CHospital.obtenerHospital(request.getParameter ("obtener"));
             if (h != null)
-                response.getWriter ().write (String.format ("%s@%s@%s@%s@%s@%s@%s", h.getNombre (), h.isPublico () ? "on" : "off", h.getDepartamento (), h.getCalle (), h.getNumero (), h.getLatitud (), h.getLongitud ()));
+                response.getWriter ().write (String.format ("%s#%s#%s#%s#%s#%s#%s#%s#%s#%s", h.getNombre (), h.isPublico () ? "on" : "off", h.getDepartamento (), h.getCalle (), h.getNumero (), h.getLatitud (), h.getLongitud (), h.getDirectora (), h.getCorreo (), h.getTelefono ()));
             else
                 response.getWriter ().write ("NOPE");
         } else if (request.getParameter ("modificar") != null) {
@@ -84,12 +87,15 @@ public class SHospital extends HttpServlet {
             
             Hospital h = new Hospital();
             h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
-            h.setPublico(request.getParameter("tipo").equals("on"));
-            h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
-            h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
-            h.setNumero(Integer.valueOf(request.getParameter("nro")));
-            h.setLatitud(Double.valueOf(request.getParameter("lat")));
-            h.setLongitud(Double.valueOf(request.getParameter("lng")));
+            h.setDirectora (URLDecoder.decode(request.getParameter("directora"), "UTF-8"));
+            h.setPublico (request.getParameter("tipo").equals("on"));
+            h.setCorreo (URLDecoder.decode(request.getParameter("correo"), "UTF-8"));
+            h.setTelefono (URLDecoder.decode(request.getParameter("telefono"), "UTF-8"));
+            h.setDepartamento (URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
+            h.setCalle (URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
+            h.setNumero (Integer.valueOf(request.getParameter("nro")));
+            h.setLatitud (Double.valueOf(request.getParameter("lat")));
+            h.setLongitud (Double.valueOf(request.getParameter("lng")));
             
             CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
             

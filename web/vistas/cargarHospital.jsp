@@ -33,7 +33,7 @@
 
         <!-- Panel ingresar informacion de nuevo hospital -->
         <div class="modal fade" id="modalIngresar" role="dialog">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -41,14 +41,40 @@
                     </div>
                     <form onsubmit="return false">
                         <div class="modal-body">
-                            <label>Nombre</label>
-                            <div class="form-group" id="nombreParent">
-                                <input required class="form-control" placeholder="Nombre Hospital" type="text" id="nombre" name="nombre">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Nombre</label>
+                                    <div class="form-group" id="nombreParent">
+                                        <input required class="form-control" placeholder="Nombre Hospital" type="text" id="nombre" name="nombre">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" id="directoraParent">
+                                    <label>Directora</label>
+                                    <div class="form-group">
+                                        <input required class="form-control" placeholder="Nombre Directora" type="text" id="directora" name="directora">
+                                    </div>
+                                </div>
                             </div>
                             <label>Tipo</label>
                             <div class="form-group">
                                 <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" checked name="tipo" id="tipo">
                             </div>
+                            
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Correo Hospital</label>
+                                    <div class="form-group" id="correoHospitalParent">
+                                        <input required class="form-control" placeholder="Correo Hospital" type="text" id="correo" name="correoHospital">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" id="telefonoHospitalParent">
+                                    <label>Telefono Hospital</label>
+                                    <div class="form-group">
+                                        <input required class="form-control" placeholder="Telefono Hospital" type="text" id="telefono" name="telefonoHospital">
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <label>Departamento</label>
                             <div class="form-group" id="departamentoParent">
                                 <input required class="form-control" placeholder="Departamento" type="text" id="departamento" name="departamento">
@@ -94,24 +120,54 @@
                             <h3 class="modal-title">Informacion Hospital</h3>
                         </div>
                         <div class="modal-body">
-                            <label>Nombre</label>
-                            <div class="form-group" id="dnombreParent">
-                                <input required class="form-control" placeholder="Nombre Hospital" type="text" id="detnombre" readonly name="nombre">
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Nombre</label>
+                                    <div class="form-group" id="detnombreParent">
+                                        <input required class="form-control" placeholder="Nombre Hospital" type="text" id="detnombre" readonly name="nombre">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" id="detdirectoraParent">
+                                    <label>Directora</label>
+                                    <div class="form-group">
+                                        <input required class="form-control" placeholder="Nombre Directora" type="text" id="detdirectora" name="directora">
+                                    </div>
+                                </div>
                             </div>
+                            
                             <label>Tipo</label>
                             <div class="form-group">
                                 <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" name="tipo" id="dettipo">
                             </div>
+                            
+
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Correo Hospital</label>
+                                    <div class="form-group" id="detcorreoHospitalParent">
+                                        <input required class="form-control" placeholder="Correo Hospital" type="text" id="detcorreo" name="correoHospital">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" id="dettelefonoHospitalParent">
+                                    <label>Telefono Hospital</label>
+                                    <div class="form-group">
+                                        <input required class="form-control" placeholder="Telefono Hospital" type="text" id="dettelefono" name="telefonoHospital">
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <label>Departamento</label>
-                            <div class="form-group" id="ddepartamentoParent">
+                            <div class="form-group" id="detdepartamentoParent">
                                 <input required class="form-control" placeholder="Departamento" type="text" id="detdepartamento" readonly name="departamento">
                             </div>
                             <label>Calle</label>
-                            <div class="form-group" id="dcalleParent">
+                            <div class="form-group" id="detcalleParent">
                                 <input required class="form-control" placeholder="Calle" type="text" id="detcalle" readonly name="calle">
                             </div>
                             <label>Nro. Calle</label>
-                            <div class="form-group" id="dnumeroParent">
+                            <div class="form-group" id="detnumeroParent">
                                 <input required class="form-control" placeholder="Nro. Calle" type="text" id="detnumero" readonly name="nro">
                             </div>
                             <label>Posicion</label>

@@ -155,6 +155,11 @@ public class SUsuario extends HttpServlet {
                     //request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
                     break;
+
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
+                    break;
             }
         }
 

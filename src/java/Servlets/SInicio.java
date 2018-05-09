@@ -26,9 +26,9 @@ public class SInicio extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         Usuario u = new Usuario();
-        u.setCi("admin");
+        u.setCi("1234");
         u.setCorreo("admin@correo.com");
-        u.setContrasenia("admin");
+        u.setContrasenia("1234");
         
         if (new CUsuario ().login (u.getCi (), u.getContrasenia ()) == null)
             CAdministradores.agregarAdminGeneral (u);
