@@ -23,12 +23,14 @@ public class SHospital extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
         if (request.getParameter("Administrador") != null) {
             request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         } else if (request.getParameter("verHospital") != null) {
             Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
             request.setAttribute("hospital", h);
+            request.setAttribute("empleados", null);
             request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
         } else if (request.getParameter("Vacuna") != null) {
             request.setAttribute("vacuna", "vacuna");

@@ -43,10 +43,9 @@
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&libraries=places&callback=initMapa" sync defer></script>
 
-  <% if(request.getAttribute("verMapa")!= null){ %>
+  <% if(request.getAttribute("nombreH") != null){ %>
   <script>
-    //verMapa('<%= request.getAttribute("verMapa")%>');
+    verMapa('<%= request.getAttribute("nombreH")%>');
   </script>
   <% } %>
-
   </html>

@@ -4,6 +4,7 @@ var marcadores= [];
 var hospitales = [];
 var servicio;
 var direccion;
+var enMapa="";
 
 
 function agregarHospital(nombre, lat, lng) {
@@ -12,17 +13,17 @@ function agregarHospital(nombre, lat, lng) {
 
 function verMapa(nombre){
 
-    for (var i = 0; i < marcadores.length; i++){
-
-        if(nombre.localeCompare(marcadores[i][0].title) == 0){
-            mapa.setCenter(marcadores[i][0].getPosition());
-            return;
-        }
+    if(nombre == ""){
+        console.log("NOMBRE VACIO");
+        return;
+    }else{
+        enMapa=nombre;
     }
-
 }
 
+
 function initMapa() {
+
     posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
     var opciones = {
         center: posInicial,
@@ -80,6 +81,7 @@ function initMapa() {
         ]
     };
 
+
     mapa = new google.maps.Map(document.getElementById("mapa"), opciones);
 
     servicio = new google.maps.DirectionsService;
@@ -96,8 +98,6 @@ function initMapa() {
       navigator.geolocation.getCurrentPosition(function(position){
 
         posInicial = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-        mapa.setCenter(posInicial);
 
         /*crear marcador con ubicacion*/
 
@@ -124,26 +124,48 @@ function initMapa() {
 
  /* FIN OBTENER UBICACION*/
 
- for (var i = 0; i < hospitales.length; i++)
-    new google.maps.Marker({
-        position: new google.maps.LatLng(hospitales[i][1], hospitales[i][2]),
-        title: hospitales[i][0],
-        icon: {
-            url: "img/icono_h.png",
-            scaledSize: new google.maps.Size(29, 35)
-        },
-        map: mapa
-    }).addListener("click", function () {
-        clickHospital(this);
-    });
+ for (var i = 0; i < hospitales.length; i++){
+
+   var marker = new google.maps.Marker({
+    position: new google.maps.LatLng(hospitales[i][1], hospitales[i][2]),
+    title: hospitales[i][0],
+    icon: {
+        url: "img/icono_h.png",
+        scaledSize: new google.maps.Size(29, 35)
+    },
+    map: mapa
+});
+
+   marker.addListener("click", function () {
+    clickHospital(this);
+});
+
+   marcadores.push(marker);
+
+}
+
+
+if(enMapa != ""){
+
+    console.log("INT: "+marcadores.length);
+
+    for(var i=0; i < marcadores.length; i++){
+
+        if(enMapa.localeCompare(marcadores[i].title) == 0){
+            console.log("ENCONTRADO");
+            mapa.setCenter(marcadores[i].getPosition());
+            console.log("lat:"+ marcadores[i].getPosition().lat());
+            console.log("lng: "+marcadores[i].getPosition().lng());
+        }
+    }
+
+}
 
 }
 
 var hospitalSeleccionado;
 
 function clickHospital(hospital) {
-
-    marcadores.push(hospital);
 
     var selectedMode = document.getElementById('mode').value;
 
@@ -152,9 +174,6 @@ function clickHospital(hospital) {
         destination: hospital.position,
         travelMode: google.maps.TravelMode[selectedMode]
     };
-
-
-
 
     /*OBTENER INDICACIONES*/
 
