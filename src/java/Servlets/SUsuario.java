@@ -8,9 +8,11 @@ package Servlets;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.Usuario;
+import Controladores.CCliente;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -57,12 +59,14 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-                            
-                            switch (CUsuario.obtenerTipo (u)) {
+
+                            switch (CUsuario.obtenerTipo(u)) {
                                 case "General":
                                     request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                     break;
                                 case "Hospital":
+                                    List<Cliente> clientes = CCliente.obtenerClientes();
+                                    request.setAttribute("clientes", clientes);
                                     request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
                                     break;
                                 default:
