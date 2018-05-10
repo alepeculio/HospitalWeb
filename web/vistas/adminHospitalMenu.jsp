@@ -169,56 +169,56 @@
             <div class="tab-pane pestania" id="ingresarMedico">
                 <h2>Ingresar médico</h2>
                 <hr>
-                <form>
+                <form id="formIC2">
                     <div class="form-group">
-                        <input required class="form-control" placeholder="Nombre" type="text" id="nombre">
-                        <small id="nombreError" class="text-danger" hidden>
+                        <input required class="form-control" placeholder="Nombre" type="text" id="nombreMed">
+                        <small id="nombreMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
                     <div class="form-group">
-                        <input required class="form-control" placeholder="Apellido" type="text" id="apellido">
-                        <small id="apellidoError" class="text-danger" hidden>
+                        <input required class="form-control" placeholder="Apellido" type="text" id="apellidoMed">
+                        <small id="apellidoMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
                     <div class="form-group">
-                        <input required class="form-control" placeholder="E-mail" type="text" id="email">
-                        <small id="emailError" class="text-danger" hidden>
+                        <input required class="form-control" placeholder="E-mail" type="text" id="emailMed">
+                        <small id="emailMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
                     <div class="row">
                         <div class="col-sm-8 form-group">
-                            <input required class="form-control" placeholder="C.I. (Sin Guion)" type="text" id="ci">
-                            <small id="ciError" class="text-danger" hidden>
+                            <input required class="form-control" placeholder="C.I. (Sin Guion)" type="text" id="ciMed">
+                            <small id="ciMedError" class="text-danger" hidden>
                                 Error!
                             </small>
                         </div>
                         <div class="col-sm-4 form-group">
-                            <input required class="form-control" placeholder="-" type="text" id="digitoVer">
+                            <input required class="form-control" placeholder="-" type="text" id="digitoVerMed">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Fecha de nacimiento</label>
                         <div class="row">
                             <div class="col-sm-3">
-                                <select class="form-control" id="dia" required>
+                                <select class="form-control" id="diaMed" required>
                                     <option value="">Día</option>
                                 </select>
                             </div>
                             <div class="col-sm-5">
-                                <select class="form-control" id="mes" required>
+                                <select class="form-control" id="mesMed" required>
                                     <option value="">Mes</option>
                                 </select>
                             </div>
                             <div class="col-sm-4">
-                                <select class="form-control" id="anio" required>
+                                <select class="form-control" id="anioMed" required>
                                     <option value="">Año</option>
                                 </select>
                             </div>
                         </div>
-                        <small id="fechaError" class="text-danger" hidden>
+                        <small id="fechaMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
@@ -237,35 +237,35 @@
                     <button type="button" class="btn btn-primary btn-block" onclick="agregarTelMed()">Agregar campo de teléfono <span class="glyphicon glyphicon-plus iconoButton"></span></button>
                     </br>
                     <label>Dirección</label>
-                    <select class="form-control" id="departamento" required>
+                    <select class="form-control" id="departamentoMed" required>
                         <option value="">Departamento</option>
                     </select>
                     </br>
-                    <select class="form-control" id="ciudad" required>
+                    <select class="form-control" id="ciudadMed" required>
                         <option value="">Ciudad</option>
                     </select>
                     </br>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input required class="form-control" placeholder="Calle" type="text" id="calle">
+                                <input required class="form-control" placeholder="Calle" type="text" id="calleMed">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input required class="form-control" placeholder="Nro." type="text" id="numero">
+                                <input required class="form-control" placeholder="Nro." type="text" id="numeroMed">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Apt." type="text" id="apartamento">
+                                <input class="form-control" placeholder="Apt." type="text" id="apartamentoMed">
                             </div>
                         </div>
                     </div>
                     <label >Especialidades</label>
                     <div class="form-group" id="esp0" hidden>
                         <div class="input-group">
-                            <input required class="form-control especialidad" type="text" placeholder="Especialidad 1" id="especialidad1"/>
+                            <input required class="form-control especialidad" type="text" placeholder="Especialidad 1" id="especialidad"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-danger especialidadButton" type="button" onclick="quitarEspecialidad(1)" disabled>
                                     <span class="glyphicon glyphicon-minus iconoButton"></span>
@@ -275,18 +275,18 @@
                     </div>
                     <button type="button" class="btn btn-primary btn-block" onclick="agregarEspecialidad()">Agregar campo de especialidad <span class="glyphicon glyphicon-plus iconoButton"></span></button>
                     <br>
-                    <div id="opciones" class="collapse">
+                    <div id="opcionesMed" class="collapse">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button type="submit" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico">Confirmar</button>
+                                <button type="submit" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico">Confirmar</button>
                             </div>
                             <div class="col-lg-6">
-                                <button type="button" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-danger btn-block">Cancelar</button>
+                                <button type="button" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-danger btn-block">Cancelar</button>
                             </div>
                         </div>
                         </br>
                     </div>
-                    <button type="button" id="registrarMedico" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
+                    <button type="button" id="registrarMedico" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
                 </form>
             </div>
             <div class="tab-pane pestania" id="eliminarMedico">
