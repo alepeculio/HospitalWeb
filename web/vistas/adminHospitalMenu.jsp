@@ -1,4 +1,6 @@
 
+<%@page import="Clases.Cliente"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -143,9 +145,19 @@
                 <h2>Relacionar con hijo</h2>
                 <hr>
                 <form>
+                    <% List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");%>
+
                     <label>Seleccione el cliente</label>
                     <select class="form-control" id="clientePadre" required>
-                        <option value="">Cliente</option>
+                        <% if (clientes != null) {
+                            out.println("<option value=''>Cliente</option>");
+                                for (Cliente cliente : clientes) {
+                                    out.println("<option value='" + cliente.getId() + "'>" + cliente.getNombre() + " " + cliente.getApellido() + "</option>");
+                                }
+                            }else{
+                            out.println("<option value=''>No hay clientes</option>");
+                        }
+                        %>
                     </select>
                     <br>
                     <label>Seleccione el hijo a relacionar con el cliente anterior</label>
