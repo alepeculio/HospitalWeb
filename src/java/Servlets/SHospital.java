@@ -22,8 +22,21 @@ import javax.servlet.http.HttpServletResponse;
 public class SHospital extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("Administrador") != null)
-            checkearAdmin (request, response);
+        request.setCharacterEncoding ("UTF-8");
+        if (request.getParameter("Administrador") != null) {
+            request.setAttribute ("hospitales", CHospital.obtenerHospitales ());
+            request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
+        }else if(request.getParameter("verHospital") != null){
+            Hospital h = CHospital.obtenerHospital( URLDecoder.decode(request.getParameter("verHospital"),"UTF-8"));
+            request.setAttribute("hospital",h);
+            request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
+        }else if(request.getParameter("Vacuna") != null){
+            request.setAttribute("vacuna", "vacuna");
+            request.setAttribute("hospital", "hospital");
+            request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
+        }else if(request.getParameter("verMapa") != null){
+            request.setAttribute("verMap", this);
+        }
     }
     
     @Override
@@ -48,7 +61,10 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital ();
             h.setNombre (URLDecoder.decode (request.getParameter("nombre"), "UTF-8"));
+            h.setDirectora (URLDecoder.decode (request.getParameter("directora"), "UTF-8"));
             h.setPublico (request.getParameter("tipo").equals ("on"));
+            h.setCorreo (URLDecoder.decode (request.getParameter("correo"), "UTF-8"));
+            h.setTelefono (URLDecoder.decode (request.getParameter("telefono"), "UTF-8"));
             h.setDepartamento (URLDecoder.decode (request.getParameter("departamento"), "UTF-8"));
             h.setCalle (URLDecoder.decode (request.getParameter("calle"), "UTF-8"));
             h.setNumero (Integer.valueOf (request.getParameter("nro")));
@@ -69,7 +85,7 @@ public class SHospital extends HttpServlet {
             
             Hospital h = CHospital.obtenerHospital(request.getParameter ("obtener"));
             if (h != null)
-                response.getWriter ().write (String.format ("%s@%s@%s@%s@%s@%s@%s", h.getNombre (), h.isPublico () ? "on" : "off", h.getDepartamento (), h.getCalle (), h.getNumero (), h.getLatitud (), h.getLongitud ()));
+                response.getWriter ().write (String.format ("%s#%s#%s#%s#%s#%s#%s#%s#%s#%s", h.getNombre (), h.isPublico () ? "on" : "off", h.getDepartamento (), h.getCalle (), h.getNumero (), h.getLatitud (), h.getLongitud (), h.getDirectora (), h.getCorreo (), h.getTelefono ()));
             else
                 response.getWriter ().write ("NOPE");
         } else if (request.getParameter ("modificar") != null) {
@@ -84,12 +100,15 @@ public class SHospital extends HttpServlet {
             
             Hospital h = new Hospital();
             h.setNombre(URLDecoder.decode(request.getParameter("nuevo_nombre"), "UTF-8"));
-            h.setPublico(request.getParameter("tipo").equals("on"));
-            h.setDepartamento(URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
-            h.setCalle(URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
-            h.setNumero(Integer.valueOf(request.getParameter("nro")));
-            h.setLatitud(Double.valueOf(request.getParameter("lat")));
-            h.setLongitud(Double.valueOf(request.getParameter("lng")));
+            h.setDirectora (URLDecoder.decode(request.getParameter("directora"), "UTF-8"));
+            h.setPublico (request.getParameter("tipo").equals("on"));
+            h.setCorreo (URLDecoder.decode(request.getParameter("correo"), "UTF-8"));
+            h.setTelefono (URLDecoder.decode(request.getParameter("telefono"), "UTF-8"));
+            h.setDepartamento (URLDecoder.decode(request.getParameter("departamento"), "UTF-8"));
+            h.setCalle (URLDecoder.decode(request.getParameter("calle"), "UTF-8"));
+            h.setNumero (Integer.valueOf(request.getParameter("nro")));
+            h.setLatitud (Double.valueOf(request.getParameter("lat")));
+            h.setLongitud (Double.valueOf(request.getParameter("lng")));
             
             CHospital.modificarHospital (request.getParameter ("viejo_nombre"), h);
             

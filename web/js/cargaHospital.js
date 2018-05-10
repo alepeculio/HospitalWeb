@@ -119,7 +119,7 @@ function clickHospital (hospital) {
                 window.location.assign ("/HospitalWeb/SHospital?Administrador");
             } else {
                 modificar (false);
-                var partes = data.split ("@");
+                var partes = data.split ("#");
                 $("#detnombre").val (partes[0]);
                 $("#dettipo").attr ("disabled", false);
                 $("#dettipo").bootstrapToggle (partes[1]);
@@ -128,6 +128,9 @@ function clickHospital (hospital) {
                 $("#detnumero").val (partes[4]);
                 $("#detlat").val (partes[5]);
                 $("#detlng").val (partes[6]);
+                $("#detdirectora").val (partes[7]);
+                $("#detcorreo").val (partes[8]);
+                $("#dettelefono").val (partes[9]);
                 $("#modalDetallesHospital").modal("show");
             }
         },
@@ -219,7 +222,10 @@ $("#btnBorrarHospital").click (function () {
 
 $("#btnIngresarConfirmar").click (function () {
     var nombre = $("#nombre").val ();
+    var directora = $("#directora").val ();
     var tipo = $("#tipo").is (":checked") ? "on" : "off";
+    var telefono = $("#telefono").val ();
+    var correoHospital = $("#correo").val ();
     var departamento = $("#departamento").val ();
     var calle = $("#calle").val ();
     var numero = $("#numero").val ();
@@ -233,6 +239,24 @@ $("#btnIngresarConfirmar").click (function () {
         faltaCampos = true;
     } else
         $("#nombreParent").removeClass ("has-error");
+    
+    if (directora == "") {
+        $("#directoraParent").addClass ("has-error");
+        faltaCampos = true;
+    } else
+        $("#nombreParent").removeClass ("has-error");
+    
+    if (telefono == "") {
+        $("#telefonoHospitalParent").addClass ("has-error");
+        faltaCampos = true;
+    } else
+        $("#telefonoHospitalParent").removeClass ("has-error");
+    
+    if (correoHospital == "") {
+        $("#correoHospitalParent").addClass ("has-error");
+        faltaCampos = true;
+    } else
+        $("#correoHospitalParent").removeClass ("has-error");
     
     if (departamento == "") {
         $("#departamentoParent").addClass ("has-error");
@@ -275,7 +299,10 @@ $("#btnIngresarConfirmar").click (function () {
                     data: {
                         "ingresarNuevo": "si",
                         "nombre": nombre,
+                        "directora": directora,
                         "tipo": tipo,
+                        "correo": correoHospital,
+                        "telefono": telefono,
                         "departamento": departamento,
                         "calle": calle,
                         "nro": numero,
@@ -312,7 +339,10 @@ var modificando = false;
 function modificar (modificar) {
     modificando = modificar;
     $("#detnombre").prop ("readonly", !modificar);
+    $("#detdirectora").prop ("readonly", !modificar);
     $("#dettipo").prop ("disabled", !modificar);
+    $("#dettelefono").prop ("disabled", !modificar);
+    $("#detcorreo").prop ("disabled", !modificar);
     $("#detdepartamento").prop ("readonly", !modificar);
     $("#detcalle").prop ("readonly", !modificar);
     $("#detnumero").prop ("readonly", !modificar);
@@ -325,7 +355,10 @@ $("#btnModificarConrfirmar").click (function () {
         return;
     
     var nombre = $("#detnombre").val();
+    var directora = $("#detdirectora").val();
     var tipo = $("#dettipo").is(":checked") ? "on" : "off";
+    var correo = $("#detcorreo").val();
+    var telefono = $("#dettelefono").val();
     var departamento = $("#detdepartamento").val();
     var calle = $("#detcalle").val();
     var numero = $("#detnumero").val();
@@ -335,34 +368,52 @@ $("#btnModificarConrfirmar").click (function () {
     var faltaCampos = false;
 
     if (nombre == "") {
-        $("#nombreParent").addClass("has-error");
+        $("#detnombreParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#nombreParent").removeClass("has-error");
+        $("#detnombreParent").removeClass("has-error");
+    
+    if (directora == "") {
+        $("#detdirectoraParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#detdirectoraParent").removeClass("has-error");
+    
+    if (telefono == "") {
+        $("#dettelefonoParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#dettelefonoParent").removeClass("has-error");
+    
+    if (correo == "") {
+        $("#detcorreoParent").addClass("has-error");
+        faltaCampos = true;
+    } else
+        $("#detcorreoParent").removeClass("has-error");
 
     if (departamento == "") {
-        $("#departamentoParent").addClass("has-error");
+        $("#detdepartamentoParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#departamentoParent").removeClass("has-error");
+        $("#detdepartamentoParent").removeClass("has-error");
 
     if (calle == "") {
-        $("#calleParent").addClass("has-error");
+        $("#detcalleParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#calleParent").removeClass("has-error");
+        $("#detcalleParent").removeClass("has-error");
 
     if (numero == "") {
-        $("#numeroParent").addClass("has-error");
+        $("#detnumeroParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#numeroParent").removeClass("has-error");
+        $("#detnumeroParent").removeClass("has-error");
 
     if (numero.match(/^[0-9]+$/) == null) {
-        $("#numeroParent").addClass("has-error");
+        $("#detnumeroParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#numeroParent").removeClass("has-error");
+        $("#detnumeroParent").removeClass("has-error");
 
     if (faltaCampos)
         return;
@@ -374,7 +425,10 @@ $("#btnModificarConrfirmar").click (function () {
             "modificar": "si",
             "viejo_nombre": hospitalSeleccionado.title,
             "nuevo_nombre": nombre,
+            "directora": directora,
             "tipo": tipo,
+            "correo": correo,
+            "telefono": telefono,
             "departamento": departamento,
             "calle": calle,
             "nro": numero,
