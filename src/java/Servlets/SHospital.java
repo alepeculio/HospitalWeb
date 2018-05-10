@@ -28,7 +28,6 @@ public class SHospital extends HttpServlet {
             request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         } else if (request.getParameter("verHospital") != null) {
-           
             Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
             List<Empleado> empleados;
             empleados = h.getEmpleados();
@@ -39,9 +38,11 @@ public class SHospital extends HttpServlet {
             request.setAttribute("vacuna", "vacuna");
             request.setAttribute("hospital", "hospital");
             request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
-        } else if (request.getParameter("verMapa") != null) {
-            request.setAttribute("verMap", this);
+        } else if (request.getParameter("nombreH") != null) {
+            request.setAttribute("verMapa", request.getParameter("nombreH"));
+            request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
         }
+
     }
 
     @Override
