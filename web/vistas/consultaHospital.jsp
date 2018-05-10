@@ -22,6 +22,7 @@
         <%
             Hospital h = (Hospital) request.getAttribute("hospital");
             List<Empleado> empleados = (List<Empleado>) request.getAttribute("empleados");
+            
         %>
 
     </head>
@@ -107,7 +108,7 @@
                             </tr>
                             <tr>
                                 <td style="border-top:#1b6d85 ;">BCG</td>
-                                <td id="vacuna" onclick="" value="BCG-m-0" title="Ir a registrar" ></td>
+                                <td id="vacuna" onclick="" value="BCG-m-0" data-toggle="modal" data-target="#myModal" title="Ir a registrar" ></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -125,7 +126,7 @@
                                 <td id="vacuna"  onclick="" value="Pentavalente-m-4" title="Ir a registrar"></td>
                                 <td id="vacuna" onclick="" value="Pentavalente-m-6"title="Ir a registrar"></td>
                                 <td></td>
-                                <td id="vacuna" data-target="#myModal" value="Pentavalente-m-15" title="Ir a registrar"></td>
+                                <td id="vacuna" data-toggle="modal" data-target="#myModal" value="Pentavalente-m-15" title="Ir a registrar"></td>
                                 <td style="border-right-color: #d43f3a"></td>
                                 <td ></td>
                                 <td></td>
@@ -294,20 +295,23 @@
                             <h4 class="modal-title">Registro Vacuna</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
+
                         <div class="modal-body ">
-                            <h5>Motivo Del Reporte</h5>
-                            <form method="POST">
-                                <input type="radio" value="Engañoso" name="reporte">Contenido Engañoso<br>
-                                <input type="radio" value="Inapropiado" name="reporte">Contenido Inapropiado<br>
-                                <input type="radio" value="Ilegal" name="reporte">Contenido Ilegal<br>
-                                <input type="radio" value="Dañino" name="reporte">Contenido Dañino<br>
-                                <input type="radio" value="Otros" name="reporte">Otros<br>
-                                <h5>Descripcion Del Reporte (opcional)</h5>
-                                <textarea name="descripcion" style="width: 80%;" maxlength="150"></textarea>
+                            <h3>No tiene hijo/s registrado en el sistema.</h3> 
+                            <p>Si usted quiere registrar a su hijo para poder reservar turno de vacunacion dar clic en Registrar Hijo.</p> 
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-default"  name="aceptar" >Aceptar</button>
+                            <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
                         </div>
+                        <form method="POST">
+                            <div class="modal-body ">
+                                <h3>No tiene hijo/s registrado en el sistema.</h3> 
+                                <p>Si usted quiere registrar a su hijo para poder reservar turno de vacunacion dar clic en Registrar Hijo.</p> 
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-default"  name="aceptar" >Aceptar</button>
+                            </div>
                         </form>
 
                     </div>

@@ -15,8 +15,6 @@
         <jsp:include page="header.jsp"/>
 
 
-
-
         <jsp:include page="include_js.html"/>
     </body>
 </html>

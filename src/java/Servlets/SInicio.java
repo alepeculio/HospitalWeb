@@ -5,6 +5,8 @@
  */
 package Servlets;
 
+import Clases.Cliente;
+import Clases.Empleado;
 import Clases.Usuario;
 import Controladores.CAdministradores;
 import Controladores.CUsuario;
@@ -30,6 +32,23 @@ public class SInicio extends HttpServlet {
         u.setCorreo("admin@correo.com");
         u.setContrasenia("1234");
         
+        
+        Cliente c = new Cliente();
+        c.setNombre("brian");
+        c.setAnioNacimiento(1997);
+        c.setMesNacimiento(8);
+        c.setDiaNacimiento(24);
+        c.setDepartamento("paysandu");
+        c.setCiudad("paysandu");
+        c.setApartamento(1);
+        c.setPiso(1);
+        c.setNumero(1);
+        c.setUsuario(u);
+        
+        new CUsuario().altaCliente(c);
+     
+        
+                
         if (new CUsuario ().login (u.getCi (), u.getContrasenia ()) == null)
             CAdministradores.agregarAdminGeneral (u);
 
