@@ -1,9 +1,11 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="Clases.Turno"%>
 <%@page import="java.util.List"%>
 <%@page import="Clases.HorarioAtencion"%>
 <%@page import="Clases.Usuario"%>
 <%@page import="Clases.Empleado"%>
 <%@page import="Clases.Cliente"%>
+<%@page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +17,7 @@
         <jsp:include page="header.jsp"/>
         <hr>
 
-        <%  
+        <%
             Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
             Empleado empleado = (Empleado) request.getAttribute("empleado");
         %>
@@ -101,8 +103,8 @@
                                     <tr>
                                         <td><%--<%= ha.getHospital().getNombre() %>--%></td>
                                         <td><%= ha.getDia()%></td>
-                                        <td><% out.println(ha.getHoraInicio() + ":" + ha.getMinInicio()); %></td>
-                                        <td><% out.println(ha.getHoraFin() + ":" + ha.getMinFin());%></td>
+                                        <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraInicio())%></td>
+                                        <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
                                         <td><%= ha.getClientesMax()%></td>
                                         <td><%= ha.getClienteActual()%></td>
                                         <td><a class="btn btn-info" data-toggle="collapse" data-target="#turnos" href="#turnos">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>
@@ -123,20 +125,21 @@
                                                         <% List<Turno> turnos = ha.getTurnos();
 
                                                             if (turnos != null && turnos.size() > 0) {
-                                                                for(Turno turno : turnos){
+                                                                for (Turno turno : turnos) {
                                                         %>
                                                         <tr>
-                                                            <td><%= turno.getTipo() %></td>
-                                                            <td><%= turno.getNumero() %></td>
-                                                            <td><%= (turno.isFinalizado())? "Si" : "No <button class='btn btn-danger'>Finalizar</button>" %></td>
+                                                            <td><%= turno.getTipo()%></td>
+                                                            <td><%= turno.getNumero()%></td>
+                                                            <td><%= (turno.isFinalizado()) ? "Si" : "No <button class='btn btn-danger'>Finalizar</button>"%></td>
                                                         </tr>
 
-                                                        <%}} else { %>
+                                                        <%}
+                                                        } else { %>
 
                                                         <tr class="text-center">
                                                             <td colspan = "3"> No hay turnos reservados en este Horario de atención</td>
                                                         </tr>
-                                                           <% }%>
+                                                        <% }%>
                                                     </tbody>
                                                 </table>
                                             </div>     
