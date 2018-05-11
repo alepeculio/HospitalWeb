@@ -29,6 +29,7 @@ var ciudades = [
     ["Treinta y Tres"]
 ];
 agregarTel();
+agregarTelMed();
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 //Telefonos de ingresar usaurio
 
@@ -71,10 +72,10 @@ function agregarTelMed() {
     var nuevo = $("#telMed" + telMed).clone();
     nuevo.prop("hidden", false);
     nuevo.attr("id", "telMed" + (telMed + 1));
-    nuevo.find(".telInputMed").attr("id", "telefonoMed" + (telMed + 1));
-    nuevo.find(".telInputMed").attr("placeholder", "Teléfono " + (telMed + 1));
-    nuevo.find(".telInputMed").val("");
-    nuevo.find(".telButtonMed").attr("onclick", "quitarTelMed(" + (telMed + 1) + ")");
+    nuevo.find(".telMedInput").attr("id", "telefonoMed" + (telMed + 1));
+    nuevo.find(".telMedInput").attr("placeholder", "Teléfono " + (telMed + 1));
+    nuevo.find(".telMedInput").val("");
+    nuevo.find(".telMedButton").attr("onclick", "quitarTelMed(" + (telMed + 1) + ")");
     nuevo.insertAfter($("#telMed" + telMed));
     telMed++;
     cambiarBotonesMed();
@@ -139,35 +140,60 @@ function cambiarBotonesEsp() {
 
 $(function () {
     var dia = document.getElementById("dia");
+    var diaMed = document.getElementById("diaMed");
     for (var i = 1; i <= 31; i++) {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = i;
         dia.appendChild(opt);
+        var optMed = document.createElement("option");
+        optMed.innerHTML = opt.value = i;
+        diaMed.appendChild(optMed);
     }
 
     var mes = document.getElementById("mes");
+    var mesMed = document.getElementById("mesMed");
     for (var i = 0; i < meses.length; i++) {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = meses[i];
+        var optMed = document.createElement("option");
+        optMed.innerHTML = opt.value = meses[i];
         mes.appendChild(opt);
+        mesMed.appendChild(optMed);
     }
 
     var anio = document.getElementById("anio");
+    var anioMed = document.getElementById("anioMed");
     for (var i = 1900; i <= new Date().getFullYear(); i++) {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = i;
         anio.appendChild(opt);
+        var optMed = document.createElement("option");
+        optMed.innerHTML = opt.value = i;
+        anioMed.appendChild(optMed);
     }
 
     var departamento = document.getElementById("departamento");
+    var departamentoMed = document.getElementById("departamentoMed");
     for (var i = 0; i < departamentos.length; i++) {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = departamentos[i];
         departamento.appendChild(opt);
+        
+        var optMed = document.createElement("option");
+        optMed.innerHTML = opt.value = departamentos[i];
+        departamentoMed.appendChild(optMed);
     }
 
     $("#departamento").change(function () {
-        cargarCiudades($("#departamento option:selected").text());
+        $("#ciudad").html("");
+        var ciudad = document.getElementById("ciudad");
+        cargarCiudades($("#departamento option:selected").text(), ciudad);
+    });
+    
+    $("#departamentoMed").change(function () {
+        $("#ciudadMed").html("");
+        var ciudadMed = document.getElementById("ciudadMed");
+        cargarCiudades($("#departamentoMed option:selected").text(), ciudadMed);
     });
 });
 $("#btnRegistrarUsuario").click(function () {
@@ -196,7 +222,7 @@ $("#btnRegistrarUsuario").click(function () {
     var apartamento = $("#apartamento").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 0; i < tel; i++)
+    for (i = 1; i < tel; i++)
         telefonos = telefonos + "|" + ($("#telefono" + (i + 1)).val().toString().trim());
     var errores = false;
     if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
@@ -258,23 +284,133 @@ $("#btnRegistrarUsuario").click(function () {
                     texto.innerHTML = "El cliente no se pudo ingresar al sistema";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
-                } else {
+                } else if (data === "OK") {
                     texto.innerHTML = "El cliente ha sido ingresado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC")[0].reset();
-                    
+                } else {
+                    texto.innerHTML = data;
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
                 }
             },
             error: function () {
-                window.location.assign("/HospitalWeb/SHospital?Administrador");
             }
         });
     }
 });
-function cargarCiudades(departamento) {
-    $("#ciudad").html("");
-    var ciudad = document.getElementById("ciudad");
+$("#btnRegistrarMedico").click(function () {
+    var errCi = $("#ciMedError");
+    var errNombre = $("#nombreMedError");
+    var errApellido = $("#apellidoMedError");
+    var errEmail = $("#emailMedError");
+    var errFecha = $("#fechaMedError");
+    errCi.prop("hidden", true);
+    errNombre.prop("hidden", true);
+    errApellido.prop("hidden", true);
+    errEmail.prop("hidden", true);
+    errFecha.prop("hidden", true);
+    var ci = $("#ciMed").val().toString().trim();
+    var digitoVer = $("#digitoVerMed").val().toString().trim();
+    var nombre = $("#nombreMed").val().toString().trim();
+    var apellido = $("#apellidoMed").val().toString().trim();
+    var email = $("#emailMed").val().toString().trim();
+    var dia = $("#diaMed").val().toString().trim();
+    var mes = $("#mesMed").val().toString().trim();
+    var anio = $("#anioMed").val().toString().trim();
+    var departamento = $("#departamentoMed").val().toString().trim();
+    var ciudad = $("#ciudadMed").val().toString().trim();
+    var calle = $("#calleMed").val().toString().trim();
+    var numero = $("#numeroMed").val().toString().trim();
+    var apartamento = $("#apartamentoMed").val().toString().trim();
+    var telefonos = "";
+    var i;
+    for (i = 1; i < telMed; i++)
+        telefonos = telefonos + "|" + ($("#telefonoMed" + (i + 1)).val().toString().trim());
+    
+    var especialidades = "";
+    var j;
+    for (j = 1; j < esp; j++)
+        especialidades = especialidades + "|" + ($("#especialidad" + (j + 1)).val().toString().trim());
+    var errores = false;
+    if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
+        errCi.text("Error: Cedula no valida.");
+        errCi.prop("hidden", false);
+        errores = true;
+    }
+
+    if (!soloLetras(nombre)) {
+        errNombre.text("Error: Caracteres invalidos.");
+        errNombre.prop("hidden", false);
+        errores = true;
+    }
+
+    if (!soloLetras(apellido)) {
+        errApellido.text("Error: Caracteres invalidos.");
+        errApellido.prop("hidden", false);
+        errores = true;
+    }
+
+    if (!emailCorrecto(email)) {
+        errEmail.text("Error: Email no valido.");
+        errEmail.prop("hidden", false);
+        errores = true;
+    }
+
+    if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
+        errFecha.text("Error: Fecha no valida.");
+        errFecha.prop("hidden", false);
+        errores = true;
+    }
+
+    if (errores) {
+        return;
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/HospitalWeb/SUsuario?accion=altaMedico",
+            data: {
+                nombre: nombre,
+                apellido: apellido,
+                ci: ci,
+                digitoVer: digitoVer,
+                email: email,
+                dia: dia,
+                mes: obtenerNumeroMes(mes),
+                anio: anio,
+                departamento: departamento,
+                ciudad: ciudad,
+                calle: calle,
+                numero: numero,
+                apartamento: apartamento,
+                telefonos: telefonos,
+                especialidades: especialidades
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+
+                if (data === "ERR") {
+                    texto.innerHTML = "El medico no se pudo ingresar al sistema";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else if (data === "OK") {
+                    texto.innerHTML = "El medico ha sido ingresado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    $("#formIC2")[0].reset();
+                } else {
+                    texto.innerHTML = data;
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+});
+function cargarCiudades(departamento, ciudad) {
     var def = document.createElement("option");
     def.innerHTML = "Ciudad";
     def.value = "";

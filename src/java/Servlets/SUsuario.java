@@ -110,10 +110,17 @@ public class SUsuario extends HttpServlet {
                     String anio = request.getParameter("anio");
                     String tels = request.getParameter("telefonos");
                     String departamento = request.getParameter("departamento");
-                    String ciudad = request.getParameter("cuidad");
+                    String ciudad = request.getParameter("ciudad");
                     String calle = request.getParameter("calle");
                     String numero = request.getParameter("numero");
                     String apart = request.getParameter("apartamento");
+                    
+                    if (nombre == null || apellido == null || ciCliente == null || correo == null || digitoVer == null || dia == null || mes == null || anio == null || tels == null || departamento == null || ciudad == null || calle == null || numero == null) {
+                        response.setContentType("text/plain");
+                        response.setCharacterEncoding("UTF-8");
+                        response.getWriter().write("Faltan Campos");
+                        return;
+                    }
 
                     Usuario u = new Usuario();
                     u.setCi(ciCliente + digitoVer);
@@ -126,13 +133,12 @@ public class SUsuario extends HttpServlet {
                     c.setDiaNacimiento(Integer.parseInt(dia));
                     c.setMesNacimiento(Integer.parseInt(mes));
                     c.setAnioNacimiento(Integer.parseInt(anio));
-                    c.setTelefonos(tels.split("|"));
-                    log(departamento);
+                    c.setTelefonos(tels.split("\\|"));
                     c.setDepartamento(departamento.trim());
                     c.setCiudad(ciudad);
                     c.setCalle(calle);
                     c.setNumero(Integer.parseInt(numero));
-                    if (!apart.equals("")) {
+                    if (apart != null && !apart.equals("")) {
                         c.setApartamento(Integer.parseInt(apart));
                     }
 
@@ -146,10 +152,72 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensaje);
                     break;
+                case "altaMedico":
+                    String nombreMed = request.getParameter("nombre");
+                    String apellidoMed = request.getParameter("apellido");
+                    String ciClienteMed = request.getParameter("ci");
+                    String correoMed = request.getParameter("email");
+                    String digitoVerMed = request.getParameter("digitoVer");
+                    String diaMed = request.getParameter("dia");
+                    String mesMed = request.getParameter("mes");
+                    String anioMed = request.getParameter("anio");
+                    String telsMed = request.getParameter("telefonos");
+                    String especialidades = request.getParameter("especialidades");
+                    String departamentoMed = request.getParameter("departamento");
+                    String ciudadMed = request.getParameter("ciudad");
+                    String calleMed = request.getParameter("calle");
+                    String numeroMed = request.getParameter("numero");
+                    String apartMed = request.getParameter("apartamento");
+                    
+                    if (nombreMed == null || apellidoMed == null || ciClienteMed == null || correoMed == null || digitoVerMed == null || diaMed == null || mesMed == null || anioMed == null || telsMed == null || departamentoMed == null || ciudadMed == null || calleMed == null || numeroMed == null) {
+                        response.setContentType("text/plain");
+                        response.setCharacterEncoding("UTF-8");
+                        response.getWriter().write("Faltan Campos");
+                        return;
+                    }
+                    
+                    Usuario uMed = new Usuario();
+                    uMed.setCi(ciClienteMed + digitoVerMed);
+                    uMed.setCorreo(correoMed);
+
+                    Empleado e = new Empleado();
+                    e.setUsuario(uMed);
+                    e.setNombre(nombreMed);
+                    e.setApellido(apellidoMed);
+                    e.setDiaNacimiento(Integer.parseInt(diaMed));
+                    e.setMesNacimiento(Integer.parseInt(mesMed));
+                    e.setAnioNacimiento(Integer.parseInt(anioMed));
+                    e.setTelefonos(telsMed.split("\\|"));
+                    if (especialidades != null && !especialidades.equals("")) {
+                        e.setEspecialidades(especialidades.split("\\|"));
+                    }
+                    e.setDepartamento(departamentoMed.trim());
+                    e.setCiudad(ciudadMed);
+                    e.setCalle(calleMed);
+                    e.setNumero(Integer.parseInt(numeroMed));
+                    if (apartMed != null && !apartMed.equals("")) {
+                        e.setApartamento(Integer.parseInt(apartMed));
+                    }
+
+                    String mensajeMed = "";
+                    if (cusuario.altaCliente(e)) {
+                        mensajeMed = "OK";
+                    } else {
+                        mensajeMed = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeMed);
+                    break;
 
                 case "indicaciones":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
+                    break;
+
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
 
                 case "vacunas":
@@ -160,11 +228,6 @@ public class SUsuario extends HttpServlet {
                 case "registrar":
                     //request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
-                    break;
-
-                case "cliente":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
                 case "obtNoHijosCliente":
                     List<Cliente> hCliente = CCliente.obtenerNoHijosCliente(request.getParameter("idCliente"));
