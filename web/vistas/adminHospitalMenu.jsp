@@ -145,7 +145,6 @@
                 <h2>Relacionar con hijo</h2>
                 <hr>
                 <form>
-                    <% List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");%>
                     <label>Seleccione el cliente</label>
                     <div class="input-group">
                         <input class="form-control" type="text" id="buscarCliPInput" onkeyup="buscarCliP()" placeholder="Buscar">
@@ -155,15 +154,7 @@
                     </div><!-- /input-group -->
 
                     <ul class="list-group listCliP" id="listCliP">
-                        <% if (clientes != null && !clientes.isEmpty()) {
-                                for (Cliente cliente : clientes) {
-                                    out.println("<li class='list-group-item' id='clientePFila" + cliente.getId() + "' onclick='seleccionarCliP("+cliente.getId()+")'><a>" + cliente.getNombre() + " " + cliente.getApellido() + "</a></li>");
-                                }
-                            } else {
-                                out.println("<li class='list-group-item' value=''>No hay clientes</li>");
-                            }
-                        %>
-                        <li class="list-group-item" id="listCliPNoEncontrado" ><a>No hay resultados para la busqueda</a></li>
+                        <li class="list-group-item"><a>No hay clientes</a></li>
                     </ul>
                     <br>
                     <label>Seleccione el hijo a relacionar con el cliente anterior</label>
@@ -175,7 +166,6 @@
                     </div><!-- /input-group -->
 
                     <ul class="list-group listCliP" id="listCliH">
-                        <input hidden name="idSeleccionadoInput" value="">
                         <li class="list-group-item"><a>Elija un cliente padre primero</a></li>
                     </ul>
                     <br>
@@ -186,11 +176,18 @@
                 <h2>Eliminar cliente</h2>
                 <hr>
                 <label>Seleccione el cliente a eliminar</label>
-                <select class="form-control" id="clienteEliminar" required>
-                    <option value="">Cliente</option>
-                </select>
+                <div class="input-group">
+                    <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscarCli()" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div><!-- /input-group -->
+
+                <ul class="list-group listCliP" id="listCli">
+                    <li class="list-group-item"><a>No hay clientes</a></li>
+                </ul>
                 <br>
-                <button type="button" id="vincularCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
+                <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
             </div>
             <div class="tab-pane pestania" id="ingresarMedico">
                 <h2>Ingresar médico</h2>

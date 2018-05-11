@@ -1,5 +1,38 @@
 //------------------------------------------------------------------------------------------------------------------------
 //Relacionar con hijo
+function cargarClientes(idLista, nombreFila, nombreFunction) {
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtClientes",
+        type: "POST",
+        dataType: 'json',
+        data: {
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay clientes"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", nombreFunction + "(" + data[i].id + ")");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+        }
+    });
+}
+
+cargarClientes("listCliP", "clientePFila", "seleccionarCliP");
 
 function buscarCliP() {
     var input, filter, ul, li, a, i;
@@ -178,19 +211,100 @@ $("#btnVincularCliente").click(function () {
     }
 
 });
-
 //---------------------------------------------------------------------------------------------------------------------
 //Eliminar cliente
 
+cargarClientes("listCli", "clienteFila", "seleccionarCli");
 
+function buscarCli() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('buscarCliInput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("listCli");
+    li = ul.getElementsByTagName('li');
+    var restantes = 0;
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+            restantes--;
+        } else {
+            li[i].style.display = "none";
+            restantes++;
+        }
+    }
 
+    if (restantes === li.length) {
+        var ul = document.getElementById("listCli");
+        if (document.getElementById("listCliNoEncontrado") === null) {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
+            li.setAttribute("id", "listCliNoEncontrado");
+            li.setAttribute("class", "list-group-item");
+            ul.appendChild(li);
+            li.appendChild(a);
+        }
+    } else {
+        var li = document.getElementById("listCliNoEncontrado");
+        if (li !== null) {
+            li.parentNode.removeChild(li);
+        }
+    }
+}
 
+var seleccionadoCli = "";
+function seleccionarCli(idCli) {
+    var li = document.getElementById("clienteFila" + idCli);
+    li.style.background = "#204565c2";
+    var a = li.getElementsByTagName('a')[0];
+    a.style.color = "white";
+    if (seleccionadoCli !== "" && seleccionadoCli !== idCli) {
+        deseleccionarCli();
+    }
+    seleccionadoCli = idCli;
+}
 
+function deseleccionarCli() {
+    var li = document.getElementById("clienteFila" + seleccionadoCli);
+    li.style.background = "white";
+    var a = li.getElementsByTagName('a')[0];
+    a.style.color = "black";
 
+    seleccionadoCli = "";
+}
+$("#btnEliminarCliente").click(function () {
+    if (seleccionadoCli === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=eliminarCliente",
+            type: "POST",
+            data: {
+                idCliente: seleccionadoCli
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo eliminar el cliente seleccionado";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Cliente eliminado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
 
+                }
+            }
+        });
+        deseleccionarCli();
+        cargarClientes("listCli", "clienteFila", "seleccionarCli");
+    }
 
-
-
+});
 
 
 

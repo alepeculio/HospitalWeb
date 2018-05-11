@@ -67,8 +67,6 @@ public class SUsuario extends HttpServlet {
                                     request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                     break;
                                 case "Hospital":
-                                    List<Cliente> clientes = CCliente.obtenerClientes();
-                                    request.setAttribute("clientes", clientes);
                                     request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
                                     break;
                                 default:
@@ -114,7 +112,7 @@ public class SUsuario extends HttpServlet {
                     String calle = request.getParameter("calle");
                     String numero = request.getParameter("numero");
                     String apart = request.getParameter("apartamento");
-                    
+
                     if (nombre == null || apellido == null || ciCliente == null || correo == null || digitoVer == null || dia == null || mes == null || anio == null || tels == null || departamento == null || ciudad == null || calle == null || numero == null) {
                         response.setContentType("text/plain");
                         response.setCharacterEncoding("UTF-8");
@@ -168,14 +166,14 @@ public class SUsuario extends HttpServlet {
                     String calleMed = request.getParameter("calle");
                     String numeroMed = request.getParameter("numero");
                     String apartMed = request.getParameter("apartamento");
-                    
+
                     if (nombreMed == null || apellidoMed == null || ciClienteMed == null || correoMed == null || digitoVerMed == null || diaMed == null || mesMed == null || anioMed == null || telsMed == null || departamentoMed == null || ciudadMed == null || calleMed == null || numeroMed == null) {
                         response.setContentType("text/plain");
                         response.setCharacterEncoding("UTF-8");
                         response.getWriter().write("Faltan Campos");
                         return;
                     }
-                    
+
                     Usuario uMed = new Usuario();
                     uMed.setCi(ciClienteMed + digitoVerMed);
                     uMed.setCorreo(correoMed);
@@ -247,6 +245,16 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVinculo);
+                    break;
+                case "obtClientes":
+                    List<Cliente> clientes = CCliente.obtenerClientes();
+                    String clientesJson = new Gson().toJson(clientes);
+                    response.setContentType("application/json");
+                    response.getWriter().write(clientesJson);
+                    break;
+                case "eliminarCliente":
+                    String idCliEliminar = request.getParameter("idCliente");
+                    log(idCliEliminar);
                     break;
             }
         }
