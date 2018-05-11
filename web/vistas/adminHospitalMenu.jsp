@@ -424,7 +424,7 @@
         </div>
 
         <jsp:include page="include_js.html"/>
-        <script src="js/registrar.js"></script>
+       <!-- <script src="js/registrar.js"></script> -->
         <script src="js/adminHospitalMenu.js"></script>
     </body>
 </html>

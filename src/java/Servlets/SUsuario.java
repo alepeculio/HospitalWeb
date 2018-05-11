@@ -248,15 +248,24 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "obtClientes":
                     List<Cliente> clientes = CCliente.obtenerClientes();
-                    String clientesJson = new Gson().toJson(clientes);
+                    Gson js = new Gson();
+                    String clientesJson = (js != null)? js.toJson(clientes): "";
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
                 case "eliminarCliente":
                     String idCliEliminar = request.getParameter("idCliente");
-                    Cliente cliente = new Cliente ();
+                    Cliente cliente = new Cliente();
                     cliente.setId(Long.valueOf(idCliEliminar));
-                    CCliente.bajaCliente(cliente);
+                    String mensajeBajaCliente = "";
+                    if (CCliente.bajaCliente(cliente)) {
+                        mensajeBajaCliente = "OK";
+                    } else {
+                        mensajeBajaCliente = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeBajaCliente);
                     break;
             }
         }
