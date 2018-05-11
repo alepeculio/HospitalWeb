@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 /**
  *
  * @author Ale
@@ -164,12 +166,31 @@ public class SUsuario extends HttpServlet {
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
+                case "obtNoHijosCliente":
+                    List<Cliente> hCliente = CCliente.obtenerNoHijosCliente(request.getParameter("idCliente"));
+                    String json = new Gson().toJson(hCliente);
+                    response.setContentType("application/json");
+                    response.getWriter().write(json);
+                    break;
+                case "vincularHijoCliente":
+                    String idClientePadre = request.getParameter("idClienteP");
+                    String idClienteHijo = request.getParameter("idClienteH");
+                    String mensajeVinculo = "";
+                    if (CCliente.vincularHijoCliente(idClienteHijo, idClientePadre)) {
+                        mensajeVinculo = "OK";
+                    } else {
+                        mensajeVinculo = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeVinculo);
+                    break;
             }
         }
 
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

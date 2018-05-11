@@ -141,31 +141,45 @@
 
 
             </div>
-            <div class="tab-pane pestania" id="relacionarHijo">
+            <div class="tab-pane pestania text-center" id="relacionarHijo">
                 <h2>Relacionar con hijo</h2>
                 <hr>
                 <form>
                     <% List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");%>
-
                     <label>Seleccione el cliente</label>
-                    <select class="form-control" id="clientePadre" required>
-                        <% if (clientes != null) {
-                            out.println("<option value=''>Cliente</option>");
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="buscarCliPInput" onkeyup="buscarCliP()" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listCliP">
+                        <% if (clientes != null && !clientes.isEmpty()) {
                                 for (Cliente cliente : clientes) {
-                                    out.println("<option value='" + cliente.getId() + "'>" + cliente.getNombre() + " " + cliente.getApellido() + "</option>");
+                                    out.println("<li class='list-group-item' id='clientePFila" + cliente.getId() + "' onclick='seleccionarCliP("+cliente.getId()+")'><a>" + cliente.getNombre() + " " + cliente.getApellido() + "</a></li>");
                                 }
-                            }else{
-                            out.println("<option value=''>No hay clientes</option>");
-                        }
+                            } else {
+                                out.println("<li class='list-group-item' value=''>No hay clientes</li>");
+                            }
                         %>
-                    </select>
+                        <li class="list-group-item" id="listCliPNoEncontrado" ><a>No hay resultados para la busqueda</a></li>
+                    </ul>
                     <br>
                     <label>Seleccione el hijo a relacionar con el cliente anterior</label>
-                    <select class="form-control" id="clientePadre" required>
-                        <option value="">Hijo</option>
-                    </select>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="buscarCliHInput" onkeyup="buscarCliH()" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listCliH">
+                        <input hidden name="idSeleccionadoInput" value="">
+                        <li class="list-group-item"><a>Elija un cliente padre primero</a></li>
+                    </ul>
                     <br>
-                    <button type="button" id="vincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
+                    <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
                 </form>
             </div>
             <div class="tab-pane pestania" id="eliminarCliente">
@@ -414,5 +428,6 @@
 
         <jsp:include page="include_js.html"/>
         <script src="js/registrar.js"></script>
+        <script src="js/adminHospitalMenu.js"></script>
     </body>
 </html>

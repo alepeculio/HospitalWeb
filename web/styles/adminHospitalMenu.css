@@ -4,7 +4,7 @@
 }
 
 .pestania{
-     padding:0 100px 0 100px;
+    padding:0 100px 0 100px;
 }
 
 .panel{
@@ -30,4 +30,50 @@
 
 .centrarIUBoton{
     text-align: center;
+}
+
+.listCliP{
+    overflow:auto;
+    max-height:20vh;
+}
+
+.listCliP li:hover{
+    background-color:#e2dada;
+    cursor:pointer;
+}
+
+.listCliP li a{
+    text-decoration:none;
+    color:black;
+}
+
+#listCliPNoEncontrado{
+    display: none;
+}
+#listCliPNoEncontrado:hover{
+    background-color: white;
+}
+
+
+
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
 }
