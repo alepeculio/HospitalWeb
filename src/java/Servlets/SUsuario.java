@@ -141,7 +141,7 @@ public class SUsuario extends HttpServlet {
                     }
 
                     String mensaje = "";
-                    if (cusuario.altaCliente(c)) {
+                    if (CCliente.altaCliente(c)) {
                         mensaje = "OK";
                     } else {
                         mensaje = "ERR";
@@ -198,7 +198,7 @@ public class SUsuario extends HttpServlet {
                     }
 
                     String mensajeMed = "";
-                    if (cusuario.altaCliente(e)) {
+                    if (CCliente.altaCliente(e)) {
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -254,7 +254,9 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "eliminarCliente":
                     String idCliEliminar = request.getParameter("idCliente");
-                    log(idCliEliminar);
+                    Cliente cliente = new Cliente ();
+                    cliente.setId(Long.valueOf(idCliEliminar));
+                    CCliente.bajaCliente(cliente);
                     break;
             }
         }
