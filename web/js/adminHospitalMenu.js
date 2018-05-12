@@ -1,3 +1,6 @@
+//Prueba
+
+
 //Registrar cliente y medico
 
 var tel = 0;
@@ -180,7 +183,7 @@ $(function () {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = departamentos[i];
         departamento.appendChild(opt);
-        
+
         var optMed = document.createElement("option");
         optMed.innerHTML = opt.value = departamentos[i];
         departamentoMed.appendChild(optMed);
@@ -191,7 +194,7 @@ $(function () {
         var ciudad = document.getElementById("ciudad");
         cargarCiudades($("#departamento option:selected").text(), ciudad);
     });
-    
+
     $("#departamentoMed").change(function () {
         $("#ciudadMed").html("");
         var ciudadMed = document.getElementById("ciudadMed");
@@ -333,7 +336,7 @@ $("#btnRegistrarMedico").click(function () {
     var i;
     for (i = 1; i < telMed; i++)
         telefonos = telefonos + "|" + ($("#telefonoMed" + (i + 1)).val().toString().trim());
-    
+
     var especialidades = "";
     var j;
     for (j = 1; j < esp; j++)
@@ -474,7 +477,7 @@ function telefonoCorrecto(telefono) {
 
 ////------------------------------------------------------------------------------------------------------------------------
 //Relacionar con hijo
-function cargarClientes(idLista, nombreFila, nombreFunction) {
+function cargarClientes(idLista, nombreFila, tipo) {
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtClientes",
         type: "POST",
@@ -498,7 +501,7 @@ function cargarClientes(idLista, nombreFila, nombreFunction) {
                 a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
                 li.setAttribute("id", nombreFila + data[i].id);
                 li.setAttribute("class", "list-group-item");
-                li.setAttribute("onclick", nombreFunction + "(" + data[i].id + ")");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
                 ul.appendChild(li);
                 li.appendChild(a);
             }
@@ -506,57 +509,81 @@ function cargarClientes(idLista, nombreFila, nombreFunction) {
     });
 }
 
-cargarClientes("listCliP", "clientePFila", "seleccionarCliP");
+cargarClientes("listCliP", "clientePFila", "CliP");
 
-function buscarCliP() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('buscarCliPInput');
+
+
+function buscar(inputid, listaid) {
+
+    var input, filter, ul, li, a, i, contador;
+    input = document.getElementById(inputid);
     filter = input.value.toUpperCase();
-    ul = document.getElementById("listCliP");
+    ul = document.getElementById(listaid);
     li = ul.getElementsByTagName('li');
-    var restantes = 0;
+    contador = li.length;
+
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("a")[0];
         if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
-            restantes--;
+            if (parseInt(contador) < li.length)
+                contador = parseInt(contador) + 1;
         } else {
             li[i].style.display = "none";
-            restantes++;
+            contador = parseInt(contador) - 1;
+
         }
     }
 
-    if (restantes === li.length) {
-        document.getElementById("listCliPNoEncontrado").style.display = "block";
+    var liNoEncontrado = document.getElementById(listaid + "NoEncontrado");
+    if (contador === 0) {
+        if (liNoEncontrado === null) {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
+            li.setAttribute("id", listaid + "NoEncontrado");
+            li.setAttribute("class", "list-group-item");
+            li.style.display = "block";
+            ul.appendChild(li);
+            li.appendChild(a);
+        } else {
+            liNoEncontrado.style.display = "block";
+        }
     } else {
-        document.getElementById("listCliPNoEncontrado").style.display = "none";
+        if (liNoEncontrado !== null) {
+            liNoEncontrado.parentNode.removeChild(liNoEncontrado);
+        }
     }
 }
 
+var seleccionado = ["Cli", "CliP", "CliH"];
+seleccionado["Cli"] = "";
+seleccionado["CliP"] = "";
+seleccionado["CliH"] = "";
 
-var seleccionadoCliP = "";
-function seleccionarCliP(idCliP) {
-    var li = document.getElementById("clientePFila" + idCliP);
+function seleccionar(nombreFila, id, tipo) {
+    var li = document.getElementById(nombreFila + id);
     li.style.background = "#204565c2";
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "white";
-    if (seleccionadoCliP !== "") {
-        deseleccionarCliP();
+    if (seleccionado[tipo] !== "") {
+        deseleccionar(nombreFila, tipo);
     }
-    seleccionadoCliP = idCliP;
-    cargarHijos(seleccionadoCliP);
-}
+    seleccionado[tipo] = id;
+    if (tipo === "CliP") {
+        cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
+    }
 
-function deseleccionarCliP() {
-    var li = document.getElementById("clientePFila" + seleccionadoCliP);
+}
+function deseleccionar(nombreFila, tipo) {
+    var li = document.getElementById(nombreFila + seleccionado[tipo]);
     li.style.background = "white";
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "black";
-
-    seleccionadoCliP = "";
+    seleccionado[tipo] = "";
 }
 
-function cargarHijos(idCliente) {
+function cargarHijos(idCliente, idLista, nombreFila, tipo) {
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtNoHijosCliente",
         type: "POST",
@@ -565,7 +592,7 @@ function cargarHijos(idCliente) {
             idCliente: idCliente
         },
         success: function (data) {
-            var ul = document.getElementById("listCliH");
+            var ul = document.getElementById(idLista);
             $(ul).empty();
             if (data.length === 0) {
                 var li1 = document.createElement("li");
@@ -579,9 +606,9 @@ function cargarHijos(idCliente) {
                 var li = document.createElement("li");
                 var a = document.createElement("a");
                 a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
-                li.setAttribute("id", "clienteHFila" + data[i].id);
+                li.setAttribute("id", nombreFila + data[i].id);
                 li.setAttribute("class", "list-group-item");
-                li.setAttribute("onclick", "seleccionarCliH(" + data[i].id + ")");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
                 ul.appendChild(li);
                 li.appendChild(a);
             }
@@ -589,71 +616,14 @@ function cargarHijos(idCliente) {
     });
 }
 
-var seleccionadoCliH = "";
-function seleccionarCliH(idCliH) {
-    var li = document.getElementById("clienteHFila" + idCliH);
-    li.style.background = "#204565c2";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "white";
-    if (seleccionadoCliH !== "" && seleccionadoCliH !== idCliH) {
-        deseleccionarCliH();
-    }
-    seleccionadoCliH = idCliH;
-}
-
-function deseleccionarCliH() {
-    var li = document.getElementById("clienteHFila" + seleccionadoCliH);
-    li.style.background = "white";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "black";
-
-    seleccionadoCliH = "";
-}
-
-function buscarCliH() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('buscarCliHInput');
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("listCliH");
-    li = ul.getElementsByTagName('li');
-    var restantes = 0;
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-            restantes--;
-        } else {
-            li[i].style.display = "none";
-            restantes++;
-        }
-    }
-
-    if (restantes === li.length) {
-        var ul = document.getElementById("listCliH");
-        if (document.getElementById("listCliHNoEncontrado") === null) {
-            var li = document.createElement("li");
-            var a = document.createElement("a");
-            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
-            li.setAttribute("id", "listCliHNoEncontrado");
-            li.setAttribute("class", "list-group-item");
-            ul.appendChild(li);
-            li.appendChild(a);
-        }
-    } else {
-        var li = document.getElementById("listCliHNoEncontrado");
-        if (li !== null) {
-            li.parentNode.removeChild(li);
-        }
-    }
-}
 
 $("#btnVincularCliente").click(function () {
-    if (seleccionadoCliP === "") {
+    if (seleccionado["CliP"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó ningun cliente";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
-    } else if (seleccionadoCliH === "") {
+    } else if (seleccionado["CliH"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó un cliente como hijo";
         texto.style.color = "red";
@@ -663,8 +633,8 @@ $("#btnVincularCliente").click(function () {
             url: "/HospitalWeb/SUsuario?accion=vincularHijoCliente",
             type: "POST",
             data: {
-                idClienteP: seleccionadoCliP,
-                idClienteH: seleccionadoCliH
+                idClienteP: seleccionado["CliP"],
+                idClienteH: seleccionado["CliH"]
             },
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
@@ -680,75 +650,18 @@ $("#btnVincularCliente").click(function () {
                 }
             }
         });
-        deseleccionarCliP();
-        deseleccionarCliH();
+        deseleccionar("clientePFila", "CliP");
+        deseleccionar("clienteHFila", "CliH");
     }
 
 });
 //---------------------------------------------------------------------------------------------------------------------
 //Eliminar cliente
 
-cargarClientes("listCli", "clienteFila", "seleccionarCli");
+cargarClientes("listCli", "clienteFila", "Cli");
 
-function buscarCli() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('buscarCliInput');
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("listCli");
-    li = ul.getElementsByTagName('li');
-    var restantes = 0;
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-            restantes--;
-        } else {
-            li[i].style.display = "none";
-            restantes++;
-        }
-    }
-
-    if (restantes === li.length) {
-        var ul = document.getElementById("listCli");
-        if (document.getElementById("listCliNoEncontrado") === null) {
-            var li = document.createElement("li");
-            var a = document.createElement("a");
-            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
-            li.setAttribute("id", "listCliNoEncontrado");
-            li.setAttribute("class", "list-group-item");
-            ul.appendChild(li);
-            li.appendChild(a);
-        }
-    } else {
-        var li = document.getElementById("listCliNoEncontrado");
-        if (li !== null) {
-            li.parentNode.removeChild(li);
-        }
-    }
-}
-
-var seleccionadoCli = "";
-function seleccionarCli(idCli) {
-    var li = document.getElementById("clienteFila" + idCli);
-    li.style.background = "#204565c2";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "white";
-    if (seleccionadoCli !== "" && seleccionadoCli !== idCli) {
-        deseleccionarCli();
-    }
-    seleccionadoCli = idCli;
-}
-
-function deseleccionarCli() {
-    var li = document.getElementById("clienteFila" + seleccionadoCli);
-    li.style.background = "white";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "black";
-
-    seleccionadoCli = "";
-}
 $("#btnEliminarCliente").click(function () {
-    if (seleccionadoCli === "") {
+    if (seleccionado["Cli"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó ningun cliente";
         texto.style.color = "red";
@@ -758,7 +671,7 @@ $("#btnEliminarCliente").click(function () {
             url: "/HospitalWeb/SUsuario?accion=eliminarCliente",
             type: "POST",
             data: {
-                idCliente: seleccionadoCli
+                idCliente: seleccionado["Cli"]
             },
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
@@ -770,8 +683,8 @@ $("#btnEliminarCliente").click(function () {
                     texto.innerHTML = "Cliente eliminado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
-                    deseleccionarCli();
-                    cargarClientes("listCli", "clienteFila", "seleccionarCli");
+                    deseleccionar("clienteFila", "Cli");
+                    cargarClientes("listCli", "clienteFila", "Cli");
                 }
             }
         });

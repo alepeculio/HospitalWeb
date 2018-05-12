@@ -147,7 +147,7 @@
                 <form>
                     <label>Seleccione el cliente</label>
                     <div class="input-group">
-                        <input class="form-control" type="text" id="buscarCliPInput" onkeyup="buscarCliP()" placeholder="Buscar">
+                        <input class="form-control" type="text" id="buscarCliPInput" onkeyup="buscar('buscarCliPInput','listCliP')" placeholder="Buscar">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
@@ -159,7 +159,7 @@
                     <br>
                     <label>Seleccione el hijo a relacionar con el cliente anterior</label>
                     <div class="input-group">
-                        <input class="form-control" type="text" id="buscarCliHInput" onkeyup="buscarCliH()" placeholder="Buscar">
+                        <input class="form-control" type="text" id="buscarCliHInput" onkeyup="buscar('buscarCliHInput','listCliH')" placeholder="Buscar">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
@@ -177,7 +177,7 @@
                 <hr>
                 <label>Seleccione el cliente a eliminar</label>
                 <div class="input-group">
-                    <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscarCli()" placeholder="Buscar">
+                    <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscar('buscarCliInput','listCli')" placeholder="Buscar">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
