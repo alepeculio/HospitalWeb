@@ -41,21 +41,21 @@ public class SUsuario extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         String accion = request.getParameter("accion");
         if (accion != null) {
             switch (accion) {
                 case "login":
-                    String ci = (request.getParameter("ci") != null) ? request.getParameter("ci") : (String) request.getAttribute("ci");
-                    String contrasenia = (request.getParameter("contrasenia") != null) ? request.getParameter("contrasenia") : (String) request.getAttribute("contrasenia");
-                    String recordarme = request.getParameter("recordarme");
-                    if (ci != null && contrasenia != null) {
-                        Usuario u = cusuario.login(ci, contrasenia);
-                        if (u != null) {
-                            request.getSession().setAttribute("usuario", u);
-                            if (recordarme != null) {
-                                Cookie userCookie = new Cookie("ci_HospitalWeb", u.getCi());
-                                Cookie passCookie = new Cookie("contrasenia_HospitalWeb", u.getContrasenia());
+                String ci = (request.getParameter("ci") != null) ? request.getParameter("ci") : (String) request.getAttribute("ci");
+                String contrasenia = (request.getParameter("contrasenia") != null) ? request.getParameter("contrasenia") : (String) request.getAttribute("contrasenia");
+                String recordarme = request.getParameter("recordarme");
+                if (ci != null && contrasenia != null) {
+                    Usuario u = cusuario.login(ci, contrasenia);
+                    if (u != null) {
+                        request.getSession().setAttribute("usuario", u);
+                        if (recordarme != null) {
+                            Cookie userCookie = new Cookie("ci_HospitalWeb", u.getCi());
+                            Cookie passCookie = new Cookie("contrasenia_HospitalWeb", u.getContrasenia());
                                 userCookie.setMaxAge(60 * 60 * 24 * 365); //Store cookie for 1 year
                                 passCookie.setMaxAge(60 * 60 * 24 * 365);
                                 response.addCookie(userCookie);
@@ -64,14 +64,14 @@ public class SUsuario extends HttpServlet {
 
                             switch (CUsuario.obtenerTipo(u)) {
                                 case "General":
-                                    request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
-                                    break;
+                                request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
+                                break;
                                 case "Hospital":
-                                    request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
-                                    break;
+                                request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
+                                break;
                                 default:
-                                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                                    break;
+                                request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                                break;
                             }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
@@ -79,7 +79,7 @@ public class SUsuario extends HttpServlet {
                         }
                     }
                     break;
-                case "logout":
+                    case "logout":
                     request.getSession().removeAttribute("ci");
                     Cookie userCookie = new Cookie("ci_HospitalWeb", null);
                     Cookie passCookie = new Cookie("contrasenia_HospitalWeb", null);
@@ -89,15 +89,15 @@ public class SUsuario extends HttpServlet {
                     response.addCookie(passCookie);
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
-                case "perfil":
+                    case "perfil":
                     Empleado empleado = (new CUsuario()).getEmpleado(((Usuario) request.getSession().getAttribute("usuario")).getId());
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
-                case "menuAdmin":
+                    case "menuAdmin":
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
                     break;
-                case "altaCliente":
+                    case "altaCliente":
                     String nombre = request.getParameter("nombre");
                     String apellido = request.getParameter("apellido");
                     String ciCliente = request.getParameter("ci");
@@ -150,7 +150,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensaje);
                     break;
-                case "altaMedico":
+                    case "altaMedico":
                     String nombreMed = request.getParameter("nombre");
                     String apellidoMed = request.getParameter("apellido");
                     String ciClienteMed = request.getParameter("ci");
@@ -208,32 +208,37 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeMed);
                     break;
 
-                case "indicaciones":
+                    case "indicaciones":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
                     break;
 
-                case "cliente":
+                    case "cliente":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
 
-                case "vacunas":
+                    case "vacunas":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);
                     break;
 
-                case "registrar":
+                    case "reservas":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/reservas.jsp").forward(request, response);
+                    break;
+
+                    case "registrar":
                     //request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
                     break;
-                case "obtNoHijosCliente":
+                    case "obtNoHijosCliente":
                     List<Cliente> hCliente = CCliente.obtenerNoHijosCliente(request.getParameter("idCliente"));
                     String json = new Gson().toJson(hCliente);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
                     break;
-                case "vincularHijoCliente":
+                    case "vincularHijoCliente":
                     String idClientePadre = request.getParameter("idClienteP");
                     String idClienteHijo = request.getParameter("idClienteH");
                     String mensajeVinculo = "";
@@ -246,14 +251,14 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVinculo);
                     break;
-                case "obtClientes":
+                    case "obtClientes":
                     List<Cliente> clientes = CCliente.obtenerClientes();
                     Gson js = new Gson();
                     String clientesJson = (js != null)? js.toJson(clientes): "";
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
-                case "eliminarCliente":
+                    case "eliminarCliente":
                     String idCliEliminar = request.getParameter("idCliente");
                     Cliente cliente = new Cliente();
                     cliente.setId(Long.valueOf(idCliEliminar));
@@ -267,10 +272,10 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
                     break;
+                }
             }
-        }
 
-    }
+        }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -283,7 +288,7 @@ public class SUsuario extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -297,7 +302,7 @@ public class SUsuario extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
