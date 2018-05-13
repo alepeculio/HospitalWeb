@@ -292,7 +292,7 @@ $("#btnRegistrarUsuario").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC")[0].reset();
-                    cargarClientes("listCliP", "clientePFila", "seleccionarCliP");
+                    cargarClientes("listCliP", "clientePFila", "CliP", "si");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -404,7 +404,7 @@ $("#btnRegistrarMedico").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC2")[0].reset();
-                    cargarClientes("listCliP", "clientePFila", "CliP");
+                    cargarClientes("listCliP", "clientePFila", "CliP", "si");
                     cargarMedicos("listMedE", "medicoEFila", "MedE");
                     cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
                 } else {
@@ -477,12 +477,13 @@ function telefonoCorrecto(telefono) {
 
 ////------------------------------------------------------------------------------------------------------------------------
 //Relacionar con hijo
-function cargarClientes(idLista, nombreFila, tipo) {
+function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtClientes",
         type: "POST",
         dataType: 'json',
         data: {
+            conEmpleados: conEmpleados
         },
         success: function (data) {
             var ul = document.getElementById(idLista);
@@ -509,7 +510,7 @@ function cargarClientes(idLista, nombreFila, tipo) {
     });
 }
 
-cargarClientes("listCliP", "clientePFila", "CliP");
+cargarClientes("listCliP", "clientePFila", "CliP", "si");
 
 
 
@@ -660,7 +661,7 @@ $("#btnVincularCliente").click(function () {
 //---------------------------------------------------------------------------------------------------------------------
 //Eliminar cliente
 
-cargarClientes("listCli", "clienteFila", "Cli");
+cargarClientes("listCli", "clienteFila", "Cli", "no");
 
 $("#btnEliminarCliente").click(function () {
     if (seleccionado["Cli"] === "") {
@@ -686,12 +687,11 @@ $("#btnEliminarCliente").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("clienteFila", "Cli");
-                    cargarClientes("listCli", "clienteFila", "Cli");
+                    cargarClientes("listCli", "clienteFila", "Cli", "no");
                 }
             }
         });
     }
-
 });
 //---------------------------------------------------------------------------------------------------------------------------
 //Eliminar medico
@@ -733,3 +733,35 @@ cargarMedicos("listMedE", "medicoEFila", "MedE");
 cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
 
 
+$("#btnEliminarMedico").click(function () {
+    if (seleccionado["MedE"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun medico";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=eliminarEmpleado",
+            type: "POST",
+            data: {
+                idEmpleado: seleccionado["MedE"]
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo eliminar el médico seleccionado";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Médico eliminado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    deseleccionar("medicoEFila", "MedE");
+                    cargarMedicos("listMedE", "medicoEFila", "MedE");
+                    cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
+                    cargarClientes("listCliP", "clientePFila", "CliP", "si");
+                }
+            }
+        });
+    }
+});

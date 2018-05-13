@@ -16,8 +16,9 @@
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
 
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar cliente</a></li>
-            <li><a href="#relacionarHijo" data-toggle="tab">Relacionar con hijo</a></li>
             <li><a href="#eliminarCliente" data-toggle="tab">Eliminar cliente</a></li>
+            <hr>
+            <li><a href="#relacionarHijo" data-toggle="tab">Relacionar con hijo</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
             <li><a href="#eliminarMedico" data-toggle="tab">Eliminar médico</a></li>
@@ -138,8 +139,23 @@
                     </div>
                     <button type="button" id="registrarCliente" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
                 </form>
+            </div>
+            <div class="tab-pane pestania" id="eliminarCliente">
+                <h2>Eliminar cliente</h2>
+                <hr>
+                <label>Seleccione el cliente a eliminar</label>
+                <div class="input-group">
+                    <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscar('buscarCliInput', 'listCli')" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div><!-- /input-group -->
 
-
+                <ul class="list-group listCliP" id="listCli">
+                    <li class="list-group-item"><a>No hay clientes</a></li>
+                </ul>
+                <br>
+                <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
             </div>
             <div class="tab-pane pestania text-center" id="relacionarHijo">
                 <h2>Relacionar con hijo</h2>
@@ -171,23 +187,6 @@
                     <br>
                     <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
                 </form>
-            </div>
-            <div class="tab-pane pestania" id="eliminarCliente">
-                <h2>Eliminar cliente</h2>
-                <hr>
-                <label>Seleccione el cliente a eliminar</label>
-                <div class="input-group">
-                    <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscar('buscarCliInput', 'listCli')" placeholder="Buscar">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                    </span>
-                </div><!-- /input-group -->
-
-                <ul class="list-group listCliP" id="listCli">
-                    <li class="list-group-item"><a>No hay clientes</a></li>
-                </ul>
-                <br>
-                <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
             </div>
             <div class="tab-pane pestania" id="ingresarMedico">
                 <h2>Ingresar médico</h2>

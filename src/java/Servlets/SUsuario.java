@@ -247,7 +247,14 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeVinculo);
                     break;
                 case "obtClientes":
-                    List<Cliente> clientes = CCliente.obtenerClientes();
+                    String conEmpleados = request.getParameter("conEmpleados");
+                    List<Cliente> clientes = null;
+                    if ("si".equals(conEmpleados)) {
+                        clientes = CCliente.obtenerClientes();
+                    } else {
+                        clientes = CCliente.obtenerClientesNoEmpleados();
+                    }
+
                     String clientesJson = new Gson().toJson(clientes);
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
@@ -266,11 +273,25 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
                     break;
-                    case "obtEmpleados":
+                case "obtEmpleados":
                     List<Empleado> empleados = cusuario.obtenerEmpleados();
                     String empleadosJson = new Gson().toJson(empleados);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
+                    break;
+                case "eliminarEmpleado":
+                    String idEmplEliminar = request.getParameter("idEmpleado");
+                    Empleado empleadoEliminar = new Empleado();
+                    empleadoEliminar.setId(Long.valueOf(idEmplEliminar));
+                    String mensajeBajaEmpleado = "";
+                    if (cusuario.bajaEmpleado(empleadoEliminar)) {
+                        mensajeBajaEmpleado = "OK";
+                    } else {
+                        mensajeBajaEmpleado = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeBajaEmpleado);
                     break;
             }
         }
