@@ -248,8 +248,7 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "obtClientes":
                     List<Cliente> clientes = CCliente.obtenerClientes();
-                    Gson js = new Gson();
-                    String clientesJson = (js != null)? js.toJson(clientes): "";
+                    String clientesJson = new Gson().toJson(clientes);
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
@@ -266,6 +265,12 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
+                    break;
+                    case "obtEmpleados":
+                    List<Empleado> empleados = cusuario.obtenerEmpleados();
+                    String empleadosJson = new Gson().toJson(empleados);
+                    response.setContentType("application/json");
+                    response.getWriter().write(empleadosJson);
                     break;
             }
         }

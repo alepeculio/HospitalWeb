@@ -1,6 +1,3 @@
-//Prueba
-
-
 //Registrar cliente y medico
 
 var tel = 0;
@@ -556,10 +553,12 @@ function buscar(inputid, listaid) {
     }
 }
 
-var seleccionado = ["Cli", "CliP", "CliH"];
+var seleccionado = ["Cli", "CliP", "CliH","Med"];
 seleccionado["Cli"] = "";
 seleccionado["CliP"] = "";
 seleccionado["CliH"] = "";
+seleccionado["MedE"] = "";
+seleccionado["MedHA"] = "";
 
 function seleccionar(nombreFila, id, tipo) {
     var li = document.getElementById(nombreFila + id);
@@ -691,10 +690,43 @@ $("#btnEliminarCliente").click(function () {
     }
 
 });
+//---------------------------------------------------------------------------------------------------------------------------
+//Eliminar medico
 
 
+function cargarMedicos(idLista, nombreFila, tipo) {
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtEmpleados",
+        type: "POST",
+        dataType: 'json',
+        data: {
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay médicos"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+        }
+    });
+}
 
-
-
+cargarMedicos("listMedE","medicoEFila","MedE");
+cargarMedicos("listMedHA","medicoEFila","MedHA");
 
 
