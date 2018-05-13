@@ -727,6 +727,6 @@ function cargarMedicos(idLista, nombreFila, tipo) {
 }
 
 cargarMedicos("listMedE","medicoEFila","MedE");
-cargarMedicos("listMedHA","medicoEFila","MedHA");
+cargarMedicos("listMedHA","medicoHAFila","MedHA");
 
 
