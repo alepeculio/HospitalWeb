@@ -404,6 +404,9 @@ $("#btnRegistrarMedico").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC2")[0].reset();
+                    cargarClientes("listCliP", "clientePFila", "CliP");
+                    cargarMedicos("listMedE", "medicoEFila", "MedE");
+                    cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -553,7 +556,7 @@ function buscar(inputid, listaid) {
     }
 }
 
-var seleccionado = ["Cli", "CliP", "CliH","Med"];
+var seleccionado = ["Cli", "CliP", "CliH", "Med"];
 seleccionado["Cli"] = "";
 seleccionado["CliP"] = "";
 seleccionado["CliH"] = "";
@@ -726,7 +729,7 @@ function cargarMedicos(idLista, nombreFila, tipo) {
     });
 }
 
-cargarMedicos("listMedE","medicoEFila","MedE");
-cargarMedicos("listMedHA","medicoHAFila","MedHA");
+cargarMedicos("listMedE", "medicoEFila", "MedE");
+cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
 
 
