@@ -1,3 +1,5 @@
+//Registrar cliente y medico
+
 var tel = 0;
 var esp = 0;
 var telMed = 0;
@@ -178,7 +180,7 @@ $(function () {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = departamentos[i];
         departamento.appendChild(opt);
-        
+
         var optMed = document.createElement("option");
         optMed.innerHTML = opt.value = departamentos[i];
         departamentoMed.appendChild(optMed);
@@ -189,13 +191,73 @@ $(function () {
         var ciudad = document.getElementById("ciudad");
         cargarCiudades($("#departamento option:selected").text(), ciudad);
     });
-    
+
     $("#departamentoMed").change(function () {
         $("#ciudadMed").html("");
         var ciudadMed = document.getElementById("ciudadMed");
         cargarCiudades($("#departamentoMed option:selected").text(), ciudadMed);
     });
 });
+var correoE = false;
+function correoExiste(correo) {
+
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario?accion=verificarCorreo",
+        data: {
+            correo: correo
+        },
+        success: function (data) {
+            var existe;
+            if (data === "OK") {
+                existe = true;
+            } else {
+                existe = false;
+            }
+            setCorreoExiste(existe);
+        },
+        error: function () {
+        }
+    });
+}
+function setCorreoExiste(existe) {
+    correoE = existe;
+}
+
+var cedulaE = false;
+function cedulaExiste(cedula) {
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario?accion=verificarCedula",
+        data: {
+            cedula: cedula
+        },
+        success: function (data) {
+            var existe;
+            if (data === "OK") {
+                existe = true;
+            } else {
+                existe = false;
+            }
+            setCedulaExiste(existe);
+        },
+        error: function () {
+        }
+    });
+}
+function setCedulaExiste(existe) {
+    cedulaE = existe;
+}
+
+$("#email").focusout(function(){
+    correoExiste($("#email").val().toString().trim());
+});
+
+$("#digitoVer").focusout(function(){
+    cedulaExiste($("#ci").val().toString().trim() + $("#digitoVer").val().toString().trim());
+});
+        
+
 $("#btnRegistrarUsuario").click(function () {
     var errCi = $("#ciError");
     var errNombre = $("#nombreError");
@@ -229,6 +291,13 @@ $("#btnRegistrarUsuario").click(function () {
         errCi.text("Error: Cedula no valida.");
         errCi.prop("hidden", false);
         errores = true;
+    } else {
+        cedulaExiste(ci + digitoVer);
+        if (cedulaE === true) {
+            errCi.text("Error: Cedula ya existe.");
+            errCi.prop("hidden", false);
+            errores = true;
+        }
     }
 
     if (!soloLetras(nombre)) {
@@ -247,6 +316,13 @@ $("#btnRegistrarUsuario").click(function () {
         errEmail.text("Error: Email no valido.");
         errEmail.prop("hidden", false);
         errores = true;
+    } else {
+        //correoExiste(email);
+        if (correoE === true) {
+            errEmail.text("Error: Email ya existe.");
+            errEmail.prop("hidden", false);
+            errores = true;
+        }
     }
 
     if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
@@ -275,7 +351,7 @@ $("#btnRegistrarUsuario").click(function () {
                 calle: calle,
                 numero: numero,
                 apartamento: apartamento,
-                telefonos: telefonos,
+                telefonos: telefonos
             },
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
@@ -289,6 +365,8 @@ $("#btnRegistrarUsuario").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC")[0].reset();
+                    setNoCargado("CliP");
+                    setNoCargado("Cli");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -300,6 +378,7 @@ $("#btnRegistrarUsuario").click(function () {
         });
     }
 });
+
 $("#btnRegistrarMedico").click(function () {
     var errCi = $("#ciMedError");
     var errNombre = $("#nombreMedError");
@@ -328,7 +407,7 @@ $("#btnRegistrarMedico").click(function () {
     var i;
     for (i = 1; i < telMed; i++)
         telefonos = telefonos + "|" + ($("#telefonoMed" + (i + 1)).val().toString().trim());
-    
+
     var especialidades = "";
     var j;
     for (j = 1; j < esp; j++)
@@ -395,10 +474,14 @@ $("#btnRegistrarMedico").click(function () {
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else if (data === "OK") {
-                    texto.innerHTML = "El medico ha sido ingresado correctamente";
+                    texto.innerHTML = "El médico ha sido ingresado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC2")[0].reset();
+                    setNoCargado("CliP");
+                    setNoCargado("MedE");
+                    setNoCargado("MedHA");
+                    setNoCargado("MedHAE")
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -410,6 +493,7 @@ $("#btnRegistrarMedico").click(function () {
         });
     }
 });
+
 function cargarCiudades(departamento, ciudad) {
     var def = document.createElement("option");
     def.innerHTML = "Ciudad";
@@ -465,3 +549,407 @@ function soloLetras(palabra) {
 function telefonoCorrecto(telefono) {
     return filtroTelefono.test(telefono);
 }
+
+////------------------------------------------------------------------------------------------------------------------------
+//Relacionar con hijo
+
+var cargado = ["Cli", "CliP", "MedE", "MedHA", "MedHAE"];
+cargado["Cli"] = false;
+cargado["CliP"] = false;
+cargado["MedE"] = false;
+cargado["MedHA"] = false;
+cargado["MedHAE"] = false;
+
+function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
+    if (cargado[tipo] === true) {
+        return;
+    }
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtClientes",
+        type: "POST",
+        dataType: 'json',
+        data: {
+            conEmpleados: conEmpleados
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay clientes"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+            setCargado(tipo);
+        }
+    });
+}
+
+function setCargado(tipo) {
+    cargado[tipo] = true;
+}
+function setNoCargado(tipo) {
+    cargado[tipo] = false;
+}
+
+function buscar(inputid, listaid) {
+
+    var input, filter, ul, li, a, i, contador;
+    input = document.getElementById(inputid);
+    filter = input.value.toUpperCase();
+    ul = document.getElementById(listaid);
+    li = ul.getElementsByTagName('li');
+    contador = li.length;
+
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+            if (parseInt(contador) < li.length)
+                contador = parseInt(contador) + 1;
+        } else {
+            li[i].style.display = "none";
+            contador = parseInt(contador) - 1;
+
+        }
+    }
+
+    var liNoEncontrado = document.getElementById(listaid + "NoEncontrado");
+    if (contador === 0) {
+        if (liNoEncontrado === null) {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
+            li.setAttribute("id", listaid + "NoEncontrado");
+            li.setAttribute("class", "list-group-item");
+            li.style.display = "block";
+            ul.appendChild(li);
+            li.appendChild(a);
+        } else {
+            liNoEncontrado.style.display = "block";
+        }
+    } else {
+        if (liNoEncontrado !== null) {
+            liNoEncontrado.parentNode.removeChild(liNoEncontrado);
+        }
+    }
+}
+
+var seleccionado = ["Cli", "CliP", "CliH", "MedE", "MedHA", "MedHAE"];
+seleccionado["Cli"] = "";
+seleccionado["CliP"] = "";
+seleccionado["CliH"] = "";
+seleccionado["MedE"] = "";
+seleccionado["MedHA"] = "";
+seleccionado["MedHAE"] = "";
+
+function seleccionar(nombreFila, id, tipo) {
+    var li = document.getElementById(nombreFila + id);
+    li.style.background = "#204565c2";
+    var a = li.getElementsByTagName('a')[0];
+    a.style.color = "white";
+    if (seleccionado[tipo] !== "") {
+        deseleccionar(nombreFila, tipo);
+    }
+    seleccionado[tipo] = id;
+    if (tipo === "CliP") {
+        cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
+    }
+
+}
+function deseleccionar(nombreFila, tipo) {
+    var li = document.getElementById(nombreFila + seleccionado[tipo]);
+    li.style.background = "white";
+    var a = li.getElementsByTagName('a')[0];
+    a.style.color = "black";
+    seleccionado[tipo] = "";
+}
+
+function cargarHijos(idCliente, idLista, nombreFila, tipo) {
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtNoHijosCliente",
+        type: "POST",
+        dataType: 'json',
+        data: {
+            idCliente: idCliente
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay clientes relacionables con el seleccionado"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+        }
+    });
+}
+
+
+$("#btnVincularCliente").click(function () {
+    if (seleccionado["CliP"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else if (seleccionado["CliH"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó un cliente como hijo";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=vincularHijoCliente",
+            type: "POST",
+            data: {
+                idClienteP: seleccionado["CliP"],
+                idClienteH: seleccionado["CliH"]
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo relacionar los clientes seleccionados";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Clientes relacionados correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    deseleccionar("clientePFila", "CliP");
+                    deseleccionar("clienteHFila", "CliH");
+                }
+            }
+        });
+
+    }
+
+});
+//---------------------------------------------------------------------------------------------------------------------
+//Eliminar cliente
+
+$("#btnEliminarCliente").click(function () {
+    if (seleccionado["Cli"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=eliminarCliente",
+            type: "POST",
+            data: {
+                idCliente: seleccionado["Cli"]
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo eliminar el cliente seleccionado";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Cliente eliminado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    deseleccionar("clienteFila", "Cli");
+                    setNoCargado("Cli");
+                    cargarClientes("listCli", "clienteFila", "Cli", "no");
+                    setNoCargado("CliP");
+                }
+            }
+        });
+    }
+});
+//---------------------------------------------------------------------------------------------------------------------------
+//Eliminar medico
+
+
+function cargarMedicos(idLista, nombreFila, tipo) {
+    if (cargado[tipo] === true) {
+        return;
+    }
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtEmpleados",
+        type: "POST",
+        dataType: 'json',
+        data: {
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay médicos"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+            setCargado(tipo);
+        }
+    });
+}
+
+
+
+
+
+$("#btnEliminarMedico").click(function () {
+    if (seleccionado["MedE"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun medico";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=eliminarEmpleado",
+            type: "POST",
+            data: {
+                idEmpleado: seleccionado["MedE"]
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo eliminar el médico seleccionado";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Médico eliminado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    deseleccionar("medicoEFila", "MedE");
+                    setNoCargado("MedE");
+                    cargarMedicos("listMedE", "medicoEFila", "MedE");
+                    setNoCargado("CliP");
+                    setNoCargado("MedHA");
+                    setNoCargado("MedHAE");
+
+                }
+            }
+        });
+    }
+});
+
+
+
+/// ---------------------
+// Ingregas HA
+
+$("#btnIngresarHA").click (function () {
+    var texto = document.getElementById("modalIUMensaje");
+    var med = seleccionado["MedHA"];
+    
+    if (med == "") {
+        texto.innerHTML = "Seleccione un medico";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var dia = $("#haDia").val ();
+    
+    if (dia == "") {
+        texto.innerHTML = "Seleccione un dia";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var hInicio = $("#haHoraInicio").val ();
+    
+    if (hInicio == "") {
+        texto.innerHTML = "Seleccione una hora de inicio";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var hFin = $("#haHoraFin").val ();
+    
+    if (hFin == "") {
+        texto.innerHTML = "Seleccione una hora de fin";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var cant = $("#haCant").val ();
+    
+    if (cant == "") {
+        texto.innerHTML = "Seleccione una cantidad de clientes";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    if (cant <= 0) {
+        texto.innerHTML = "Seleccione una cantidad de clientes valida";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "altaHA",
+            medico: med,
+            dia: dia,
+            horaInicio: hInicio,
+            horaFin: hFin,
+            cant: cant
+        },
+        success: function (data) {
+            if (data == "ERR") {
+                texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+                texto.style.color = "red";
+                $("#modalIngresarUsuario").modal("show");
+            } else {
+                texto.innerHTML = "Horario de atencion ingresado!";
+                texto.style.color = "green";
+                $("#modalIngresarUsuario").modal("show");
+                $("#formHA")[0].reset ();
+            }
+        },
+        error: function () {
+            texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+        }
+    });
+});

@@ -16,14 +16,15 @@
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
 
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar cliente</a></li>
-            <li><a href="#relacionarHijo" data-toggle="tab">Relacionar con hijo</a></li>
-            <li><a href="#eliminarCliente" data-toggle="tab">Eliminar cliente</a></li>
+            <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar cliente</a></li>
+            <hr>
+            <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Relacionar con hijo</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
-            <li><a href="#eliminarMedico" data-toggle="tab">Eliminar médico</a></li>
+            <li><a href="#eliminarMedico" data-toggle="tab" onclick ="cargarMedicos('listMedE', 'medicoEFila', 'MedE')">Eliminar médico</a></li>
             <hr>
-            <li><a href="#ingresarHA" data-toggle="tab">Agregar horario de atención</a></li>
-            <li><a href="#eliminarHA" data-toggle="tab">Eliminar horario de atención</a></li>
+            <li><a href="#ingresarHA" data-toggle="tab" onclick="cargarMedicos('listMedHA', 'medicoHAFila', 'MedHA')">Agregar horario de atención</a></li>
+            <li><a href="#eliminarHA" data-toggle="tab" onclick="cargarMedicos('listMedHAE', 'medicoHAEFila', 'MedHAE')">Eliminar horario de atención</a></li>
 
         </ul>
 
@@ -138,99 +139,108 @@
                     </div>
                     <button type="button" id="registrarCliente" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
                 </form>
-
-
-            </div>
-            <div class="tab-pane pestania" id="relacionarHijo">
-                <h2>Relacionar con hijo</h2>
-                <hr>
-                <form>
-                    <% List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");%>
-
-                    <label>Seleccione el cliente</label>
-                    <select class="form-control" id="clientePadre" required>
-                        <% if (clientes != null) {
-                            out.println("<option value=''>Cliente</option>");
-                                for (Cliente cliente : clientes) {
-                                    out.println("<option value='" + cliente.getId() + "'>" + cliente.getNombre() + " " + cliente.getApellido() + "</option>");
-                                }
-                            }else{
-                            out.println("<option value=''>No hay clientes</option>");
-                        }
-                        %>
-                    </select>
-                    <br>
-                    <label>Seleccione el hijo a relacionar con el cliente anterior</label>
-                    <select class="form-control" id="clientePadre" required>
-                        <option value="">Hijo</option>
-                    </select>
-                    <br>
-                    <button type="button" id="vincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
-                </form>
             </div>
             <div class="tab-pane pestania" id="eliminarCliente">
                 <h2>Eliminar cliente</h2>
                 <hr>
                 <label>Seleccione el cliente a eliminar</label>
-                <select class="form-control" id="clienteEliminar" required>
-                    <option value="">Cliente</option>
-                </select>
+                <div class="input-group">
+                    <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscar('buscarCliInput', 'listCli')" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div><!-- /input-group -->
+
+                <ul class="list-group listCliP" id="listCli">
+                    <li class="list-group-item"><a>No hay clientes</a></li>
+                </ul>
                 <br>
-                <button type="button" id="vincularCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
+                <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
+            </div>
+            <div class="tab-pane pestania text-center" id="relacionarHijo">
+                <h2>Relacionar con hijo</h2>
+                <hr>
+                <form>
+                    <label>Seleccione el cliente</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="buscarCliPInput" onkeyup="buscar('buscarCliPInput', 'listCliP')" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listCliP">
+                        <li class="list-group-item"><a>No hay clientes</a></li>
+                    </ul>
+                    <br>
+                    <label>Seleccione el hijo a relacionar con el cliente anterior</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="buscarCliHInput" onkeyup="buscar('buscarCliHInput', 'listCliH')" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listCliH">
+                        <li class="list-group-item"><a>Elija un cliente padre primero</a></li>
+                    </ul>
+                    <br>
+                    <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
+                </form>
             </div>
             <div class="tab-pane pestania" id="ingresarMedico">
                 <h2>Ingresar médico</h2>
                 <hr>
-                <form>
+                <form id="formIC2">
                     <div class="form-group">
-                        <input required class="form-control" placeholder="Nombre" type="text" id="nombre">
-                        <small id="nombreError" class="text-danger" hidden>
+                        <input required class="form-control" placeholder="Nombre" type="text" id="nombreMed">
+                        <small id="nombreMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
                     <div class="form-group">
-                        <input required class="form-control" placeholder="Apellido" type="text" id="apellido">
-                        <small id="apellidoError" class="text-danger" hidden>
+                        <input required class="form-control" placeholder="Apellido" type="text" id="apellidoMed">
+                        <small id="apellidoMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
                     <div class="form-group">
-                        <input required class="form-control" placeholder="E-mail" type="text" id="email">
-                        <small id="emailError" class="text-danger" hidden>
+                        <input required class="form-control" placeholder="E-mail" type="text" id="emailMed">
+                        <small id="emailMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
                     <div class="row">
                         <div class="col-sm-8 form-group">
-                            <input required class="form-control" placeholder="C.I. (Sin Guion)" type="text" id="ci">
-                            <small id="ciError" class="text-danger" hidden>
+                            <input required class="form-control" placeholder="C.I. (Sin Guion)" type="text" id="ciMed">
+                            <small id="ciMedError" class="text-danger" hidden>
                                 Error!
                             </small>
                         </div>
                         <div class="col-sm-4 form-group">
-                            <input required class="form-control" placeholder="-" type="text" id="digitoVer">
+                            <input required class="form-control" placeholder="-" type="text" id="digitoVerMed">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Fecha de nacimiento</label>
                         <div class="row">
                             <div class="col-sm-3">
-                                <select class="form-control" id="dia" required>
+                                <select class="form-control" id="diaMed" required>
                                     <option value="">Día</option>
                                 </select>
                             </div>
                             <div class="col-sm-5">
-                                <select class="form-control" id="mes" required>
+                                <select class="form-control" id="mesMed" required>
                                     <option value="">Mes</option>
                                 </select>
                             </div>
                             <div class="col-sm-4">
-                                <select class="form-control" id="anio" required>
+                                <select class="form-control" id="anioMed" required>
                                     <option value="">Año</option>
                                 </select>
                             </div>
                         </div>
-                        <small id="fechaError" class="text-danger" hidden>
+                        <small id="fechaMedError" class="text-danger" hidden>
                             Error!
                         </small>
                     </div>
@@ -249,35 +259,35 @@
                     <button type="button" class="btn btn-primary btn-block" onclick="agregarTelMed()">Agregar campo de teléfono <span class="glyphicon glyphicon-plus iconoButton"></span></button>
                     </br>
                     <label>Dirección</label>
-                    <select class="form-control" id="departamento" required>
+                    <select class="form-control" id="departamentoMed" required>
                         <option value="">Departamento</option>
                     </select>
                     </br>
-                    <select class="form-control" id="ciudad" required>
+                    <select class="form-control" id="ciudadMed" required>
                         <option value="">Ciudad</option>
                     </select>
                     </br>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input required class="form-control" placeholder="Calle" type="text" id="calle">
+                                <input required class="form-control" placeholder="Calle" type="text" id="calleMed">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input required class="form-control" placeholder="Nro." type="text" id="numero">
+                                <input required class="form-control" placeholder="Nro." type="text" id="numeroMed">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Apt." type="text" id="apartamento">
+                                <input class="form-control" placeholder="Apt." type="text" id="apartamentoMed">
                             </div>
                         </div>
                     </div>
                     <label >Especialidades</label>
                     <div class="form-group" id="esp0" hidden>
                         <div class="input-group">
-                            <input required class="form-control especialidad" type="text" placeholder="Especialidad 1" id="especialidad1"/>
+                            <input required class="form-control especialidad" type="text" placeholder="Especialidad 1" id="especialidad"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-danger especialidadButton" type="button" onclick="quitarEspecialidad(1)" disabled>
                                     <span class="glyphicon glyphicon-minus iconoButton"></span>
@@ -287,39 +297,52 @@
                     </div>
                     <button type="button" class="btn btn-primary btn-block" onclick="agregarEspecialidad()">Agregar campo de especialidad <span class="glyphicon glyphicon-plus iconoButton"></span></button>
                     <br>
-                    <div id="opciones" class="collapse">
+                    <div id="opcionesMed" class="collapse">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button type="submit" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico">Confirmar</button>
+                                <button type="submit" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico">Confirmar</button>
                             </div>
                             <div class="col-lg-6">
-                                <button type="button" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-danger btn-block">Cancelar</button>
+                                <button type="button" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-danger btn-block">Cancelar</button>
                             </div>
                         </div>
                         </br>
                     </div>
-                    <button type="button" id="registrarMedico" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
+                    <button type="button" id="registrarMedico" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
                 </form>
             </div>
             <div class="tab-pane pestania" id="eliminarMedico">
                 <h2>Eliminar médico</h2>
-                <hr>
-                <label>Seleccione el médico a eliminar</label>
-                <select class="form-control" id="medicoEliminar" required>
-                    <option value="">Médico</option>
-                </select>
+                <label>Seleccione el medico a eliminar</label>
+                <div class="input-group">
+                    <input class="form-control" type="text" id="buscarMedEInput" onkeyup="buscar('buscarMedEInput', 'listMedE')" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div><!-- /input-group -->
+
+                <ul class="list-group listCliP" id="listMedE">
+                    <li class="list-group-item"><a>No hay médicos</a></li>
+                </ul>
                 <br>
-                <button type="button" id="eliminarClienteButton" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
+                <button type="button" id="btnEliminarMedico" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
 
             </div>
             <div class="tab-pane pestania" id="ingresarHA">
                 <h2>Agregar horario de atención</h2>
                 <hr>
-                <form>
+                <form onsubmit="return false" id="formHA">
                     <label>Seleccione el médico a asignar el horario</label>
-                    <select class="form-control" id="medicoEliminar" required>
-                        <option value="">Médico</option>
-                    </select>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="buscarMedHAInput" onkeyup="buscar('buscarMedHAInput', 'listMedHA')" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listMedHA">
+                        <li class="list-group-item"><a>No hay médicos</a></li>
+                    </ul>
                     <br>
 
                     <label>Especifique datos del horario</label>
@@ -328,28 +351,28 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <label>Día</label>
-                                <select class="form-control" id="medicoEliminar" required>
+                                <select class="form-control" id="haDia" required>
                                     <option value="">--</option>
-                                    <option value="">Lunes</option>
-                                    <option value="">Martes</option>
-                                    <option value="">Miercoles</option>
-                                    <option value="">Jueves</option>
-                                    <option value="">Viernes</option>
-                                    <option value="">Sabado</option>
-                                    <option value="">Domingo</option>
+                                    <option value="Lunes">Lunes</option>
+                                    <option value="Martes">Martes</option>
+                                    <option value="Miercoles">Miercoles</option>
+                                    <option value="Jueves">Jueves</option>
+                                    <option value="Viernes">Viernes</option>
+                                    <option value="Sabado">Sabado</option>
+                                    <option value="Domingo">Domingo</option>
                                 </select>
                             </div>
                             <div class="col-sm-3">
                                 <label>Hora de inicio</label>
-                                <input class="form-control" type="time">
+                                <input class="form-control" type="time" required id="haHoraInicio">
                             </div>
                             <div class="col-sm-3">
                                 <label>Hora de fin</label>
-                                <input class="form-control" type="time">
+                                <input class="form-control" type="time" required id="haHoraFin">
                             </div>
                             <div class="col-sm-3">
                                 <label>Cantidad de clientes</label>
-                                <input class="form-control" type="number">
+                                <input class="form-control" type="number" required id="haCant">
                             </div>
                         </div>
                     </div>
@@ -361,9 +384,16 @@
                 <h2>Eliminar horario de atención</h2>
                 <hr>
                 <label>Seleccione el médico a eliminar el horario</label>
-                <select class="form-control" id="medicoEliminar" required>
-                    <option value="">Médico</option>
-                </select>
+                <div class="input-group">
+                        <input class="form-control" type="text" id="buscarMedHAEInput" onkeyup="buscar('buscarMedHAEInput', 'listMedHAE')" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listMedHAE">
+                        <li class="list-group-item"><a>No hay médicos</a></li>
+                    </ul>
                 <br>
                 <div class="datosHorarioAtencion"></div>
                 <label>Horarios de atención</label>
@@ -413,6 +443,7 @@
         </div>
 
         <jsp:include page="include_js.html"/>
-        <script src="js/registrar.js"></script>
+        <!-- <script src="js/registrar.js"></script> -->
+        <script src="js/adminHospitalMenu.js"></script>
     </body>
 </html>

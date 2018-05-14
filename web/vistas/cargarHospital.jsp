@@ -216,11 +216,11 @@
                             </div>
                     <form onsubmit="return false">
                             <label>C.I.</label>
-                            <div class="form-group">
+                            <div class="form-group" id="divCiNuevoAdmin">
                                 <input required class="form-control" placeholder="C.I." type="text" id="ciNuevoAdmin" name="ciAdmin">
                             </div>
                             <label>Correo</label>
-                            <div class="form-group">
+                            <div class="form-group" id="divCorreoNuevoAdmin">
                                 <input required class="form-control" placeholder="Correo" type="text" id="correoNuevoAdmin" name="correoAdmin">
                             </div>
                         </div>
