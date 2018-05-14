@@ -7,10 +7,12 @@ package Servlets;
 
 import Clases.Cliente;
 import Clases.Empleado;
+import Clases.HorarioAtencion;
 import Clases.Usuario;
 import Controladores.CCliente;
 import Controladores.CHospital;
 import Controladores.CUsuario;
+import Controladores.Singleton;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import java.util.Date;
 
 /**
  *
@@ -198,7 +201,7 @@ public class SUsuario extends HttpServlet {
                     }
 
                     String mensajeMed = "";
-                    if (CCliente.altaCliente(e)) {
+                    if (Singleton.getInstance ().persist (e)) {
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -292,6 +295,27 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaEmpleado);
+                    break;
+                case "altaHA":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    
+                    String horaInicio = request.getParameter ("horaInicio");
+                    String horaFin = request.getParameter ("horaFin");
+                    String cant = request.getParameter ("cant");
+                    
+                    Date hi = new Date (0, 0, 0, 19, 30);
+                    Date hf = new Date (0, 0, 0, 19, 31);
+                    
+                    HorarioAtencion ha = new HorarioAtencion ();
+                    ha.setDia (request.getParameter ("dia"));
+                    ha.setHoraInicio (hi);
+                    ha.setHoraFin (hf);
+                    ha.setClientesMax (Integer.valueOf (cant));
+                    
+                    CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha);
+                    
+                    response.getWriter().write("OK");
                     break;
             }
         }
