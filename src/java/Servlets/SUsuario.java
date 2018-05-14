@@ -281,7 +281,7 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(empleadosJson);
                     break;
                 case "eliminarEmpleado":
-                    String idEmplEliminar = request.getParameter("idEmpleado");
+                    String idEmplEliminar = request.getParameter("idEmpleado"); 
                     String mensajeBajaEmpleado = "";
                     if (cusuario.bajaEmpleado(idEmplEliminar)) {
                         mensajeBajaEmpleado = "OK";
@@ -309,9 +309,11 @@ public class SUsuario extends HttpServlet {
                     ha.setHoraFin (hf);
                     ha.setClientesMax (Integer.valueOf (cant));
                     
-                    CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha);
-                    
-                    response.getWriter().write("OK");
+                    if (CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha))
+                        response.getWriter().write("OK");
+                    else
+                        response.getWriter().write("ERR");
+                    break;
                 case "verificarCorreo":
                     String correoVerficar = request.getParameter("correo");
                     String mensajeVerifCorreo = "";

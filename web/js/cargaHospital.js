@@ -597,6 +597,3 @@ function cedulaCorrecta(ci, digVer) {
         sum += (ci[i] * dig[i]) % 10;
     return 10 - sum % 10 === digVer * 1;
 }
-
-if (!window.location.toString ().includes ("/HospitalWeb/SHospital?Administrador"))
-    window.location.assign ("/HospitalWeb/SHospital?Administrador");
