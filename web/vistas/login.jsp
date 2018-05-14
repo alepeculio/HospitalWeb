@@ -26,7 +26,7 @@
                         </br>
                         <form accept-charset="UTF-8" role="form" method="POST" action="/HospitalWeb/SUsuario?accion=login">
                             <div class="form-group">
-                                <input class="form-control" title="Cedula de identidad (sin puntos ni guiones)" required placeholder="C.I" name="ci" type="number" autofocus="" max="99999999">
+                                <input class="form-control" title="Cedula de identidad (sin puntos ni guiones)" required placeholder="C.I." name="ci" type="number" autofocus="" max="99999999">
                             </div>
                             <div class="form-group">
                                 <input class="form-control" title="Contraseña" required placeholder="Contraseña" name="contrasenia" type="password">
