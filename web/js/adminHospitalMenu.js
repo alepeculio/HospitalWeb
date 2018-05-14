@@ -249,14 +249,14 @@ function setCedulaExiste(existe) {
     cedulaE = existe;
 }
 
-$("#email").focusout(function(){
+$("#email").focusout(function () {
     correoExiste($("#email").val().toString().trim());
 });
 
-$("#digitoVer").focusout(function(){
+$("#digitoVer").focusout(function () {
     cedulaExiste($("#ci").val().toString().trim() + $("#digitoVer").val().toString().trim());
 });
-        
+
 
 $("#btnRegistrarUsuario").click(function () {
     var errCi = $("#ciError");
@@ -656,13 +656,17 @@ seleccionado["MedHA"] = "";
 seleccionado["MedHAE"] = "";
 
 function seleccionar(nombreFila, id, tipo) {
+    if (seleccionado[tipo] === id) {
+        deseleccionar(nombreFila, tipo);
+        return;
+    } else if (seleccionado[tipo] !== "") {
+        deseleccionar(nombreFila, tipo);
+    }
     var li = document.getElementById(nombreFila + id);
     li.style.background = "#204565c2";
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "white";
-    if (seleccionado[tipo] !== "") {
-        deseleccionar(nombreFila, tipo);
-    }
+
     seleccionado[tipo] = id;
     if (tipo === "CliP") {
         cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
