@@ -80,7 +80,7 @@ public class SUsuario extends HttpServlet {
                     }
                     break;
                 case "logout":
-                    request.getSession().removeAttribute("ci");
+                    request.getSession().removeAttribute("usuario");
                     Cookie userCookie = new Cookie("ci_HospitalWeb", null);
                     Cookie passCookie = new Cookie("contrasenia_HospitalWeb", null);
                     userCookie.setMaxAge(0);
