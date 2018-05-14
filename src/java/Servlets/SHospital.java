@@ -1,13 +1,21 @@
 package Servlets;
 
+import Clases.Cliente;
 import Clases.Empleado;
 import Clases.Hospital;
 import Clases.Usuario;
+import Controladores.CCliente;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +36,13 @@ public class SHospital extends HttpServlet {
             request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         } else if (request.getParameter("verHospital") != null) {
+            // Obtener Usuario Sesion 
+            Cliente c = CCliente.obtenerCliente("brian");
+
             Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
             List<Empleado> empleados;
             empleados = h.getEmpleados();
+            request.setAttribute("cliente", c);
             request.setAttribute("empleados", empleados);
             request.setAttribute("hospital", h);
             request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
@@ -150,6 +162,13 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             CHospital.borrarAdministrador(URLDecoder.decode(request.getParameter("nomHospital")), URLDecoder.decode(request.getParameter("ciAdmin")));
             response.getWriter().write("OK");
+        } else if (request.getParameter("edad") != null) {
+            Cliente c = CCliente.obtenerCliente("brian");
+           if (CCliente.edad(c,Integer.parseInt(request.getParameter("edad")),request.getParameter("en"))!=null){
+            
+               response.getWriter().write("si");
+           }else{ response.getWriter().write("no");}
         }
+
     }
 }

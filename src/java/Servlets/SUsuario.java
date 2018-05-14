@@ -309,7 +309,7 @@ public class SUsuario extends HttpServlet {
                     ha.setHoraFin (hf);
                     ha.setClientesMax (Integer.valueOf (cant));
                     
-                    CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha);
+                    CHospital.agregaHorarioAtencion((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha);
                     
                     response.getWriter().write("OK");
                 case "verificarCorreo":

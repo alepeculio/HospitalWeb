@@ -4,6 +4,7 @@
     Author     : Brian
 --%>
 
+<%@page import="Clases.Cliente"%>
 <%@page import="Clases.Empleado"%>
 <%@page import="java.util.List"%>
 <%@page import="Clases.Hospital"%>
@@ -22,6 +23,7 @@
         <%
             Hospital h = (Hospital) request.getAttribute("hospital");
             List<Empleado> empleados = (List<Empleado>) request.getAttribute("empleados");
+            Cliente c = (Cliente) request.getAttribute("cliente");
             
         %>
 
@@ -108,7 +110,7 @@
                             </tr>
                             <tr>
                                 <td style="border-top:#1b6d85 ;">BCG</td>
-                                <td id="vacuna" onclick="" value="BCG-m-0" data-toggle="modal" data-target="#myModal" title="Ir a registrar" ></td>
+                                <td id="vacuna" onClick="verificar('BCG-m-0')" value="BCG-m-0" data-toggle="modal"  title="Ir a registrar" ></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -286,7 +288,7 @@
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal fade" id="noHijos" role="dialog">
                 <div class="modal-dialog">
 
                     <!-- Modal content-->
@@ -295,7 +297,6 @@
                             <h4 class="modal-title">Registro Vacuna</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-
                         <div class="modal-body ">
                             <h3>No tiene hijo/s registrado en el sistema.</h3> 
                             <p>Si usted quiere registrar a su hijo para poder reservar turno de vacunacion dar clic en Registrar Hijo.</p> 
@@ -304,24 +305,80 @@
                             <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
                             <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
                         </div>
-                        <form method="POST">
-                            <div class="modal-body ">
-                                <h3>No tiene hijo/s registrado en el sistema.</h3> 
-                                <p>Si usted quiere registrar a su hijo para poder reservar turno de vacunacion dar clic en Registrar Hijo.</p> 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-default"  name="aceptar" >Aceptar</button>
-                            </div>
-                        </form>
-
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="noEdad" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">	
+                            <h4 class="modal-title">Registro Vacuna</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body ">
+                            <h3>Edad Incompatible.</h3>
+                            <h4>Las vacunas se dan a cierta edad.</h4> 
+                            <p>Si usted tiene algun hijo con la edad correcta puede registrar a su hijo haciendo clic en Registrar Hijo.</p>
+                            <p>  Luego de registrar su hijo podra reservar un turno para vacunarlo</p> 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="correcto" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">	
+                            <h4 class="modal-title">Registro Vacuna</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body ">
+                            <h3>Correcto.</h3> 
+                            <select>
+                               for()
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
     </body>
+    <script>
+        function verificar(td) {
+            var vacuna = td.split("-");
+            $.ajax({
+                type: "POST",
+                url: "/HospitalWeb/SHospital",
+                data: {
+                    "edad": vacuna[2],
+                    "en": vacuna[1]
+                },
+                success: function (data) {
+                    if (data === "no") {
+                        $('#noEdad').modal('show');
+                    } else {
+                        $('#correcto').modal('show');
+                    }
+                },
+                error: function () {
+                    alert("Error en el servelt");
+                }
+
+            });
+        }
+
+
+    </script>
 </html>
 

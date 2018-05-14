@@ -26,31 +26,17 @@ import javax.servlet.http.HttpServletResponse;
 public class SInicio extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         Usuario u = new Usuario();
         u.setCi("1234");
         u.setCorreo("admin@correo.com");
         u.setContrasenia("1234");
-        
-        
-        Cliente c = new Cliente();
-        c.setNombre("brian");
-        c.setAnioNacimiento(1997);
-        c.setMesNacimiento(8);
-        c.setDiaNacimiento(24);
-        c.setDepartamento("paysandu");
-        c.setCiudad("paysandu");
-        c.setApartamento(1);
-        c.setPiso(1);
-        c.setNumero(1);
-        c.setUsuario(u);
-        
-        new CUsuario().altaCliente(c);
-     
-        
-                
-        if (new CUsuario ().login (u.getCi (), u.getContrasenia ()) == null)
-            CAdministradores.agregarAdminGeneral (u);
+         
+        Usuario u2 = new Usuario();
+
+        if (new CUsuario().login(u.getCi(), u.getContrasenia()) == null) {
+            CAdministradores.agregarAdminGeneral(u);
+        }
 
         String accion = request.getParameter("accion");
 
