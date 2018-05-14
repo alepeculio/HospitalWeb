@@ -198,6 +198,65 @@ $(function () {
         cargarCiudades($("#departamentoMed option:selected").text(), ciudadMed);
     });
 });
+var correoE = false;
+function correoExiste(correo) {
+
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario?accion=verificarCorreo",
+        data: {
+            correo: correo
+        },
+        success: function (data) {
+            var existe;
+            if (data === "OK") {
+                existe = true;
+            } else {
+                existe = false;
+            }
+            setCorreoExiste(existe);
+        },
+        error: function () {
+        }
+    });
+}
+function setCorreoExiste(existe) {
+    correoE = existe;
+}
+
+var cedulaE = false;
+function cedulaExiste(cedula) {
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario?accion=verificarCedula",
+        data: {
+            cedula: cedula
+        },
+        success: function (data) {
+            var existe;
+            if (data === "OK") {
+                existe = true;
+            } else {
+                existe = false;
+            }
+            setCedulaExiste(existe);
+        },
+        error: function () {
+        }
+    });
+}
+function setCedulaExiste(existe) {
+    cedulaE = existe;
+}
+
+$("#email").focusout(function(){
+    correoExiste($("#email").val().toString().trim());
+});
+
+$("#digitoVer").focusout(function(){
+    cedulaExiste($("#ci").val().toString().trim() + $("#digitoVer").val().toString().trim());
+});
+        
 
 $("#btnRegistrarUsuario").click(function () {
     var errCi = $("#ciError");
@@ -232,6 +291,13 @@ $("#btnRegistrarUsuario").click(function () {
         errCi.text("Error: Cedula no valida.");
         errCi.prop("hidden", false);
         errores = true;
+    } else {
+        cedulaExiste(ci + digitoVer);
+        if (cedulaE === true) {
+            errCi.text("Error: Cedula ya existe.");
+            errCi.prop("hidden", false);
+            errores = true;
+        }
     }
 
     if (!soloLetras(nombre)) {
@@ -250,6 +316,13 @@ $("#btnRegistrarUsuario").click(function () {
         errEmail.text("Error: Email no valido.");
         errEmail.prop("hidden", false);
         errores = true;
+    } else {
+        //correoExiste(email);
+        if (correoE === true) {
+            errEmail.text("Error: Email ya existe.");
+            errEmail.prop("hidden", false);
+            errores = true;
+        }
     }
 
     if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
@@ -292,7 +365,8 @@ $("#btnRegistrarUsuario").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC")[0].reset();
-                    cargarClientes("listCliP", "clientePFila", "CliP", "si");
+                    setNoCargado("CliP");
+                    setNoCargado("Cli");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -400,13 +474,14 @@ $("#btnRegistrarMedico").click(function () {
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else if (data === "OK") {
-                    texto.innerHTML = "El medico ha sido ingresado correctamente";
+                    texto.innerHTML = "El médico ha sido ingresado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC2")[0].reset();
-                    cargarClientes("listCliP", "clientePFila", "CliP", "si");
-                    cargarMedicos("listMedE", "medicoEFila", "MedE");
-                    cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
+                    setNoCargado("CliP");
+                    setNoCargado("MedE");
+                    setNoCargado("MedHA");
+                    setNoCargado("MedHAE")
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -477,7 +552,18 @@ function telefonoCorrecto(telefono) {
 
 ////------------------------------------------------------------------------------------------------------------------------
 //Relacionar con hijo
+
+var cargado = ["Cli", "CliP", "MedE", "MedHA", "MedHAE"];
+cargado["Cli"] = false;
+cargado["CliP"] = false;
+cargado["MedE"] = false;
+cargado["MedHA"] = false;
+cargado["MedHAE"] = false;
+
 function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
+    if (cargado[tipo] === true) {
+        return;
+    }
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtClientes",
         type: "POST",
@@ -506,8 +592,16 @@ function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
                 ul.appendChild(li);
                 li.appendChild(a);
             }
+            setCargado(tipo);
         }
     });
+}
+
+function setCargado(tipo) {
+    cargado[tipo] = true;
+}
+function setNoCargado(tipo) {
+    cargado[tipo] = false;
 }
 
 function buscar(inputid, listaid) {
@@ -553,7 +647,7 @@ function buscar(inputid, listaid) {
     }
 }
 
-var seleccionado = ["Cli", "CliP", "CliH", "MedE","MedHA","MedHAE"];
+var seleccionado = ["Cli", "CliP", "CliH", "MedE", "MedHA", "MedHAE"];
 seleccionado["Cli"] = "";
 seleccionado["CliP"] = "";
 seleccionado["CliH"] = "";
@@ -682,7 +776,9 @@ $("#btnEliminarCliente").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("clienteFila", "Cli");
+                    setNoCargado("Cli");
                     cargarClientes("listCli", "clienteFila", "Cli", "no");
+                    setNoCargado("CliP");
                 }
             }
         });
@@ -693,6 +789,9 @@ $("#btnEliminarCliente").click(function () {
 
 
 function cargarMedicos(idLista, nombreFila, tipo) {
+    if (cargado[tipo] === true) {
+        return;
+    }
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtEmpleados",
         type: "POST",
@@ -720,6 +819,7 @@ function cargarMedicos(idLista, nombreFila, tipo) {
                 ul.appendChild(li);
                 li.appendChild(a);
             }
+            setCargado(tipo);
         }
     });
 }
@@ -752,7 +852,11 @@ $("#btnEliminarMedico").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("medicoEFila", "MedE");
+                    setNoCargado("MedE");
                     cargarMedicos("listMedE", "medicoEFila", "MedE");
+                    setNoCargado("CliP");
+                    setNoCargado("MedHA");
+                    setNoCargado("MedHAE");
 
                 }
             }
