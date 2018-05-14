@@ -553,7 +553,7 @@ function buscar(inputid, listaid) {
     }
 }
 
-var seleccionado = ["Cli", "CliP", "CliH", "Med"];
+var seleccionado = ["Cli", "CliP", "CliH", "MedE","MedHA","MedHAE"];
 seleccionado["Cli"] = "";
 seleccionado["CliP"] = "";
 seleccionado["CliH"] = "";
