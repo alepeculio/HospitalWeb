@@ -55,9 +55,11 @@
                         </h1>
                         </br>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Hospital Web es el sitio de autogestión de consultas médicas, el cual le permite de forma rápida, segura y desde la comodidad de su hogar, solicitar una cita con su médico de preferencia.                        
+                        </p>
+                        <p>
+                            Para comenzar a utilizar nuestro servicio, diríjase al hospital mas cercano con sus datos personales y solicite la inscripción de forma gratuita (Por mas información diríjase a la pestaña ayuda o haga click <a href="#">aquí</a>).
+                            Luego de realizado el proceso ya podrá acceder a su cuenta desde aquí.
                         </p>
                     </div>
                 </div>

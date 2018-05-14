@@ -15,11 +15,11 @@
     </head>
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>
-        <hr>
 
         <%
             Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
             Empleado empleado = (Empleado) request.getAttribute("empleado");
+            Cliente cliente = (Cliente) request.getAttribute("cliente");
         %>
 
         <div class="container bootstrap snippet panel">

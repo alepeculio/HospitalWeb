@@ -83,7 +83,7 @@ public class SUsuario extends HttpServlet {
                     }
                     break;
                 case "logout":
-                    request.getSession().removeAttribute("ci");
+                    request.getSession().removeAttribute("usuario");
                     Cookie userCookie = new Cookie("ci_HospitalWeb", null);
                     Cookie passCookie = new Cookie("contrasenia_HospitalWeb", null);
                     userCookie.setMaxAge(0);
@@ -93,7 +93,7 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "perfil":
-                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario) request.getSession().getAttribute("usuario")).getId());
+                    Empleado empleado = (new CUsuario()).getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
@@ -231,7 +231,7 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
                     break;
                 case "obtNoHijosCliente":
-                    List<Cliente> hCliente = CCliente.obtenerNoHijosCliente(request.getParameter("idCliente"));
+                    List<Cliente> hCliente = new CCliente().obtenerNoHijosCliente(request.getParameter("idCliente"));
                     String json = new Gson().toJson(hCliente);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
@@ -253,7 +253,7 @@ public class SUsuario extends HttpServlet {
                     String conEmpleados = request.getParameter("conEmpleados");
                     List<Cliente> clientes = null;
                     if ("si".equals(conEmpleados)) {
-                        clientes = CCliente.obtenerClientes();
+                        clientes = new CCliente().obtenerClientes();
                     } else {
                         clientes = CCliente.obtenerClientesNoEmpleados();
                     }
@@ -264,10 +264,8 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "eliminarCliente":
                     String idCliEliminar = request.getParameter("idCliente");
-                    Cliente cliente = new Cliente();
-                    cliente.setId(Long.valueOf(idCliEliminar));
                     String mensajeBajaCliente = "";
-                    if (CCliente.bajaCliente(cliente)) {
+                    if (CCliente.bajaCliente(idCliEliminar)) {
                         mensajeBajaCliente = "OK";
                     } else {
                         mensajeBajaCliente = "ERR";
@@ -284,10 +282,8 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "eliminarEmpleado":
                     String idEmplEliminar = request.getParameter("idEmpleado");
-                    Empleado empleadoEliminar = new Empleado();
-                    empleadoEliminar.setId(Long.valueOf(idEmplEliminar));
                     String mensajeBajaEmpleado = "";
-                    if (cusuario.bajaEmpleado(empleadoEliminar)) {
+                    if (cusuario.bajaEmpleado(idEmplEliminar)) {
                         mensajeBajaEmpleado = "OK";
                     } else {
                         mensajeBajaEmpleado = "ERR";
@@ -316,6 +312,29 @@ public class SUsuario extends HttpServlet {
                     CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha);
                     
                     response.getWriter().write("OK");
+                case "verificarCorreo":
+                    String correoVerficar = request.getParameter("correo");
+                    String mensajeVerifCorreo = "";
+                    if (cusuario.correoExiste(correoVerficar)) {
+                        mensajeVerifCorreo = "OK";
+                    } else {
+                        mensajeVerifCorreo = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeVerifCorreo);
+                    break;
+                case "verificarCedula":
+                    String cedulaVerficar = request.getParameter("cedula");
+                    String mensajeVerifCedula = "";
+                    if (cusuario.cedulaExiste(cedulaVerficar)) {
+                        mensajeVerifCedula = "OK";
+                    } else {
+                        mensajeVerifCedula = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeVerifCedula);
                     break;
             }
         }
