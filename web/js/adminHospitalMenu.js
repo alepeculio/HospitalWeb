@@ -867,3 +867,93 @@ $("#btnEliminarMedico").click(function () {
         });
     }
 });
+
+
+
+/// ---------------------
+// Ingregas HA
+
+$("#btnIngresarHA").click (function () {
+    var texto = document.getElementById("modalIUMensaje");
+    var med = seleccionado["MedHA"];
+    
+    if (med == "") {
+        texto.innerHTML = "Seleccione un medico";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var dia = $("#haDia").val ();
+    
+    if (dia == "") {
+        texto.innerHTML = "Seleccione un dia";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var hInicio = $("#haHoraInicio").val ();
+    
+    if (hInicio == "") {
+        texto.innerHTML = "Seleccione una hora de inicio";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var hFin = $("#haHoraFin").val ();
+    
+    if (hFin == "") {
+        texto.innerHTML = "Seleccione una hora de fin";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    var cant = $("#haCant").val ();
+    
+    if (cant == "") {
+        texto.innerHTML = "Seleccione una cantidad de clientes";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    if (cant <= 0) {
+        texto.innerHTML = "Seleccione una cantidad de clientes valida";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+    
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "altaHA",
+            medico: med,
+            dia: dia,
+            horaInicio: hInicio,
+            horaFin: hFin,
+            cant: cant
+        },
+        success: function (data) {
+            if (data == "ERR") {
+                texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+                texto.style.color = "red";
+                $("#modalIngresarUsuario").modal("show");
+            } else {
+                texto.innerHTML = "Horario de atencion ingresado!";
+                texto.style.color = "green";
+                $("#modalIngresarUsuario").modal("show");
+                $("#formHA")[0].reset ();
+            }
+        },
+        error: function () {
+            texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+        }
+    });
+});

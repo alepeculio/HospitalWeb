@@ -9,6 +9,11 @@
         <link rel="stylesheet" href="styles/adminHospitalMenu.css">
 
         <title>Menu administrador</title>
+
+        <script>
+            if (!window.location.toString ().includes ("/HospitalWeb/SUsuario?accion=menuAdmin"))
+                window.location.assign ("/HospitalWeb/SUsuario?accion=menuAdmin");
+        </script>
     </head>
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>
@@ -331,7 +336,7 @@
             <div class="tab-pane pestania" id="ingresarHA">
                 <h2>Agregar horario de atención</h2>
                 <hr>
-                <form>
+                <form onsubmit="return false" id="formHA">
                     <label>Seleccione el médico a asignar el horario</label>
                     <div class="input-group">
                         <input class="form-control" type="text" id="buscarMedHAInput" onkeyup="buscar('buscarMedHAInput', 'listMedHA')" placeholder="Buscar">
@@ -351,28 +356,28 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <label>Día</label>
-                                <select class="form-control" id="medicoEliminar" required>
+                                <select class="form-control" id="haDia" required>
                                     <option value="">--</option>
-                                    <option value="">Lunes</option>
-                                    <option value="">Martes</option>
-                                    <option value="">Miercoles</option>
-                                    <option value="">Jueves</option>
-                                    <option value="">Viernes</option>
-                                    <option value="">Sabado</option>
-                                    <option value="">Domingo</option>
+                                    <option value="Lunes">Lunes</option>
+                                    <option value="Martes">Martes</option>
+                                    <option value="Miercoles">Miercoles</option>
+                                    <option value="Jueves">Jueves</option>
+                                    <option value="Viernes">Viernes</option>
+                                    <option value="Sabado">Sabado</option>
+                                    <option value="Domingo">Domingo</option>
                                 </select>
                             </div>
                             <div class="col-sm-3">
                                 <label>Hora de inicio</label>
-                                <input class="form-control" type="time">
+                                <input class="form-control" type="time" required id="haHoraInicio">
                             </div>
                             <div class="col-sm-3">
                                 <label>Hora de fin</label>
-                                <input class="form-control" type="time">
+                                <input class="form-control" type="time" required id="haHoraFin">
                             </div>
                             <div class="col-sm-3">
                                 <label>Cantidad de clientes</label>
-                                <input class="form-control" type="number">
+                                <input class="form-control" type="number" required id="haCant">
                             </div>
                         </div>
                     </div>

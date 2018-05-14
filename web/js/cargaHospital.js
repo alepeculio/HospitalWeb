@@ -2,6 +2,9 @@ var mapa;
 var posInicial;
 var marcador;
 
+var filtroCorreo = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+var departamentos = ["Artigas", "Canelones", "Cerro Largo", "Colonia", "Durazno", "Flores", "Florida", "Lavalleja", "Maldonado", "Paysandú", "Río Negro", "Rivera", "Rocha", "Salto", "San José", "Soriano", "Tacuarembó", "Treinta y Tres", "Montevideo"];
+
 var hospitales = [];
 
 function agregarHospital (nombre, lat, lng) {
@@ -140,38 +143,48 @@ function clickHospital (hospital) {
     });
 }
 
+function obtenerDep (direccion) {
+    for (var i = 0; i < departamentos.length; i++)
+        if (direccion.includes (departamentos[i]))
+            return departamentos[i];
+    
+    return "NONE";
+}
+
+var filtroNumero = /^([0-9])+$/;
+
+function obtenerDirec (direccion) {
+    direccion = direccion.split (",")[0];
+    direccion = direccion.split (" ");
+    var final = "";
+    var fin = direccion.length - (filtroNumero.test (direccion[direccion.length - 1]) ? 1 : 0);
+    for (var i = 0; i < fin; i++)
+        final += direccion[i] + (i < fin - 1 ? " " : "");
+    return final;
+}
+
 function recomendar (geocoder, posicion) {
+    $("#nombre").val ("");
+    $("#directora").val ("");
+    $("#correo").val ("");
+    $("#telefono").val ("");
+    $("#departamento").val ("");
+    $("#calle").val ("");
+    $("#numero").val ("");
+    $("#lat").val ("");
+    $("#lng").val ("");
+    
     geocoder.geocode ({'location': posicion}, function (results, status) {
         if (status == 'OK') {
-            if (results[0]) {
-                var dep = results[0].formatted_address.split (",");
-                dep = dep[dep.length - 2];
+            if (results[0] && results[1]) {
+                var depto = obtenerDep (results[1].formatted_address);
+                if (depto == "NONE")
+                    return;
                 
-                if (dep.split (" ").length === 3)
-                    dep = "Montevideo";
-                else
-                    dep = dep.split ("Departamento de ")[1];
-                
-                var dir = results[0].formatted_address.split (",")[0];
-                var num = results[0].formatted_address.split (",")[0].split(" ");
-                num = num[num.length - 1];
-                
-                var direccion = "";
-                if (/^\d+$/.test(num)) {
-                    var p = dir.split (" ");
-                    for (var i = 0; i < p.length - 1; i++) {
-                        direccion += p[i] + " ";
-                    }
-                } else {
-                    direccion = dir;
-                    num = "";
-                }
-                if (direccion.charAt(direccion.length - 1) == ' ')
-                    direccion = direccion.substr(0, direccion.length - 1);
+                var direc = obtenerDirec (results[0].formatted_address);
                     
-                $("#departamento").val (dep);
-                $("#calle").val (direccion);
-                $("#numero").val (num);
+                $("#departamento").val (depto);
+                $("#calle").val (direc);
                 $("#lat").val (posicion.lat ());
                 $("#lng").val (posicion.lng ());
             } else {
@@ -244,15 +257,15 @@ $("#btnIngresarConfirmar").click (function () {
         $("#directoraParent").addClass ("has-error");
         faltaCampos = true;
     } else
-        $("#nombreParent").removeClass ("has-error");
+        $("#directoraParent").removeClass ("has-error");
     
-    if (telefono == "") {
+    if (telefono == "" || !filtroNumero.test (telefono)) {
         $("#telefonoHospitalParent").addClass ("has-error");
         faltaCampos = true;
     } else
         $("#telefonoHospitalParent").removeClass ("has-error");
     
-    if (correoHospital == "") {
+    if (correoHospital == "" || !emailCorrecto (correoHospital)) {
         $("#correoHospitalParent").addClass ("has-error");
         faltaCampos = true;
     } else
@@ -379,17 +392,17 @@ $("#btnModificarConrfirmar").click (function () {
     } else
         $("#detdirectoraParent").removeClass("has-error");
     
-    if (telefono == "") {
-        $("#dettelefonoParent").addClass("has-error");
+    if (telefono == "" || !filtroNumero.test (telefono)) {
+        $("#dettelefonoHospitalParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#dettelefonoParent").removeClass("has-error");
+        $("#dettelefonoHospitalParent").removeClass("has-error");
     
-    if (correo == "") {
-        $("#detcorreoParent").addClass("has-error");
+    if (correo == "" || !emailCorrecto (correo)) {
+        $("#detcorreoHospitalParent").addClass("has-error");
         faltaCampos = true;
     } else
-        $("#detcorreoParent").removeClass("has-error");
+        $("#detcorreoHospitalParent").removeClass("has-error");
 
     if (departamento == "") {
         $("#detdepartamentoParent").addClass("has-error");
@@ -497,6 +510,7 @@ $("#btnAdministradore").click (function () {
                 var administradores = data.split ("#");
                 
                 var listado = document.getElementById("listadoAdministradores");
+                $("#listadoAdministradores").html ("");
                 for (var i = 0; i < administradores.length; i++) {
                     var opt = document.createElement ("button");
                     opt.setAttribute ("role", "button");
@@ -525,13 +539,33 @@ $("#btnCerrarAdministradores").click (function () {
 });
 
 $("#btnAgregarNuevoAdministradores").click (function () {
+    var ciNuevo = $("#ciNuevoAdmin").val ().toString ().trim ();
+    var correoNuevo = $("#correoNuevoAdmin").val ().toString ().trim ();
+    
+    var errores = false;
+    
+    if (ciNuevo == "" || !filtroNumero.test (ciNuevo) || !ciNuevo.length == 8 || !cedulaCorrecta (ciNuevo.substring (0, 7), ciNuevo.charAt (7))) {
+        $("#divCiNuevoAdmin").addClass("has-error");
+        errores = true;
+    } else
+        $("#divCiNuevoAdmin").removeClass("has-error");
+    
+    if (correoNuevo == "" || !emailCorrecto (correoNuevo)) {
+        $("#divCorreoNuevoAdmin").addClass("has-error");
+        errores = true;
+    } else
+        $("#divCorreoNuevoAdmin").removeClass("has-error");
+    
+    if (errores)
+        return;
+    
     $.ajax ({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
             "agregarAdmin": "si",
-            "ci": $("#ciNuevoAdmin").val (),
-            "correo": $("#correoNuevoAdmin").val (),
+            "ci": ciNuevo,
+            "correo": correoNuevo,
             "nomHospital": hospitalSeleccionado.title
         },
         success: function (data) {
@@ -551,3 +585,15 @@ $("#btnAgregarNuevoAdministradores").click (function () {
 $("#btnAceptarAdministradorYaAgregado").click (function () {
     window.location.assign ("/HospitalWeb/SHospital?Administrador");
 });
+
+function emailCorrecto(email) {
+    return filtroCorreo.test(email);
+}
+
+function cedulaCorrecta(ci, digVer) {
+    var dig = "2987634";
+    var sum = 0;
+    for (var i = 0; i < dig.length; i++)
+        sum += (ci[i] * dig[i]) % 10;
+    return 10 - sum % 10 === digVer * 1;
+}
