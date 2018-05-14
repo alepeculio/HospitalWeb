@@ -559,6 +559,7 @@ seleccionado["CliP"] = "";
 seleccionado["CliH"] = "";
 seleccionado["MedE"] = "";
 seleccionado["MedHA"] = "";
+seleccionado["MedHAE"] = "";
 
 function seleccionar(nombreFila, id, tipo) {
     var li = document.getElementById(nombreFila + id);
