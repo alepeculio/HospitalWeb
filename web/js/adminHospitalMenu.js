@@ -510,10 +510,6 @@ function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
     });
 }
 
-cargarClientes("listCliP", "clientePFila", "CliP", "si");
-
-
-
 function buscar(inputid, listaid) {
 
     var input, filter, ul, li, a, i, contador;
@@ -649,19 +645,17 @@ $("#btnVincularCliente").click(function () {
                     texto.innerHTML = "Clientes relacionados correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
-
+                    deseleccionar("clientePFila", "CliP");
+                    deseleccionar("clienteHFila", "CliH");
                 }
             }
         });
-        deseleccionar("clientePFila", "CliP");
-        deseleccionar("clienteHFila", "CliH");
+
     }
 
 });
 //---------------------------------------------------------------------------------------------------------------------
 //Eliminar cliente
-
-cargarClientes("listCli", "clienteFila", "Cli", "no");
 
 $("#btnEliminarCliente").click(function () {
     if (seleccionado["Cli"] === "") {
@@ -729,8 +723,8 @@ function cargarMedicos(idLista, nombreFila, tipo) {
     });
 }
 
-cargarMedicos("listMedE", "medicoEFila", "MedE");
-cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
+
+
 
 
 $("#btnEliminarMedico").click(function () {
@@ -758,8 +752,7 @@ $("#btnEliminarMedico").click(function () {
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("medicoEFila", "MedE");
                     cargarMedicos("listMedE", "medicoEFila", "MedE");
-                    cargarMedicos("listMedHA", "medicoHAFila", "MedHA");
-                    cargarClientes("listCliP", "clientePFila", "CliP", "si");
+
                 }
             }
         });

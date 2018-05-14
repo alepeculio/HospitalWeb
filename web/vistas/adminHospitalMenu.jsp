@@ -16,15 +16,15 @@
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
 
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar cliente</a></li>
-            <li><a href="#eliminarCliente" data-toggle="tab">Eliminar cliente</a></li>
+            <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar cliente</a></li>
             <hr>
-            <li><a href="#relacionarHijo" data-toggle="tab">Relacionar con hijo</a></li>
+            <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Relacionar con hijo</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
-            <li><a href="#eliminarMedico" data-toggle="tab">Eliminar médico</a></li>
+            <li><a href="#eliminarMedico" data-toggle="tab" onclick ="cargarMedicos('listMedE', 'medicoEFila', 'MedE')">Eliminar médico</a></li>
             <hr>
-            <li><a href="#ingresarHA" data-toggle="tab">Agregar horario de atención</a></li>
-            <li><a href="#eliminarHA" data-toggle="tab">Eliminar horario de atención</a></li>
+            <li><a href="#ingresarHA" data-toggle="tab" onclick="cargarMedicos('listMedHA', 'medicoHAFila', 'MedHA')">Agregar horario de atención</a></li>
+            <li><a href="#eliminarHA" data-toggle="tab" onclick="cargarMedicos('listMedHAE', 'medicoHAEFila', 'MedHAE')">Eliminar horario de atención</a></li>
 
         </ul>
 
@@ -334,7 +334,7 @@
                 <form>
                     <label>Seleccione el médico a asignar el horario</label>
                     <div class="input-group">
-                        <input class="form-control" type="text" id="buscarMedHEInput" onkeyup="buscar('buscarMedHEInput', 'listMedHA')" placeholder="Buscar">
+                        <input class="form-control" type="text" id="buscarMedHAInput" onkeyup="buscar('buscarMedHAInput', 'listMedHA')" placeholder="Buscar">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
@@ -384,9 +384,16 @@
                 <h2>Eliminar horario de atención</h2>
                 <hr>
                 <label>Seleccione el médico a eliminar el horario</label>
-                <select class="form-control" id="medicoEliminar" required>
-                    <option value="">Médico</option>
-                </select>
+                <div class="input-group">
+                        <input class="form-control" type="text" id="buscarMedHAEInput" onkeyup="buscar('buscarMedHAEInput', 'listMedHAE')" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <ul class="list-group listCliP" id="listMedHAE">
+                        <li class="list-group-item"><a>No hay médicos</a></li>
+                    </ul>
                 <br>
                 <div class="datosHorarioAtencion"></div>
                 <label>Horarios de atención</label>
