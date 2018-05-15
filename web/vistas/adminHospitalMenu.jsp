@@ -412,23 +412,19 @@
                             <th class="tablaHA">Eliminar</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="tablaHA">
-                            <td>Lunes</td>
-                            <td>23:00</td>
-                            <td>08:00</td>
-                            <td>23</td>
-                            <td><button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button></td>
-                        </tr>
-                        <tr>
-                            <td>Miercoles</td>
-                            <td>23:00</td>
-                            <td>08:00</td>
-                            <td>15</td>
-                            <td><button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button></td>
+                    <tbody id="listaHA">
+                        <tr class="tablaHA" id="ha0" hidden>
+                            <td class="haDia">Lunes</td>
+                            <td class="haHI">23:00</td>
+                            <td class="haHF">08:00</td>
+                            <td class="haCant">23</td>
+                            <td><button class="btn btn-danger haBoton"><span class="glyphicon glyphicon-remove"></span></button></td>
                         </tr>
                     </tbody>
                 </table>
+                <div id="mensajeNoHay">
+                    Seleccione un medico
+                </div>
             </div>
         </div>
 

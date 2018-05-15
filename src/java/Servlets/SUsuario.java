@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -232,7 +233,7 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "obtNoHijosCliente":
                     List<Cliente> hCliente = new CCliente().obtenerNoHijosCliente(request.getParameter("idCliente"));
-                    String json = new Gson().toJson(hCliente);
+                    String json = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (hCliente);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
                     break;
@@ -258,7 +259,7 @@ public class SUsuario extends HttpServlet {
                         clientes = CCliente.obtenerClientesNoEmpleados();
                     }
 
-                    String clientesJson = new Gson().toJson(clientes);
+                    String clientesJson = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson(clientes);
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
@@ -275,8 +276,8 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeBajaCliente);
                     break;
                 case "obtEmpleados":
-                    List<Empleado> empleados = cusuario.obtenerEmpleados();
-                    String empleadosJson = new Gson().toJson(empleados);
+                    List<Empleado> empleados = cusuario.obtenerEmpleados ();
+                    String empleadosJson = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson(empleados);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
                     break;
@@ -296,12 +297,12 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     
-                    String horaInicio = request.getParameter ("horaInicio");
-                    String horaFin = request.getParameter ("horaFin");
+                    String[] horaInicio = request.getParameter ("horaInicio").split (":");
+                    String[] horaFin = request.getParameter ("horaFin").split (":");
                     String cant = request.getParameter ("cant");
                     
-                    Date hi = new Date (0, 0, 0, 19, 30);
-                    Date hf = new Date (0, 0, 0, 19, 31);
+                    Date hi = new Date (0, 0, 0, Integer.valueOf (horaInicio[0]), Integer.valueOf (horaInicio[1]));
+                    Date hf = new Date (0, 0, 0, Integer.valueOf (horaFin[0]), Integer.valueOf (horaFin[1]));
                     
                     HorarioAtencion ha = new HorarioAtencion ();
                     ha.setDia (request.getParameter ("dia"));
@@ -337,6 +338,16 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVerifCedula);
+                    break;
+                case "obtenerHorarioAtencion":
+                    response.setContentType ("application/json");
+                    List<HorarioAtencion> has = CHospital.obtenerHorariosAtencion (Long.valueOf (request.getParameter ("idMedico")), (Usuario) request.getSession ().getAttribute ("usuario"));
+                    response.getWriter ().write (new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (has));
+                    break;
+                case "eliminarHA":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CHospital.eliminarHorarioAtencion (Integer.valueOf (request.getParameter ("idHA"))) ? "OK" : "ERR");
                     break;
             }
         }
