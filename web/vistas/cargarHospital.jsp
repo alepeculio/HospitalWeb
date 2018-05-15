@@ -9,6 +9,11 @@
         <jsp:include page="include_js.html"/>
         <title>Registrar Usuario</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
+        
+        <script>
+            if (!window.location.toString ().includes ("/HospitalWeb/SHospital?Administrador"))
+                window.location.assign ("/HospitalWeb/SHospital?Administrador");
+        </script>
 
     </head>
     <body background="img/fondo.png">

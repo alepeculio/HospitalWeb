@@ -8,6 +8,7 @@ import Controladores.CCliente;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -164,10 +165,14 @@ public class SHospital extends HttpServlet {
             response.getWriter().write("OK");
         } else if (request.getParameter("edad") != null) {
             Cliente c = CCliente.obtenerCliente("brian");
-           if (CCliente.edad(c,Integer.parseInt(request.getParameter("edad")),request.getParameter("en"))!=null){
-            
-               response.getWriter().write("si");
-           }else{ response.getWriter().write("no");}
+            if (CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en")) != null) {
+                List<Cliente> hijosXedad = CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en"));
+                String json = new Gson().toJson(hijosXedad);
+                response.setContentType("application/json");
+                response.getWriter().write(json);
+            } else {
+                response.getWriter().write("no");
+            }
         }
 
     }

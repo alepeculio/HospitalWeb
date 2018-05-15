@@ -9,6 +9,11 @@
         <link rel="stylesheet" href="styles/adminHospitalMenu.css">
 
         <title>Menu administrador</title>
+
+        <script>
+            if (!window.location.toString ().includes ("/HospitalWeb/SUsuario?accion=menuAdmin"))
+                window.location.assign ("/HospitalWeb/SUsuario?accion=menuAdmin");
+        </script>
     </head>
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>

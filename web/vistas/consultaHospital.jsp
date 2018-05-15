@@ -24,7 +24,7 @@
             Hospital h = (Hospital) request.getAttribute("hospital");
             List<Empleado> empleados = (List<Empleado>) request.getAttribute("empleados");
             Cliente c = (Cliente) request.getAttribute("cliente");
-            
+
         %>
 
     </head>
@@ -93,7 +93,7 @@
                             <tr id="edad">
                                 <th style="border-top: hidden; border-left: hidden"></th>
                                 <th style="border-top: hidden;border-left: hidden" COLSPAN=7>Edad en meses</th>
-                                <th style="border-top: hidden;border-left: hidden; border-right: hidden" COLSPAN=3 >Edad en aÃ±o</th>
+                                <th style="border-top: hidden;border-left: hidden; border-right: hidden" COLSPAN=3 >Edad en año</th>
                             </tr>
                             <tr id="numero">
                                 <th style="border-left: hidden;border-top: hidden; background-color:white"></th>
@@ -342,7 +342,7 @@
                         <div class="modal-body ">
                             <h3>Correcto.</h3> 
                             <select>
-                               for()
+                                for()
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -376,6 +376,43 @@
                 }
 
             });
+            $.ajax({
+                url: "/HospitalWeb/SHospital",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    "edad": vacuna[2],
+                    "en": vacuna[1]
+                },
+                success: function (data) {
+                    var ul = document.getElementById(idLista);
+                    $(ul).empty();
+                    if (data.length === 0) {
+                        var li1 = document.createElement("li");
+                        var a1 = document.createElement("a");
+                        var modal = document.getElementById("noEdad");
+                        a1.appendChild(document.createTextNode("No hay hijos"));
+                        li1.setAttribute("class", "list-group-item");
+                        ul.appendChild(li1);
+                        li1.appendChild(a1);
+                        modal.appendChild(li1);
+                    } else {
+                        $('#noEdad').modal('show');
+                    }
+                    for (var i = 0; i < data.length; i++) {
+                        var li = document.createElement("li");
+                        var a = document.createElement("a");
+                        a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                        li.setAttribute("id", nombreFila + data[i].id);
+                        li.setAttribute("class", "list-group-item");
+                        li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                        ul.appendChild(li);
+                        li.appendChild(a);
+                    }
+                    setCargado(tipo);
+                }
+            });
+
         }
 
 
