@@ -115,7 +115,6 @@ function agregarEspecialidad() {
     nuevo.find(".especialidadButton").attr("onclick", "quitarEspecialidad(" + (esp + 1) + ")");
     nuevo.insertAfter($("#esp" + esp));
     esp++;
-    cambiarBotonesEsp();
 }
 
 function quitarEspecialidad(id) {
@@ -125,16 +124,6 @@ function quitarEspecialidad(id) {
     $("#esp" + esp).remove();
     esp--;
     cambiarBotonesEsp();
-}
-
-function cambiarBotonesEsp() {
-    if (esp === 1) {
-        $("#esp1").find(".especialidadButton").prop("disabled", true);
-        return;
-    }
-
-    for (var i = 1; i <= esp; i++)
-        $("#esp" + i).find(".especialidadButton").prop("disabled", false);
 }
 
 
@@ -284,8 +273,17 @@ $("#btnRegistrarUsuario").click(function () {
     var apartamento = $("#apartamento").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 0; i < tel; i++)
-        telefonos = telefonos + "|" + ($("#telefono" + (i + 1)).val().toString().trim());
+    for (i = 0; i < tel; i++) {
+        var tt = $("#telefono" + (i + 1)).val().toString().trim();
+        if (!telefonoCorrecto (tt)){
+            var texto = document.getElementById("modalIUMensaje");
+            texto.innerHTML = "Algun telefono es incorrecto";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+            return;
+        }
+        telefonos = telefonos + "|" + (tt);
+    }
     var errores = false;
     if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
         errCi.text("Error: Cedula no valida.");
@@ -299,7 +297,7 @@ $("#btnRegistrarUsuario").click(function () {
             errores = true;
         }
     }
-
+    
     if (!soloLetras(nombre)) {
         errNombre.text("Error: Caracteres invalidos.");
         errNombre.prop("hidden", false);
@@ -405,9 +403,17 @@ $("#btnRegistrarMedico").click(function () {
     var apartamento = $("#apartamentoMed").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 0; i < telMed; i++)
-        telefonos = telefonos + "|" + ($("#telefonoMed" + (i + 1)).val().toString().trim());
-
+    for (i = 0; i < telMed; i++) {
+        var tt = $("#telefonoMed" + (i + 1)).val().toString().trim();
+        if (!telefonoCorrecto (tt)){
+            var texto = document.getElementById("modalIUMensaje");
+            texto.innerHTML = "Algun telefono es incorrecto";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+            return;
+        }
+        telefonos = telefonos + "|" + (tt);
+    }
     var especialidades = "";
     var j;
     for (j = 0; j < esp; j++)
