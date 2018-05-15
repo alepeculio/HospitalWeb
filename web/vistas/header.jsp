@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="styles/header.css">
- 
+
 <!--<%@page contentType="text/html" pageEncoding="UTF-8"%>-->
 <nav class="navbar navbar-inverse" id="barra">
     <div class="container-fluid">
@@ -16,24 +16,11 @@
             </div>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
+        <%if (request.getSession().getAttribute("usuario") != null) {%>
         <div class="collapse navbar-collapse" id="c-menu">
-            <ul class="nav navbar-nav padding">
-                <li><a id="menu" href="/HospitalWeb/SInicio?accion=inicio">Inicio <span class="sr-only"></span></a></li>
-                <li><a id="menu" href="#">¿Por qué Hospital Web?</a></li>
-                <li><a id="menu" href="#" >Ayuda</a></li>
-            </ul>
-
-            <ul class="nav navbar-right" id="menu-boton">
-                <li class="dropdown">
-                    <a id="menu" href="#" class="btn btn-primary" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mi cuenta <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li class="text-center"><a href="/HospitalWeb/SUsuario?accion=perfil">Ver Perfil <span class="glyphicon glyphicon-user micuenta_icono"></span></a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="text-center"><a href="/HospitalWeb/SUsuario?accion=logout">Cerrar Sesión <span class="glyphicon glyphicon-log-out micuenta_icono"></span></a></li>
-                    </ul>
-                </li>
-            </ul>
+            <button class="btn btn-default" id="btnCerrarSesion" title = "Cerrar sesión" onclick="window.location='/HospitalWeb/SUsuario?accion=logout'"><span class="glyphicon glyphicon-log-out micuenta_icono"></span></a></button>
         </div>
+        <% }%>
+
     </div>
 </nav>

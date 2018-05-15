@@ -284,7 +284,7 @@ $("#btnRegistrarUsuario").click(function () {
     var apartamento = $("#apartamento").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 1; i < tel; i++)
+    for (i = 0; i < tel; i++)
         telefonos = telefonos + "|" + ($("#telefono" + (i + 1)).val().toString().trim());
     var errores = false;
     if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
@@ -405,7 +405,7 @@ $("#btnRegistrarMedico").click(function () {
     var apartamento = $("#apartamentoMed").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 1; i < telMed; i++)
+    for (i = 0; i < telMed; i++)
         telefonos = telefonos + "|" + ($("#telefonoMed" + (i + 1)).val().toString().trim());
 
     var especialidades = "";
@@ -1043,4 +1043,12 @@ function eliminarHA (id) {
             $("#modalIngresarUsuario").modal("show");
         }
     });
+}
+
+
+// ------------------
+// Modal Pregunta
+
+function pregunta () {
+    
 }
