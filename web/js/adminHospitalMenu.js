@@ -410,7 +410,7 @@ $("#btnRegistrarMedico").click(function () {
 
     var especialidades = "";
     var j;
-    for (j = 1; j < esp; j++)
+    for (j = 0; j < esp; j++)
         especialidades = especialidades + "|" + ($("#especialidad" + (j + 1)).val().toString().trim());
     var errores = false;
     if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
