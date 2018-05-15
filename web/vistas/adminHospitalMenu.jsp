@@ -412,23 +412,19 @@
                             <th class="tablaHA">Eliminar</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="tablaHA">
-                            <td>Lunes</td>
-                            <td>23:00</td>
-                            <td>08:00</td>
-                            <td>23</td>
-                            <td><button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button></td>
-                        </tr>
-                        <tr>
-                            <td>Miercoles</td>
-                            <td>23:00</td>
-                            <td>08:00</td>
-                            <td>15</td>
-                            <td><button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button></td>
+                    <tbody id="listaHA">
+                        <tr class="tablaHA" id="ha0" hidden>
+                            <td class="haDia">Lunes</td>
+                            <td class="haHI">23:00</td>
+                            <td class="haHF">08:00</td>
+                            <td class="haCant">23</td>
+                            <td><button class="btn btn-danger haBoton"><span class="glyphicon glyphicon-remove"></span></button></td>
                         </tr>
                     </tbody>
                 </table>
+                <div id="mensajeNoHay">
+                    Seleccione un medico
+                </div>
             </div>
         </div>
 
@@ -442,6 +438,22 @@
                     </div>
                     <div class="modal-footer centrarIUBoton">
                         <button class="btn btn-info" data-dismiss="modal" id="btnPregBorrarAdminConfirmar">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pregunta -->
+        <div class="modal fade" id="modalPregunta" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="modalPreguntaTexto"></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success" data-dismiss="modal" id="btnPreguntaAceptar">Aceptar</button>
                     </div>
                 </div>
             </div>
