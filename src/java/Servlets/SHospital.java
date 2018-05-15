@@ -164,14 +164,21 @@ public class SHospital extends HttpServlet {
             CHospital.borrarAdministrador(URLDecoder.decode(request.getParameter("nomHospital")), URLDecoder.decode(request.getParameter("ciAdmin")));
             response.getWriter().write("OK");
         } else if (request.getParameter("edad") != null) {
-            Cliente c = CCliente.obtenerCliente("brian");
+            System.out.println("Servlets.SHospital.doPost()");
+            Cliente c = CCliente.obtenerCliente("sinhijo");
+            if (c.getHijos().isEmpty()) {
+                System.out.println("Servlets.SHospital.doPost().no");
+                String json = new Gson().toJson("no");
+                response.setContentType("application/json");
+                response.getWriter().write(json);
+            }else{
             if (CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en")) != null) {
+                System.out.println("Servlets.SHospital.doPost().if");
                 List<Cliente> hijosXedad = CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en"));
                 String json = new Gson().toJson(hijosXedad);
                 response.setContentType("application/json");
                 response.getWriter().write(json);
-            } else {
-                response.getWriter().write("no");
+            }
             }
         }
 

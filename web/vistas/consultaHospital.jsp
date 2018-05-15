@@ -124,7 +124,7 @@
                             <tr>
                                 <td>Pentavalente</td>
                                 <td></td>
-                                <td id="vacuna" onclick="" value="Pentavalente-m-2" title="Ir a registrar" ></td>
+                                <td id="vacuna" onClick="verificar('Pentavalente-m-2')" value="Pentavalente-m-2" title="Ir a registrar" ></td>
                                 <td id="vacuna"  onclick="" value="Pentavalente-m-4" title="Ir a registrar"></td>
                                 <td id="vacuna" onclick="" value="Pentavalente-m-6"title="Ir a registrar"></td>
                                 <td></td>
@@ -341,9 +341,10 @@
                         </div>
                         <div class="modal-body ">
                             <h3>Correcto.</h3> 
-                            <select>
-                                for()
+
+                            <select id="hijos">
                             </select>
+
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
@@ -358,25 +359,6 @@
         function verificar(td) {
             var vacuna = td.split("-");
             $.ajax({
-                type: "POST",
-                url: "/HospitalWeb/SHospital",
-                data: {
-                    "edad": vacuna[2],
-                    "en": vacuna[1]
-                },
-                success: function (data) {
-                    if (data === "no") {
-                        $('#noEdad').modal('show');
-                    } else {
-                        $('#correcto').modal('show');
-                    }
-                },
-                error: function () {
-                    alert("Error en el servelt");
-                }
-
-            });
-            $.ajax({
                 url: "/HospitalWeb/SHospital",
                 type: "POST",
                 dataType: 'json',
@@ -385,34 +367,25 @@
                     "en": vacuna[1]
                 },
                 success: function (data) {
-                    var ul = document.getElementById(idLista);
-                    $(ul).empty();
                     if (data.length === 0) {
-                        var li1 = document.createElement("li");
-                        var a1 = document.createElement("a");
-                        var modal = document.getElementById("noEdad");
-                        a1.appendChild(document.createTextNode("No hay hijos"));
-                        li1.setAttribute("class", "list-group-item");
-                        ul.appendChild(li1);
-                        li1.appendChild(a1);
-                        modal.appendChild(li1);
-                    } else {
                         $('#noEdad').modal('show');
+                    } else if (data === "no") {
+                        $('#noHijos').modal('show');
+                    } else {
+                        for (var i = 0; i < data.length; i++) {
+                            var id = data[i].nombre;
+                            var nombre = data[i].nombre;
+                            var apellido = data[i].apellido;
+                            $("#hijos").append('<option value=' + id + '>' + nombre + ' ' + apellido + '</option>');
+                        }
+                        $('#correcto').modal('show');
                     }
-                    for (var i = 0; i < data.length; i++) {
-                        var li = document.createElement("li");
-                        var a = document.createElement("a");
-                        a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
-                        li.setAttribute("id", nombreFila + data[i].id);
-                        li.setAttribute("class", "list-group-item");
-                        li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
-                        ul.appendChild(li);
-                        li.appendChild(a);
-                    }
-                    setCargado(tipo);
+                },
+                error: function () {
+                    console.log("Error");
                 }
-            });
 
+            });
         }
 
 
