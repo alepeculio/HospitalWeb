@@ -767,6 +767,10 @@ $("#btnVincularCliente").click(function () {
 //Eliminar cliente
 
 $("#btnEliminarCliente").click(function () {
+    pregunta ("Desea eliminar el cliente?", "eliminarClienteDeVerdar");
+});
+
+function eliminarClienteDeVerdar () {
     if (seleccionado["Cli"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó ningun cliente";
@@ -797,7 +801,8 @@ $("#btnEliminarCliente").click(function () {
             }
         });
     }
-});
+}
+
 //---------------------------------------------------------------------------------------------------------------------------
 //Eliminar medico
 
@@ -838,11 +843,11 @@ function cargarMedicos(idLista, nombreFila, tipo) {
     });
 }
 
-
-
-
-
 $("#btnEliminarMedico").click(function () {
+    pregunta ("Desea eliminar el medico?", "eliminarMedicoDeVerdad");
+});
+
+function eliminarMedicoDeVerdad () {
     if (seleccionado["MedE"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó ningun medico";
@@ -876,8 +881,7 @@ $("#btnEliminarMedico").click(function () {
             }
         });
     }
-});
-
+}
 
 
 /// ---------------------
@@ -1017,6 +1021,10 @@ function cargarHorariosAtencion () {
 }
 
 function eliminarHA (id) {
+    pregunta ("Desea eliminar el horario de atencion?", "eliminarHADeVerdad", id);
+}
+
+function eliminarHADeVerdad (id) {
     var texto = document.getElementById("modalIUMensaje");
     $.ajax ({
         type: "POST",
@@ -1045,10 +1053,11 @@ function eliminarHA (id) {
     });
 }
 
-
 // ------------------
 // Modal Pregunta
 
-function pregunta () {
-    
+function pregunta (pregunta, funcion, params = "") {
+    $("#modalPreguntaTexto").html (pregunta);
+    $("#btnPreguntaAceptar").attr ("onclick", funcion + "(" + params + ")");
+    $("#modalPregunta").modal ("show");
 }
