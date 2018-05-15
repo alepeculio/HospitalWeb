@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -66,15 +68,20 @@ public class SUsuario extends HttpServlet {
                             }
 
                             switch (CUsuario.obtenerTipo(u)) {
+
                                 case "General":
                                     request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                     break;
                                 case "Hospital":
                                     request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
                                     break;
-                                default:
+                                case "Empleado":
+                                    request.getRequestDispatcher("/SEmpleado?accion=inicio").forward(request, response);
+                                    break;
+                                case "Cliente":
                                     request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
                                     break;
+
                             }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
@@ -91,11 +98,6 @@ public class SUsuario extends HttpServlet {
                     response.addCookie(userCookie);
                     response.addCookie(passCookie);
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
-                    break;
-                case "perfil":
-                    Empleado empleado = (new CUsuario()).getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
-                    request.setAttribute("empleado", empleado);
-                    request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
                 case "menuAdmin":
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
@@ -201,7 +203,7 @@ public class SUsuario extends HttpServlet {
                     }
 
                     String mensajeMed = "";
-                    if (Singleton.getInstance ().persist (e)) {
+                    if (Singleton.getInstance().persist(e)) {
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -232,7 +234,7 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "obtNoHijosCliente":
                     List<Cliente> hCliente = new CCliente().obtenerNoHijosCliente(request.getParameter("idCliente"));
-                    String json = new Gson().toJson(hCliente);
+                    String json = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (hCliente);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
                     break;
@@ -251,14 +253,14 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "obtClientes":
                     String conEmpleados = request.getParameter("conEmpleados");
-                    List<Cliente> clientes = null;
+                    List<Cliente> clientes;
                     if ("si".equals(conEmpleados)) {
-                        clientes = new CCliente().obtenerClientes();
+                        clientes = CCliente.obtenerClientes();
                     } else {
                         clientes = CCliente.obtenerClientesNoEmpleados();
                     }
 
-                    String clientesJson = new Gson().toJson(clientes);
+                    String clientesJson = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson(clientes);
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
@@ -275,14 +277,14 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeBajaCliente);
                     break;
                 case "obtEmpleados":
-                    List<Empleado> empleados = cusuario.obtenerEmpleados();
-                    String empleadosJson = new Gson().toJson(empleados);
+                    List<Empleado> empleados = cusuario.obtenerEmpleados ();
+                    String empleadosJson = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson(empleados);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
                     break;
                 case "eliminarEmpleado":
-                    String idEmplEliminar = request.getParameter("idEmpleado"); 
-                    String mensajeBajaEmpleado = "";
+                    String idEmplEliminar = request.getParameter("idEmpleado");
+                    String mensajeBajaEmpleado;
                     if (cusuario.bajaEmpleado(idEmplEliminar)) {
                         mensajeBajaEmpleado = "OK";
                     } else {
@@ -296,12 +298,12 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     
-                    String horaInicio = request.getParameter ("horaInicio");
-                    String horaFin = request.getParameter ("horaFin");
+                    String[] horaInicio = request.getParameter ("horaInicio").split (":");
+                    String[] horaFin = request.getParameter ("horaFin").split (":");
                     String cant = request.getParameter ("cant");
                     
-                    Date hi = new Date (0, 0, 0, 19, 30);
-                    Date hf = new Date (0, 0, 0, 19, 31);
+                    Date hi = new Date (0, 0, 0, Integer.valueOf (horaInicio[0]), Integer.valueOf (horaInicio[1]));
+                    Date hf = new Date (0, 0, 0, Integer.valueOf (horaFin[0]), Integer.valueOf (horaFin[1]));
                     
                     HorarioAtencion ha = new HorarioAtencion ();
                     ha.setDia (request.getParameter ("dia"));
@@ -309,14 +311,15 @@ public class SUsuario extends HttpServlet {
                     ha.setHoraFin (hf);
                     ha.setClientesMax (Integer.valueOf (cant));
                     
-                    if (CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha))
+                    if (CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha)) {
                         response.getWriter().write("OK");
-                    else
+                    } else {
                         response.getWriter().write("ERR");
+                    }
                     break;
                 case "verificarCorreo":
                     String correoVerficar = request.getParameter("correo");
-                    String mensajeVerifCorreo = "";
+                    String mensajeVerifCorreo;
                     if (cusuario.correoExiste(correoVerficar)) {
                         mensajeVerifCorreo = "OK";
                     } else {
@@ -328,7 +331,7 @@ public class SUsuario extends HttpServlet {
                     break;
                 case "verificarCedula":
                     String cedulaVerficar = request.getParameter("cedula");
-                    String mensajeVerifCedula = "";
+                    String mensajeVerifCedula;
                     if (cusuario.cedulaExiste(cedulaVerficar)) {
                         mensajeVerifCedula = "OK";
                     } else {
@@ -337,6 +340,16 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVerifCedula);
+                    break;
+                case "obtenerHorarioAtencion":
+                    response.setContentType ("application/json");
+                    List<HorarioAtencion> has = CHospital.obtenerHorariosAtencion (Long.valueOf (request.getParameter ("idMedico")), (Usuario) request.getSession ().getAttribute ("usuario"));
+                    response.getWriter ().write (new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (has));
+                    break;
+                case "eliminarHA":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CHospital.eliminarHorarioAtencion (Integer.valueOf (request.getParameter ("idHA"))) ? "OK" : "ERR");
                     break;
             }
         }

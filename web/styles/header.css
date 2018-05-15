@@ -11,22 +11,16 @@
     color: white;
 }
 
-#menu{
-  font-size: 15px;
-  color: white;
-}
-
-#c-menu{
-    margin-left: 10pt;
-}
-
-#menu-boton{
-  margin-top:0.4%;
-}
-
 .navbar-nav.padding{
     margin-left: 20%;
 }
 
+#btnCerrarSesion{
+    float:right; 
+    margin-top : .7%;
+}
 
-
+#btnCerrarSesion > a {
+    color:black;
+    text-decoration: none;
+}
