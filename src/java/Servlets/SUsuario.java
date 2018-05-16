@@ -351,6 +351,16 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(CHospital.eliminarHorarioAtencion (Integer.valueOf (request.getParameter ("idHA"))) ? "OK" : "ERR");
                     break;
+                case "passCorrecta":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(((Usuario) request.getSession ().getAttribute ("usuario")).getContrasenia ().equals (request.getParameter ("pass")) ? "OK" : "ERR");
+                    break;
+                case "cambiarPass":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CUsuario.cambiarPass (((Usuario) request.getSession ().getAttribute ("usuario")).getId (), request.getParameter ("pass")) ? "OK" : "ERR");
+                    break;
             }
         }
 
