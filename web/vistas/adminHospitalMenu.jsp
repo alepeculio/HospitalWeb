@@ -11,8 +11,8 @@
         <title>Menu administrador</title>
 
         <script>
-            if (!window.location.toString ().includes ("/HospitalWeb/SUsuario?accion=menuAdmin"))
-                window.location.assign ("/HospitalWeb/SUsuario?accion=menuAdmin");
+            if (!window.location.toString().includes("/HospitalWeb/SUsuario?accion=menuAdmin"))
+                window.location.assign("/HospitalWeb/SUsuario?accion=menuAdmin");
         </script>
     </head>
     <body background="img/fondo.png">
@@ -109,21 +109,33 @@
                     <select class="form-control" id="departamento" required>
                         <option value="">Departamento</option>
                     </select>
+                    <small id="departamentoError" class="text-danger" hidden>
+                        Error!
+                    </small>
                     </br>
                     <select class="form-control" id="ciudad" required>
                         <option value="">Ciudad</option>
                     </select>
+                    <small id="ciudadError" class="text-danger" hidden>
+                        Error!
+                    </small>
                     </br>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input required class="form-control" placeholder="Calle" type="text" id="calle">
                             </div>
+                            <small id="calleError" class="text-danger" hidden>
+                                Error!
+                            </small>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <input required class="form-control" placeholder="Nro." type="number" id="numero">
                             </div>
+                            <small id="numeroError" class="text-danger" hidden>
+                                Error!
+                            </small>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
@@ -134,7 +146,7 @@
                     <div id="opciones" class="collapse">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button type="submit" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-success btn-block" id="btnRegistrarUsuario">Confirmar</button>
+                                <button type="submit" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-success btn-block" id="btnRegistrarUsuario" onclick="cedulaExiste('Cliente')">Confirmar</button>
                             </div>
                             <div class="col-lg-6">
                                 <button type="button" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-danger btn-block">Cancelar</button>
@@ -142,7 +154,7 @@
                         </div>
                         </br>
                     </div>
-                    <button type="button" id="registrarCliente" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
+                    <button type="button" id="registrarCliente" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar</button>
                 </form>
             </div>
             <div class="tab-pane pestania" id="eliminarCliente">
@@ -253,7 +265,7 @@
                     <label>Teléfonos</label>
                     <div class="form-group" id="telMed0" hidden>
                         <div class="input-group">
-                            <input required class="form-control telMedInput" type="text" placeholder="Telefono 1" id="telefonoMed"/>
+                            <input required class="form-control telMedInput" type="number" placeholder="Telefono 1" id="telefonoMed"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-danger telMedButton" type="button" onclick="quitarTelMed(1)" disabled>
                                     <span class="glyphicon glyphicon-minus iconoButton"></span>
@@ -267,25 +279,37 @@
                     <select class="form-control" id="departamentoMed" required>
                         <option value="">Departamento</option>
                     </select>
+                    <small id="departamentoMedError" class="text-danger" hidden>
+                        Error!
+                    </small>
                     </br>
                     <select class="form-control" id="ciudadMed" required>
                         <option value="">Ciudad</option>
                     </select>
+                    <small id="ciudadMedError" class="text-danger" hidden>
+                        Error!
+                    </small>
                     </br>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input required class="form-control" placeholder="Calle" type="text" id="calleMed">
                             </div>
+                            <small id="calleMedError" class="text-danger" hidden>
+                                Error!
+                            </small>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input required class="form-control" placeholder="Nro." type="text" id="numeroMed">
+                                <input required class="form-control" placeholder="Nro." type="number" id="numeroMed">
                             </div>
+                            <small id="numeroMedError" class="text-danger" hidden>
+                                Error!
+                            </small>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Apt." type="text" id="apartamentoMed">
+                                <input class="form-control" placeholder="Apt." type="number" id="apartamentoMed">
                             </div>
                         </div>
                     </div>
@@ -305,7 +329,7 @@
                     <div id="opcionesMed" class="collapse">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button type="submit" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico">Confirmar</button>
+                                <button type="submit" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico" onclick="cedulaExiste('Medico')">Confirmar</button>
                             </div>
                             <div class="col-lg-6">
                                 <button type="button" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-danger btn-block">Cancelar</button>
@@ -313,7 +337,7 @@
                         </div>
                         </br>
                     </div>
-                    <button type="button" id="registrarMedico" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
+                    <button type="button" id="registrarMedico" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-lg btn-success btn-block">Registrar</button>
                 </form>
             </div>
             <div class="tab-pane pestania" id="eliminarMedico">
@@ -390,15 +414,15 @@
                 <hr>
                 <label>Seleccione el médico a eliminar el horario</label>
                 <div class="input-group">
-                        <input class="form-control" type="text" id="buscarMedHAEInput" onkeyup="buscar('buscarMedHAEInput', 'listMedHAE')" placeholder="Buscar">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                        </span>
-                    </div><!-- /input-group -->
+                    <input class="form-control" type="text" id="buscarMedHAEInput" onkeyup="buscar('buscarMedHAEInput', 'listMedHAE')" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div><!-- /input-group -->
 
-                    <ul class="list-group listCliP" id="listMedHAE">
-                        <li class="list-group-item"><a>No hay médicos</a></li>
-                    </ul>
+                <ul class="list-group listCliP" id="listMedHAE">
+                    <li class="list-group-item"><a>No hay médicos</a></li>
+                </ul>
                 <br>
                 <div class="datosHorarioAtencion"></div>
                 <label>Horarios de atención</label>

@@ -317,18 +317,6 @@ public class SUsuario extends HttpServlet {
                         response.getWriter().write("ERR");
                     }
                     break;
-                case "verificarCorreo":
-                    String correoVerficar = request.getParameter("correo");
-                    String mensajeVerifCorreo;
-                    if (cusuario.correoExiste(correoVerficar)) {
-                        mensajeVerifCorreo = "OK";
-                    } else {
-                        mensajeVerifCorreo = "ERR";
-                    }
-                    response.setContentType("text/plain");
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write(mensajeVerifCorreo);
-                    break;
                 case "verificarCedula":
                     String cedulaVerficar = request.getParameter("cedula");
                     String mensajeVerifCedula;
