@@ -46,10 +46,10 @@
                     <tbody>  
                         <tr>
                             <th>Hospital</th>
-                            <th>Dia</th>
+                            <th>Día</th>
                             <th>Inicia</th>
                             <th>Finaliza</th>
-                            <th>Clientes maximos</th>
+                            <th>Clientes máximos</th>
                             <th>Cliente actual</th>
                             <th>Turnos</th>
                         </tr>
@@ -64,7 +64,7 @@
                             <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
                             <td><%= ha.getClientesMax()%></td>
                             <td><%= ha.getClienteActual()%></td>
-                            <td><a class="btn btn-info" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>" href="#turnos">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>
+                            <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>" href="#turnos">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
                         </tr>
                         <tr>
                             <td colspan="7">
@@ -75,9 +75,10 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th>Tipo</th>
-                                                <th>Numero</th>
-                                                <th>Finalizado</th>
+                                                <th class="text-center">Tipo</th>
+                                                <th class="text-center">Número</th>
+                                                <th class="text-center">Finalizado</th>
+                                                <th></th>
                                             </tr>
                                             <% List<Turno> turnos = ha.getTurnos();
 
@@ -87,12 +88,13 @@
                                             <tr>
                                                 <td><%= turno.getTipo()%></td>
                                                 <td><%= turno.getNumero()%></td>
-                                                <td><%= (turno.isFinalizado()) ? "Si" : "No <button class='btn btn-danger'>Finalizar</button>"%></td>
+                                                <td><%= (turno.isFinalizado()) ? "Si" : "No"%></td>
+                                                <td><%= (turno.isFinalizado()) ? "" : "<button class='btn btn-success'>Finalizar</button>"%></td>
+
                                             </tr>
 
                                             <%}
                                             } else { %>
-
                                             <tr class="text-center">
                                                 <td colspan = "3"> No hay turnos reservados en este Horario de atención</td>
                                             </tr>
@@ -178,5 +180,6 @@
             </div>
         </div>
         <jsp:include page="include_js.html"/>
+        <script src="js/empleado.js"></script>
     </body>
 </html>
