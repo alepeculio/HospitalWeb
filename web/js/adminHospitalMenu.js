@@ -219,9 +219,9 @@ function cedulaExiste(tipoUsuario) {
                 errCi.prop("hidden", false);
             } else {
                 if (tipoUsuario === "Cliente") {
-                    altaCliente(ci,digitoVer);
+                    altaCliente(ci, digitoVer);
                 } else {
-                    altaMedico(ci,digitoVer);
+                    altaMedico(ci, digitoVer);
                 }
             }
         },
@@ -229,15 +229,23 @@ function cedulaExiste(tipoUsuario) {
         }
     });
 }
-function altaCliente(ci,digitoVer) {
+function altaCliente(ci, digitoVer) {
     var errNombre = $("#nombreError");
     var errApellido = $("#apellidoError");
     var errEmail = $("#emailError");
     var errFecha = $("#fechaError");
+    var errDepartamento = $("#departamentoError");
+    var errCuidad = $("#ciudadError");
+    var errCalle = $("#calleError");
+    var errNumero = $("#numeroError");
     errNombre.prop("hidden", true);
     errApellido.prop("hidden", true);
     errEmail.prop("hidden", true);
     errFecha.prop("hidden", true);
+    errDepartamento.prop("hidden", true);
+    errCuidad.prop("hidden", true);
+    errNumero.prop("hidden", true);
+    errCalle.prop("hidden", true);
     var nombre = $("#nombre").val().toString().trim();
     var apellido = $("#apellido").val().toString().trim();
     var email = $("#email").val().toString().trim();
@@ -253,7 +261,7 @@ function altaCliente(ci,digitoVer) {
     var i;
     for (i = 0; i < tel; i++) {
         var tt = $("#telefono" + (i + 1)).val().toString().trim();
-        if (!telefonoCorrecto (tt)){
+        if (!telefonoCorrecto(tt)) {
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -285,6 +293,30 @@ function altaCliente(ci,digitoVer) {
     if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
         errFecha.text("Error: Fecha no valida.");
         errFecha.prop("hidden", false);
+        errores = true;
+    }
+
+    if (departamento === "") {
+        errDepartamento.text("Error: Departamento no seleccionado.");
+        errDepartamento.prop("hidden", false);
+        errores = true;
+    }
+
+    if (ciudad === "") {
+        errCuidad.text("Error: Cuidad no seleccionada.");
+        errCuidad.prop("hidden", false);
+        errores = true;
+    }
+
+    if (calle === "") {
+        errCalle.text("Error: Calle no valida.");
+        errCalle.prop("hidden", false);
+        errores = true;
+    }
+
+    if (numero === "") {
+        errNumero.text("Error: Numero no valido.");
+        errNumero.prop("hidden", false);
         errores = true;
     }
 
@@ -336,15 +368,23 @@ function altaCliente(ci,digitoVer) {
     }
 }
 
-function altaMedico(ci,digitoVer) {
+function altaMedico(ci, digitoVer) {
     var errNombre = $("#nombreMedError");
     var errApellido = $("#apellidoMedError");
     var errEmail = $("#emailMedError");
     var errFecha = $("#fechaMedError");
+    var errDepartamento = $("#departamentoMedError");
+    var errCuidad = $("#ciudadMedError");
+    var errCalle = $("#calleMedError");
+    var errNumero = $("#numeroMedError");
     errNombre.prop("hidden", true);
     errApellido.prop("hidden", true);
     errEmail.prop("hidden", true);
     errFecha.prop("hidden", true);
+    errDepartamento.prop("hidden", true);
+    errCuidad.prop("hidden", true);
+    errNumero.prop("hidden", true);
+    errCalle.prop("hidden", true);
     var nombre = $("#nombreMed").val().toString().trim();
     var apellido = $("#apellidoMed").val().toString().trim();
     var email = $("#emailMed").val().toString().trim();
@@ -360,7 +400,7 @@ function altaMedico(ci,digitoVer) {
     var i;
     for (i = 0; i < telMed; i++) {
         var tt = $("#telefonoMed" + (i + 1)).val().toString().trim();
-        if (!telefonoCorrecto (tt)){
+        if (!telefonoCorrecto(tt)) {
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -396,6 +436,30 @@ function altaMedico(ci,digitoVer) {
     if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
         errFecha.text("Error: Fecha no valida.");
         errFecha.prop("hidden", false);
+        errores = true;
+    }
+
+    if (departamento === "") {
+        errDepartamento.text("Error: Departamento no seleccionado.");
+        errDepartamento.prop("hidden", false);
+        errores = true;
+    }
+
+    if (ciudad === "") {
+        errCuidad.text("Error: Cuidad no seleccionada.");
+        errCuidad.prop("hidden", false);
+        errores = true;
+    }
+
+    if (calle === "") {
+        errCalle.text("Error: Calle no valida.");
+        errCalle.prop("hidden", false);
+        errores = true;
+    }
+
+    if (numero === "") {
+        errNumero.text("Error: Numero no valido.");
+        errNumero.prop("hidden", false);
         errores = true;
     }
 
@@ -437,7 +501,7 @@ function altaMedico(ci,digitoVer) {
                     setNoCargado("CliP");
                     setNoCargado("MedE");
                     setNoCargado("MedHA");
-                    setNoCargado("MedHAE")
+                    setNoCargado("MedHAE");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -492,7 +556,7 @@ function emailCorrecto(email) {
 
 function fechaCorrecta(dia, mes, anio) {
     var d = new Date(anio * 1, mes * 1 - 1, dia);
-    return d && (d.getMonth() + 1) === mes * 1;
+    return d && (d.getMonth() + 1) === mes * 1 && d.getYear() !== 0;
 }
 
 function soloLetras(palabra) {
@@ -627,7 +691,7 @@ function seleccionar(nombreFila, id, tipo) {
     if (tipo === "CliP") {
         cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
     }
-    if (tipo == "MedHAE")
+    if (tipo === "MedHAE")
         cargarHorariosAtencion();
 }
 function deseleccionar(nombreFila, tipo) {
@@ -847,7 +911,7 @@ $("#btnIngresarHA").click(function () {
     var texto = document.getElementById("modalIUMensaje");
     var med = seleccionado["MedHA"];
 
-    if (med == "") {
+    if (med === "") {
         texto.innerHTML = "Seleccione un medico";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
@@ -856,7 +920,7 @@ $("#btnIngresarHA").click(function () {
 
     var dia = $("#haDia").val();
 
-    if (dia == "") {
+    if (dia === "") {
         texto.innerHTML = "Seleccione un dia";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
@@ -865,7 +929,7 @@ $("#btnIngresarHA").click(function () {
 
     var hInicio = $("#haHoraInicio").val();
 
-    if (hInicio == "") {
+    if (hInicio === "") {
         texto.innerHTML = "Seleccione una hora de inicio";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
@@ -874,7 +938,7 @@ $("#btnIngresarHA").click(function () {
 
     var hFin = $("#haHoraFin").val();
 
-    if (hFin == "") {
+    if (hFin === "") {
         texto.innerHTML = "Seleccione una hora de fin";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
@@ -883,7 +947,7 @@ $("#btnIngresarHA").click(function () {
 
     var cant = $("#haCant").val();
 
-    if (cant == "") {
+    if (cant === "") {
         texto.innerHTML = "Seleccione una cantidad de clientes";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
@@ -909,7 +973,7 @@ $("#btnIngresarHA").click(function () {
             cant: cant
         },
         success: function (data) {
-            if (data == "ERR") {
+            if (data === "ERR") {
                 texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
                 texto.style.color = "red";
                 $("#modalIngresarUsuario").modal("show");
@@ -932,7 +996,7 @@ var haNum = 0;
 
 function cargarHorariosAtencion() {
     var texto = document.getElementById("modalIUMensaje");
-    if (seleccionado["MedHAE"] == "")
+    if (seleccionado["MedHAE"] === "")
         return;
 
     $.ajax({
@@ -949,7 +1013,7 @@ function cargarHorariosAtencion() {
                 haNum--;
             }
             haNum = 0;
-            if (data.length == 0) {
+            if (data.length === 0) {
                 $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
                 $("#mensajeNoHay").show();
             } else
@@ -990,7 +1054,7 @@ function eliminarHADeVerdad(id) {
             idHA: id
         },
         success: function (data) {
-            if (data == "OK") {
+            if (data === "OK") {
                 texto.innerHTML = "Horario de atencion eliminado";
                 texto.style.color = "green";
                 cargarHorariosAtencion();
