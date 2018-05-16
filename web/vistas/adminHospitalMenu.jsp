@@ -294,7 +294,7 @@
                         <div class="input-group">
                             <input required class="form-control especialidad" type="text" placeholder="Especialidad 1" id="especialidad"/>
                             <span class="input-group-btn">
-                                <button class="btn btn-danger especialidadButton" type="button" onclick="quitarEspecialidad(1)" disabled>
+                                <button class="btn btn-danger especialidadButton" type="button" onclick="quitarEspecialidad(1)">
                                     <span class="glyphicon glyphicon-minus iconoButton"></span>
                                 </button>
                             </span>
