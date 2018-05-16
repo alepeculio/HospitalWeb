@@ -134,7 +134,7 @@
                     <div id="opciones" class="collapse">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button type="submit" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-success btn-block" id="btnRegistrarUsuario">Confirmar</button>
+                                <button type="submit" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-success btn-block" id="btnRegistrarUsuario" onclick="cedulaExiste('Cliente')">Confirmar</button>
                             </div>
                             <div class="col-lg-6">
                                 <button type="button" data-toggle="collapse" data-target="#opciones" class="btn btn-sm btn-danger btn-block">Cancelar</button>
@@ -142,7 +142,7 @@
                         </div>
                         </br>
                     </div>
-                    <button type="button" id="registrarCliente" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar Usuario</button>
+                    <button type="button" id="registrarCliente" data-toggle="collapse" data-target="#opciones" class="btn btn-lg btn-success btn-block">Registrar</button>
                 </form>
             </div>
             <div class="tab-pane pestania" id="eliminarCliente">
@@ -305,7 +305,7 @@
                     <div id="opcionesMed" class="collapse">
                         <div class="row">
                             <div class="col-lg-6">
-                                <button type="submit" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico">Confirmar</button>
+                                <button type="submit" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-success btn-block" id="btnRegistrarMedico" onclick="cedulaExiste('Medico')">Confirmar</button>
                             </div>
                             <div class="col-lg-6">
                                 <button type="button" data-toggle="collapse" data-target="#opcionesMed" class="btn btn-sm btn-danger btn-block">Cancelar</button>
