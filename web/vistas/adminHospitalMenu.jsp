@@ -467,22 +467,7 @@
             </div>
         </div>
 
-        <!-- Pregunta -->
-        <div class="modal fade" id="modalPregunta" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" id="modalPreguntaTexto"></h4>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-success" data-dismiss="modal" id="btnPreguntaAceptar">Aceptar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <jsp:include page="dialogos.html"/>
         <jsp:include page="include_js.html"/>
         <script src="js/adminHospitalMenu.js"></script>
     </body>

@@ -259,9 +259,9 @@ function altaCliente(ci, digitoVer) {
     var apartamento = $("#apartamento").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 0; i < tel; i++) {
-        var tt = $("#telefono" + (i + 1)).val().toString().trim();
-        if (!telefonoCorrecto(tt)) {
+    for (i = 1; i < tel; i++) {
+        var tt = $("#telefono" + i).val().toString().trim();
+        if (!telefonoCorrecto (tt)){
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -398,9 +398,9 @@ function altaMedico(ci, digitoVer) {
     var apartamento = $("#apartamentoMed").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 0; i < telMed; i++) {
-        var tt = $("#telefonoMed" + (i + 1)).val().toString().trim();
-        if (!telefonoCorrecto(tt)) {
+    for (i = 1; i < telMed; i++) {
+        var tt = $("#telefonoMed" + i).val().toString().trim();
+        if (!telefonoCorrecto (tt)){
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -1071,13 +1071,4 @@ function eliminarHADeVerdad(id) {
             $("#modalIngresarUsuario").modal("show");
         }
     });
-}
-
-// ------------------
-// Modal Pregunta
-
-function pregunta(pregunta, funcion, params = "") {
-    $("#modalPreguntaTexto").html(pregunta);
-    $("#btnPreguntaAceptar").attr("onclick", funcion + "(" + params + ")");
-    $("#modalPregunta").modal("show");
 }

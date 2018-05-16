@@ -3,6 +3,7 @@
     Created on : 15/05/2018, 02:15:15 PM
     Author     : Ale
 --%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@page import="Clases.EstadoTurno"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -17,9 +18,14 @@
 <html>
     <head>
         <jsp:include page="include_css.html"/>
+        <jsp:include page="include_js.html"/>
         <link rel="stylesheet" href="styles/empleado.css">
 
         <title>Perfil</title>
+        <script>
+            if (!window.location.toString ().includes ("/HospitalWeb/SEmpleado?accion=inicio"))
+                window.location.assign ("/HospitalWeb/SEmpleado?accion=inicio");
+        </script>
 
     </head>
     <body background="img/fondo.png">
@@ -31,7 +37,7 @@
         %>
 
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
-            <li class="active"><a href="#horariosAtencion" data-toggle="tab">Horarios de atenci�n</a></li>
+            <li class="active"><a href="#horariosAtencion" data-toggle="tab">Horarios de atención</a></li>
             <hr>
             <li><a href="#datosPersonales" data-toggle="tab" >Datos personales</a></li>
         </ul>
@@ -39,7 +45,7 @@
         <div class="panel contenido col-md-8 text-center tab-content">
 
             <div class="tab-pane active pestania" id="horariosAtencion">
-                <h2>Horarios de atenci�n</h2>
+                <h2>Horarios de atención</h2>
                 <hr>
                 <table class="table">
                     <thead>
@@ -109,7 +115,7 @@
                                                    } else {%>
                                             </tr>
                                             <tr class="text-center">
-                                                <td colspan = "3"> No hay turnos reservados en este Horario de atenci�n</td>
+                                                <td colspan = "3"> No hay turnos reservados en este Horario de atención</td>
                                             </tr>
                                             <% }%>
                                         </tbody>
@@ -120,7 +126,7 @@
                         <%}
                         } else {%>
                         <tr>
-                            <td colspan="7">No tiene horarios de atenci�n definidos</td>
+                            <td colspan="7">No tiene horarios de atención definidos</td>
                         </tr> 
                         <%}%>
                     </tbody>
@@ -135,20 +141,28 @@
                     <ul class="list-group">
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Nombre completo</strong></span><%= empleado.getNombre()%> <%= empleado.getApellido()%></li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Email</strong></span><%= usuario.getCorreo()%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Tel�fonos</strong></span> 
+                        <li class="list-group-item text-right">
                             <%
-                                String[] telefonos = empleado.getTelefonos();
-                                if (telefonos != null && telefonos.length != 0) {
-                                    for (String t : telefonos) {
-                                        out.println(" " + t + " | ");
+                                    String[] telefonos = empleado.getTelefonos();
+                                    %>
+                            <span class="pull-left"><strong>Teléfono<%= telefonos.length <= 2 ? "" : "s"%></strong></span>
+                            <ul>
+                                <%
+                                    if (telefonos != null && telefonos.length != 0) {
+                                        for (String t : telefonos) {
+                                            out.println("<li>" + t + "</li>");
+                                        }
+                                    } else {
+                                        out.println("-");
                                     }
-                                    out.println(telefonos[0]);
-                                } else {
-                                    out.println("-");
-                                }
-                            %>
+                                %>
+                            </ul>
                         </li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>T�tulos</strong></span> 
+                        <!--
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Teléfonos</strong></span> 
+                            
+                        </li>-->
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Títulos</strong></span> 
                             <%
                                 String[] titulos = empleado.getTitulos();
                                 if (titulos != null) {
@@ -173,25 +187,33 @@
                             %>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Fecha de nacimiento</strong></span><% out.println(empleado.getDiaNacimiento() + "/" + empleado.getMesNacimiento() + "/" + empleado.getAnioNacimiento());%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Direcci�n</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento() + " " + empleado.getPiso());%></li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento() + " " + empleado.getPiso());%></li>
                     </ul> 
 
 
                     <div>
                         <ul class="nav nav-tabs" id="myTab">
-                            <li><a href="#editar" data-toggle="tab">Editar</a></li>
+                            <li class="active"><a href="#editar" data-toggle="tab">Cambiar Contraseña</a></li>
                         </ul>
-
-                        <div class="tab-content">
-
-                            <div class="tab-pane active" id="editar">
-
-                            </div>
+                        <div class="tab-pane" id="pe">
+                            <form onsubmit="return false">
+                                <label>Contraseña Actual</label>
+                                <div class="form-group" id="actualParent">
+                                    <input required class="form-control" placeholder="Contraseña Actual" type="password" name="nombre" id="passActual">
+                                </div>
+                                <label>Contraseña Nueva</label>
+                                <div class="form-group" id="nuevaParent">
+                                    <input required class="form-control" placeholder="Contraseña Nueva" type="password" name="nombre" id="passNueva">
+                                </div>
+                                <button class="btn btn-success" id="btnCambiar">Confirmar</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <jsp:include page="dialogos.html"/>
+        <script src="js/empleado.js"></script>
         <jsp:include page="include_js.html"/>
         <script src="js/empleado.js"></script>
     </body>
