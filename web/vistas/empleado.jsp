@@ -5,6 +5,7 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%@page import="Clases.EstadoTurno"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="Clases.Turno"%>
 <%@page import="java.util.List"%>
@@ -82,7 +83,8 @@
                                             <tr>
                                                 <th class="text-center">Tipo</th>
                                                 <th class="text-center">N�mero</th>
-                                                <th class="text-center">Finalizado</th>
+                                                <th class="text-center">Cliente</th>
+                                                <th class="text-center">Estado</th>
                                                 <th></th>
                                             </tr>
                                             <% List<Turno> turnos = ha.getTurnos();
@@ -93,13 +95,24 @@
                                             <tr>
                                                 <td><%= turno.getTipo()%></td>
                                                 <td><%= turno.getNumero()%></td>
-                                                <td><%= (turno.isFinalizado()) ? "Si" : "No"%></td>
-                                                <td><%= (turno.isFinalizado()) ? "" : "<button class='btn btn-success'>Finalizar</button>"%></td>
+                                                <td>
+                                                    <%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%>
+                                                </td>
 
+                                                <td><%= turno.getEstado()%></td>
+                                                <td><%
+                                                    EstadoTurno estado = turno.getEstado();
+                                                    if (estado == EstadoTurno.INICIADO) {
+                                                        out.println("<button class='btn btn-danger' style='width: 80%'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
+                                                    } else if (estado == EstadoTurno.INGRESADO) {
+                                                        out.println("<button class='btn btn-success' style='width: 80%'>Iniciar <span class='glyphicon glyphicon-play'></span></button>");
+                                                    }
+
+                                                    %>
+                                                <td>
+                                                    <%}
+                                                   } else {%>
                                             </tr>
-
-                                            <%}
-                                            } else { %>
                                             <tr class="text-center">
                                                 <td colspan = "3"> No hay turnos reservados en este Horario de atención</td>
                                             </tr>
