@@ -5,6 +5,7 @@ import Clases.Empleado;
 import Clases.HorarioAtencion;
 import Clases.Usuario;
 import Controladores.CCliente;
+import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
@@ -18,6 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -128,6 +132,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (CCliente.altaCliente(c)) {
+                        new Thread (new Runnable() {
+                            @Override
+                            public void run() {
+                                CCorreo.enviarContrasenia (c);
+                            }
+                        }).start ();
                         mensaje = "OK";
                     } else {
                         mensaje = "ERR";
@@ -185,6 +195,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensajeMed = "";
                     if (Singleton.getInstance().persist(e)) {
+                        new Thread (new Runnable() {
+                            @Override
+                            public void run() {
+                                CCorreo.enviarContrasenia (e);
+                            }
+                        }).start ();
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -328,7 +344,6 @@ public class SUsuario extends HttpServlet {
                     break;
             }
         }
-
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

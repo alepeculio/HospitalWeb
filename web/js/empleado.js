@@ -74,7 +74,7 @@ function cambiarPass(nueva) {
 var turnoActual = "";
 function cambiarEstadoTurno(idTurno, estado, idHA, numero) {
     if (turnoActual !== idTurno && turnoActual !== "") {
-        alert("finalize el turno actual");
+        mensajeErr("Finalize el turno actual");
         return;
     }
     $.ajax({
@@ -86,18 +86,19 @@ function cambiarEstadoTurno(idTurno, estado, idHA, numero) {
         },
         success: function (data) {
             if (data === "ERR") {
-                alert("error");
+                mensajeErr("Ocurrió un error al actualizar el estado del turno");
             } else if (data === "OK") {
                 if (estado === "FINALIZADO") {
                     $("#btnFinalizado" + idTurno).remove();
-                    $("#estado" + idTurno).html("FINALIZADO");
+                    $("#estado" + idTurno).html("finalizado");
+                    $("#ca" + idHA).html("-");
                     turnoActual = "";
                 } else if (estado === "INICIADO") {
-                    $("#btnIniciado" + idTurno).attr("onclick", "cambiarEstadoTurno(\"" + idTurno + "\",\"FINALIZADO\")");
+                    $("#btnIniciado" + idTurno).attr("onclick", "cambiarEstadoTurno(\"" + idTurno + "\",\"FINALIZADO\",\"" + idHA + "\",\"" + numero + "\")");
                     $("#btnIniciado" + idTurno).attr("class", "btn btn-danger");
                     $("#btnIniciado" + idTurno).html("Finalizar <span class='glyphicon glyphicon-stop'></span>");
                     $("#btnIniciado" + idTurno).attr("id", "btnFinalizado" + idTurno);
-                    $("#estado" + idTurno).html("INICIADO");
+                    $("#estado" + idTurno).html("iniciado");
                     setClienteActual(idHA, numero);
                     turnoActual = idTurno;
                 }
@@ -119,7 +120,7 @@ function setClienteActual(idHA, numero) {
         },
         success: function (data) {
             if (data === "ERR") {
-                alert("error");
+                mensajeErr("Ocurrió un error al actualizar el cliente actual");
             } else if (data === "OK") {
                 $("#ca" + idHA).html(numero);
             }
@@ -129,3 +130,5 @@ function setClienteActual(idHA, numero) {
         }
     });
 }
+
+//mostrarDatosMedico(1);

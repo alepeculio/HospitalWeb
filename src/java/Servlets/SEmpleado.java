@@ -5,6 +5,7 @@ import Clases.EstadoTurno;
 import Clases.Usuario;
 import Controladores.CEmpleado;
 import Controladores.CUsuario;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ public class SEmpleado extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        request.setCharacterEncoding("UTF-8");
         String accion = request.getParameter("accion");
         if (accion != null) {
             switch (accion) {
@@ -32,6 +33,11 @@ public class SEmpleado extends HttpServlet {
                     Empleado empleado = cusuario.getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
+                    break;
+                case "obtEmpleado":
+                    response.setContentType ("application/json");
+                    Empleado e = CUsuario.getEmpleado (Long.valueOf (request.getParameter ("id")));
+                    response.getWriter ().write (new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (e == null ? "ERR" : e));
                     break;
                 case "cambiarTurno":
                     String turno = request.getParameter("idTurno");

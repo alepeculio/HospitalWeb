@@ -2,6 +2,7 @@ package Servlets;
 
 import Clases.Hospital;
 import Clases.Usuario;
+import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
@@ -141,6 +142,12 @@ public class SHospital extends HttpServlet {
             Usuario u = new Usuario();
             u.setCi(request.getParameter("ci"));
             u.setCorreo(request.getParameter("correo"));
+            new Thread (new Runnable() {
+                @Override
+                public void run() {
+                    CCorreo.enviarContrasenia (u);
+                }
+            }).start ();
             response.getWriter().write(CHospital.agregarAdministrador(URLDecoder.decode(request.getParameter("nomHospital"), "UTF-8"), u));
         } else if (request.getParameter("eliminarAdmin") != null) {
             response.setContentType("text/plain");

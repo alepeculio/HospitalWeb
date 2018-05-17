@@ -18,7 +18,7 @@
         <jsp:include page="include_css.html"/>
         <link rel="stylesheet" href="styles/empleado.css">
 
-        <title>Perfil</title>
+        <title>Inicio</title>
         <script>
             if (!window.location.toString().includes("/HospitalWeb/SEmpleado?accion=inicio"))
                 window.location.assign("/HospitalWeb/SEmpleado?accion=inicio");
@@ -56,6 +56,7 @@
                             <th>Clientes máximos</th>
                             <th>Cliente actual</th>
                             <th>Turnos</th>
+                            <th>Estado</th>
                         </tr>
 
                         <% List<HorarioAtencion> hsa = empleado.getHorariosAtencions();
@@ -69,9 +70,10 @@
                             <td><%= ha.getClientesMax()%></td>
                             <td id="ca<%= ha.getId()%>"><%= ha.getClienteActual()%></td>
                             <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
+                            <td><button class="btn btn-danger">Finalizar</button</td>
                         </tr>
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 <div id="turnos<%= ha.getId()%>" class="collapse">
                                     <table class="table">
                                         <thead> 
@@ -79,9 +81,9 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th class="text-center">Tipo</th>
                                                 <th class="text-center">Número</th>
                                                 <th class="text-center">Cliente</th>
+                                                <th class="text-center">Tipo</th>
                                                 <th class="text-center">Estado</th>
                                                 <th></th>
                                             </tr>
@@ -91,26 +93,24 @@
                                                     for (Turno turno : turnos) {
                                             %>
                                             <tr>
-                                                <td><%= turno.getTipo()%></td>
-                                                <td><%= turno.getNumero()%></td>
+                                                <td><%= turno.getNumero()%></td>  
                                                 <td><%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%></td>
-                                                <td id="estado<%=turno.getId()%>" ><%= turno.getEstado()%></td>
+                                                <td><%= turno.getTipo().toString().toLowerCase()%></td>
+                                                <td id="estado<%=turno.getId()%>" ><%= turno.getEstado().toString().toLowerCase()%></td>
                                                 <td>
                                                     <%
                                                         EstadoTurno estado = turno.getEstado();
                                                         if (estado == EstadoTurno.INICIADO) {
-                                                            out.println("<button class='btn btn-danger' style='width: 80%' id='btnFinalizado" + turno.getId() + "' onclick='cambiarEstadoTurno(\"" + turno.getId() + "\",\"FINALIZADO\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
-                                                        } else if (estado == EstadoTurno.INGRESADO) {
-                                                            out.println("<button class='btn btn-success' style='width: 80%' id='btnIniciado" + turno.getId() + "' onclick='cambiarEstadoTurno(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero()+ "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
-                                                        
-                                                    );
+                                                            out.println("<button class='btn btn-danger' style='width: 80%' id='btnFinalizado" + turno.getId() + "' onclick='cambiarEstadoTurno(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
+                                                        } else if (estado == EstadoTurno.PENDIENTE) {
+                                                            out.println("<button class='btn btn-success' style='width: 80%' id='btnIniciado" + turno.getId() + "' onclick='cambiarEstadoTurno(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
+                                                            );
                                                         }
                                                     %> 
                                                 </td>
                                             </tr>
                                             <% } %>
                                             <% } else {%>
-
                                             <tr class="text-center">
                                                 <td colspan = "4"> No hay turnos reservados en este Horario de atención</td>
                                             </tr>
@@ -123,7 +123,7 @@
                         <%}
                         } else {%>
                         <tr>
-                            <td colspan="7">No tiene horarios de atenciÃ³n definidos</td>
+                            <td colspan="7">No tiene horarios de atención definidos</td>
                         </tr> 
                         <%}%>
                     </tbody>
@@ -142,7 +142,7 @@
                             <%
                                 String[] telefonos = empleado.getTelefonos();
                             %>
-                            <span class="pull-left"><strong>TelÃ©fono<%= telefonos.length <= 2 ? "" : "s"%></strong></span>
+                            <span class="pull-left"><strong>Teléfono<%= telefonos.length <= 2 ? "" : "s"%></strong></span>
                             <ul>
                                 <%
                                     if (telefonos != null && telefonos.length != 0) {
@@ -154,22 +154,6 @@
                                     }
                                 %>
                             </ul>
-                        </li>
-                        <!--
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>TelÃ©fonos</strong></span> 
-                            
-                        </li>-->
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>TÃ­tulos</strong></span> 
-                            <%
-                                String[] titulos = empleado.getTitulos();
-                                if (titulos != null) {
-                                    for (String ti : titulos) {
-                                        out.println(" " + ti + " ");
-                                    }
-                                } else {
-                                    out.println("-");
-                                }
-                            %>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Especialidades</strong></span>
                             <%
@@ -184,23 +168,23 @@
                             %>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Fecha de nacimiento</strong></span><% out.println(empleado.getDiaNacimiento() + "/" + empleado.getMesNacimiento() + "/" + empleado.getAnioNacimiento());%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>DirecciÃ³n</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento() + " " + empleado.getPiso());%></li>
-                    </ul> 
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento());%></li>
+                    </ul>
 
 
                     <div>
                         <ul class="nav nav-tabs" id="myTab">
-                            <li class="active"><a href="#editar" data-toggle="tab">Cambiar ContraseÃ±a</a></li>
+                            <li class="active"><a href="#editar" data-toggle="tab">Cambiar Contraseña</a></li>
                         </ul>
                         <div class="tab-pane" id="pe">
                             <form onsubmit="return false">
-                                <label>ContraseÃ±a Actual</label>
+                                <label>Contraseña Actual</label>
                                 <div class="form-group" id="actualParent">
-                                    <input required class="form-control" placeholder="ContraseÃ±a Actual" type="password" name="nombre" id="passActual">
+                                    <input required class="form-control" placeholder="Contraseña Actual" type="password" name="nombre" id="passActual">
                                 </div>
-                                <label>ContraseÃ±a Nueva</label>
+                                <label>Contraseña Nueva</label>
                                 <div class="form-group" id="nuevaParent">
-                                    <input required class="form-control" placeholder="ContraseÃ±a Nueva" type="password" name="nombre" id="passNueva">
+                                    <input required class="form-control" placeholder="Contraseña Nueva" type="password" name="nombre" id="passNueva">
                                 </div>
                                 <button class="btn btn-success" id="btnCambiar">Confirmar</button>
                             </form>
@@ -210,6 +194,7 @@
             </div>
         </div>
         <jsp:include page="include_js.html"/>
+        <jsp:include page="modalDoctor.html"/>
         <jsp:include page="dialogos.html"/>
         <script src="js/empleado.js"></script>
     </body>
