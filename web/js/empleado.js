@@ -113,6 +113,13 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     $("#estadoHA" + idHA).empty();
                     $("#estadoHA" + idHA).append(finalizar);
                 }
+
+                if (data === "lastTime") {
+                    $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
+                    $('[id ="btnEstado"]', '#turnos' + idHA).remove();
+                    $('#estadoHA' + idHA).text("finalizado");
+                    turnoActual = "";
+                }
             }
         },
         error: function () {
