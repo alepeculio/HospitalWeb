@@ -71,3 +71,5 @@ function cambiarPass (nueva) {
         }
     });
 }
+
+mostrarDatosMedico(1);

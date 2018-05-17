@@ -30,9 +30,6 @@
 </div>
 
 <script>
-    // ------------------
-    // Modal Pregunta
-
     function pregunta (pregunta, funcion, params = "") {
         $("#modalPreguntaTexto").html (pregunta);
         $("#btnPreguntaAceptar").attr ("onclick", funcion + "(" + params + ")");
@@ -41,6 +38,15 @@
     
     function mensaje (mensaje, funcion = "", params = "") {
         $("#modalMensajeTexto").html (mensaje);
+        $("#modalMensajeTexto").css ("color", "green");
+        if (funcion != "")
+            $("#btnMensajeAceptar").attr ("onclick", funcion + "(" + params + ")");
+        $("#modalMensaje").modal ("show");
+    }
+    
+    function mensajeErr (mensaje, funcion = "", params = "") {
+        $("#modalMensajeTexto").html (mensaje);
+        $("#modalMensajeTexto").css ("color", "red");
         if (funcion != "")
             $("#btnMensajeAceptar").attr ("onclick", funcion + "(" + params + ")");
         $("#modalMensaje").modal ("show");

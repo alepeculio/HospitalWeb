@@ -17,7 +17,6 @@
 <html>
     <head>
         <jsp:include page="include_css.html"/>
-        <jsp:include page="include_js.html"/>
         <link rel="stylesheet" href="styles/empleado.css">
 
         <title>Perfil</title>
@@ -52,10 +51,10 @@
                     <tbody>  
                         <tr>
                             <th>Hospital</th>
-                            <th>Día</th>
+                            <th>Dï¿½a</th>
                             <th>Inicia</th>
                             <th>Finaliza</th>
-                            <th>Clientes máximos</th>
+                            <th>Clientes mï¿½ximos</th>
                             <th>Cliente actual</th>
                             <th>Turnos</th>
                         </tr>
@@ -82,7 +81,7 @@
                                         <tbody>
                                             <tr>
                                                 <th class="text-center">Tipo</th>
-                                                <th class="text-center">Número</th>
+                                                <th class="text-center">Nï¿½mero</th>
                                                 <th class="text-center">Finalizado</th>
                                                 <th></th>
                                             </tr>
@@ -145,22 +144,6 @@
                                 %>
                             </ul>
                         </li>
-                        <!--
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>TelÃ©fonos</strong></span> 
-                            
-                        </li>-->
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>TÃ­tulos</strong></span> 
-                            <%
-                                String[] titulos = empleado.getTitulos();
-                                if (titulos != null) {
-                                    for (String ti : titulos) {
-                                        out.println(" " + ti + " ");
-                                    }
-                                } else {
-                                    out.println("-");
-                                }
-                            %>
-                        </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Especialidades</strong></span>
                             <%
                                 String[] especialidades = empleado.getEspecialidades();
@@ -174,8 +157,8 @@
                             %>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Fecha de nacimiento</strong></span><% out.println(empleado.getDiaNacimiento() + "/" + empleado.getMesNacimiento() + "/" + empleado.getAnioNacimiento());%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>DirecciÃ³n</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento() + " " + empleado.getPiso());%></li>
-                    </ul> 
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>DirecciÃ³n</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento());%></li>
+                    </ul>
 
 
                     <div>
@@ -199,9 +182,9 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="dialogos.html"/>
-        <script src="js/empleado.js"></script>
         <jsp:include page="include_js.html"/>
+        <jsp:include page="modalDoctor.html"/>
+        <jsp:include page="dialogos.html"/>
         <script src="js/empleado.js"></script>
     </body>
 </html>
