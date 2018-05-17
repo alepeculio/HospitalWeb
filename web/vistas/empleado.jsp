@@ -18,6 +18,12 @@
         <jsp:include page="include_css.html"/>
         <link rel="stylesheet" href="styles/empleado.css">
 
+        <!-- Movido para arriba para poder utilizar funciones antes de que termine de cargar la pagina-->
+        <jsp:include page="include_js.html"/>
+        <jsp:include page="modalDoctor.html"/>
+        <jsp:include page="dialogos.html"/>
+        <script src="js/empleado.js"></script>
+
         <title>Inicio</title>
         <script>
             if (!window.location.toString().includes("/HospitalWeb/SEmpleado?accion=inicio"))
@@ -68,7 +74,17 @@
                             <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraInicio())%></td>
                             <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
                             <td><%= ha.getClientesMax()%></td>
-                            <td id="ca<%= ha.getId()%>"><%= ha.getClienteActual()%></td>
+                            <td id="ca<%= ha.getId()%>"><%if (ha.getClienteActual() == 0) {
+                                    out.println("-");
+                                    out.println("<script type='text/javascript'> setTurnoActual('" + ha.getId() + "','');</script>");
+                                } else {
+                                    out.println(ha.getClienteActual());
+                                    for (Turno t : ha.getTurnos()) {
+                                        if (t.getNumero() == ha.getClienteActual()) {
+                                            out.println("<script type='text/javascript'>setTurnoActual('" + ha.getId() + "','" + t.getId() + "');</script>");
+                                        }
+                                    }
+                                }%></td>
                             <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
                             <td id="estadoHA<%= ha.getId()%>">
                                 <%
@@ -204,9 +220,5 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="include_js.html"/>
-        <jsp:include page="modalDoctor.html"/>
-        <jsp:include page="dialogos.html"/>
-        <script src="js/empleado.js"></script>
     </body>
 </html>

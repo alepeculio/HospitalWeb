@@ -71,9 +71,14 @@ function cambiarPass(nueva) {
         }
     });
 }
-var turnoActual = "";
+
+var turnoActual = [];
+function setTurnoActual(idHA, idTurno) {
+    turnoActual[idHA] = idTurno;
+}
+
 function actualizarHA(idTurno, estado, idHA, numero) {
-    if (turnoActual !== idTurno && turnoActual !== "") {
+    if (turnoActual[idHA] !== idTurno && turnoActual[idHA] !== "") {
         mensajeErr("Finalize el turno actual");
         return;
     }
@@ -95,14 +100,14 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     $("#btnFinalizado" + idTurno).remove();
                     $("#estado" + idTurno).html("finalizado");
                     $("#ca" + idHA).html("-");
-                    turnoActual = "";
+                    turnoActual[idHA] = "";
                 } else if (estado === "INICIADO") {
                     $("#btnIniciado" + idTurno).attr("onclick", "actualizarHA(\"" + idTurno + "\",\"FINALIZADO\",\"" + idHA + "\",\"" + numero + "\")");
                     $("#btnIniciado" + idTurno).attr("class", "btn btn-danger");
                     $("#btnIniciado" + idTurno).html("Finalizar <span class='glyphicon glyphicon-stop'></span>");
                     $("#btnIniciado" + idTurno).attr("id", "btnFinalizado" + idTurno);
                     $("#estado" + idTurno).html("iniciado");
-                    turnoActual = idTurno;
+                    turnoActual[idHA] = idTurno;
                 }
 
                 if (data === "firstTime") {
@@ -118,7 +123,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
                     $('[id ="btnEstado"]', '#turnos' + idHA).remove();
                     $('#estadoHA' + idHA).text("finalizado");
-                    turnoActual = "";
+                    turnoActual[idHA] = "";
                 }
             }
         },
@@ -142,7 +147,7 @@ function finalizarHA(idHA) {
                 $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
                 $('[id ="btnEstado"]', '#turnos' + idHA).remove();
                 $('#estadoHA' + idHA).text("finalizado");
-                turnoActual = "";
+                turnoActual[idHA] = "";
             }
         },
         error: function () {
