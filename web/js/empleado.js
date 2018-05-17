@@ -72,35 +72,46 @@ function cambiarPass(nueva) {
     });
 }
 var turnoActual = "";
-function cambiarEstadoTurno(idTurno, estado, idHA, numero) {
+function actualizarHA(idTurno, estado, idHA, numero) {
     if (turnoActual !== idTurno && turnoActual !== "") {
         mensajeErr("Finalize el turno actual");
         return;
     }
     $.ajax({
         type: "POST",
-        url: "/HospitalWeb/SEmpleado?accion=cambiarTurno",
+        url: "/HospitalWeb/SEmpleado?accion=actualizarHA",
         data: {
             idTurno: idTurno,
-            estado: estado
+            estado: estado,
+            idHA: idHA,
         },
         success: function (data) {
             if (data === "ERR") {
-                mensajeErr("Ocurrió un error al actualizar el estado del turno");
-            } else if (data === "OK") {
+                mensajeErr("Ocurri&oacute; un error al actualizar el estado del turno");
+                return;
+            } else {
+                $("#ca" + idHA).html(numero);
                 if (estado === "FINALIZADO") {
                     $("#btnFinalizado" + idTurno).remove();
                     $("#estado" + idTurno).html("finalizado");
                     $("#ca" + idHA).html("-");
                     turnoActual = "";
                 } else if (estado === "INICIADO") {
-                    $("#btnIniciado" + idTurno).attr("onclick", "cambiarEstadoTurno(\"" + idTurno + "\",\"FINALIZADO\",\"" + idHA + "\",\"" + numero + "\")");
+                    $("#btnIniciado" + idTurno).attr("onclick", "actualizarHA(\"" + idTurno + "\",\"FINALIZADO\",\"" + idHA + "\",\"" + numero + "\")");
                     $("#btnIniciado" + idTurno).attr("class", "btn btn-danger");
                     $("#btnIniciado" + idTurno).html("Finalizar <span class='glyphicon glyphicon-stop'></span>");
                     $("#btnIniciado" + idTurno).attr("id", "btnFinalizado" + idTurno);
                     $("#estado" + idTurno).html("iniciado");
-                    setClienteActual(idHA, numero);
                     turnoActual = idTurno;
+                }
+
+                if (data === "firstTime") {
+                    var finalizar = document.createElement("button");
+                    finalizar.innerHTML = "Finalizar <span class='glyphicon glyphicon-stop'></span>";
+                    finalizar.setAttribute("class", "btn btn-danger");
+                    finalizar.setAttribute("onclick", "pregunta('&#191;Est&aacute; seguro que desea finalizar el horario de atenci&oacute;n&#63;,<br> todos sus turnos tambi&eacute;n finalizar&aacute;n.','finalizarHA','" + idHA + "')");
+                    $("#estadoHA" + idHA).empty();
+                    $("#estadoHA" + idHA).append(finalizar);
                 }
             }
         },
@@ -110,19 +121,21 @@ function cambiarEstadoTurno(idTurno, estado, idHA, numero) {
     });
 }
 
-function setClienteActual(idHA, numero) {
+function finalizarHA(idHA) {
     $.ajax({
         type: "POST",
-        url: "/HospitalWeb/SEmpleado?accion=cambiarClienteActual",
+        url: "/HospitalWeb/SEmpleado?accion=finalizarHA",
         data: {
-            idHA: idHA,
-            numero: numero
+            idHA: idHA
         },
         success: function (data) {
             if (data === "ERR") {
-                mensajeErr("Ocurrió un error al actualizar el cliente actual");
+                mensajeErr("Ocurri&oacute; un error al finalizar horario de atenci&oacute;n");
             } else if (data === "OK") {
-                $("#ca" + idHA).html(numero);
+                $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
+                $('[id ="btnEstado"]', '#turnos' + idHA).remove();
+                $('#estadoHA' + idHA).text("finalizado");
+                turnoActual = "";
             }
         },
         error: function () {
@@ -130,5 +143,7 @@ function setClienteActual(idHA, numero) {
         }
     });
 }
+
+
 
 //mostrarDatosMedico(1);

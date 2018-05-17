@@ -35,23 +35,23 @@ public class SEmpleado extends HttpServlet {
                     request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
                     break;
                 case "obtEmpleado":
-                    response.setContentType ("application/json");
-                    Empleado e = CUsuario.getEmpleado (Long.valueOf (request.getParameter ("id")));
-                    response.getWriter ().write (new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (e == null ? "ERR" : e));
+                    response.setContentType("application/json");
+                    Empleado e = CUsuario.getEmpleado(Long.valueOf(request.getParameter("id")));
+                    response.getWriter().write(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(e == null ? "ERR" : e));
                     break;
-                case "cambiarTurno":
-                    String turno = request.getParameter("idTurno");
+                case "actualizarHA":
+                    String idHA = request.getParameter("idHA");
+                    String idTurno = request.getParameter("idTurno");
                     String estado = request.getParameter("estado");
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write((CEmpleado.setEstadoTurno(turno, EstadoTurno.valueOf(estado))) ? "OK" : "ERR");
+                    response.getWriter().write(CEmpleado.actualizarHA(idHA, idTurno, EstadoTurno.valueOf(estado)));
                     break;
-                case "cambiarClienteActual":
-                    String idHA  = request.getParameter("idHA");
-                    String numero = request.getParameter("numero");
+                case "finalizarHA":
+                    String idHAfinalizar = request.getParameter("idHA");
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write((CEmpleado.setClienteActualHA(idHA, Integer.valueOf(numero))) ? "OK" : "ERR");
+                    response.getWriter().write((CEmpleado.finalizarHA(idHAfinalizar)) ? "OK" : "ERR");
                     break;
 
             }
