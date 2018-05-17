@@ -2,6 +2,7 @@ package Servlets;
 
 import Clases.Cliente;
 import Clases.Empleado;
+import Clases.HorarioAtencion;
 import Clases.Hospital;
 import Clases.Usuario;
 import Controladores.CCliente;
@@ -9,12 +10,14 @@ import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -165,21 +168,35 @@ public class SHospital extends HttpServlet {
             response.getWriter().write("OK");
         } else if (request.getParameter("edad") != null) {
             System.out.println("Servlets.SHospital.doPost()");
-            Cliente c = CCliente.obtenerCliente("sinhijo");
+            Cliente c = CCliente.obtenerCliente("brian");
             if (c.getHijos().isEmpty()) {
                 System.out.println("Servlets.SHospital.doPost().no");
                 String json = new Gson().toJson("no");
                 response.setContentType("application/json");
                 response.getWriter().write(json);
-            }else{
-            if (CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en")) != null) {
-                System.out.println("Servlets.SHospital.doPost().if");
-                List<Cliente> hijosXedad = CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en"));
-                String json = new Gson().toJson(hijosXedad);
-                response.setContentType("application/json");
-                response.getWriter().write(json);
+            } else {
+                if (CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en")) != null) {
+
+                    List<Cliente> hijosXedad = CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en"));
+                    String json = new Gson().toJson(hijosXedad);
+                    response.setContentType("application/json");
+                    response.getWriter().write(json);
+                }
             }
+        } else if (request.getParameter("dia") != null) {
+            long id = CHospital.obtenerHospital(request.getParameter("hospital")).getId();
+            List<HorarioAtencion> horarios = CHospital.obtenerHorariosHospital(id);
+            List<Object[]> listafinal = new ArrayList<Object[]>();
+            for (HorarioAtencion ha : horarios) {
+                if (ha.getDia().equals(request.getParameter("dia"))) {
+                    listafinal.add(new Object[]{ha, ha.getEmpleado()});
+                }
             }
+            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(listafinal);
+            response.setContentType("application/json");
+            response.getWriter().write(json);
+        } else if (request.getParameter("idHorario") != null) {
+            
         }
 
     }

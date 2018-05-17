@@ -324,8 +324,8 @@
                             <p>  Luego de registrar su hijo podra reservar un turno para vacunarlo</p> 
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
                             <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
+                            <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
                         </div>
                     </div>
                 </div>
@@ -339,23 +339,49 @@
                             <h4 class="modal-title">Registro Vacuna</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <div class="modal-body ">
-                            <h3>Correcto.</h3> 
-
-                            <select id="hijos">
-                            </select>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" style="float: left" name="aceptar" >Registrar Hijo</button>
-                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
-                        </div>
+                        <form method="POST" action="" >
+                            <div class="modal-body ">
+                                <label>Seleccione el hijo para cual reservara un turno de vacunacion</label>
+                                <select class="form-control" id="hijos" required onclick="Shijo()">
+                                    <option value="">--</option>0
+                                </select>
+                                <span id="Shijo" hidden style="color: red">Debe seleccionar un hijo</span><br>
+                                <label>Seleccione un día para el turno de vacunacion</label>
+                                <select class="form-control" id="haDia" onchange="horario(value)" required>
+                                    <option value="">--</option>
+                                    <option value="Lunes">Lunes</option>
+                                    <option value="Martes">Martes</option>
+                                    <option value="Miercoles">Miercoles</option>
+                                    <option value="Jueves">Jueves</option>
+                                    <option value="Viernes">Viernes</option>
+                                    <option value="Sabado">Sabado</option>
+                                    <option value="Domingo">Domingo</option>
+                                </select>
+                                <span id="Sdia" hidden style="color: red;">Debe seleccionar un dia</span><br>
+                                <label>Seleccione un medico.</label>
+                                <select class="form-control" id="horarios" onclick="Shorario()" >
+                                    <option value="">--</option>
+                                </select>
+                                <span id="Shorario" hidden style="color: red">Debe seleccionar un medico</span><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
+                                <button type="submit" class="btn btn-default" id="btnRegistrar"  name="aceptar" >Registrar Hijo</button>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </body>
     <script>
+        var hospital = "<%=h.getNombre()%>";
+
+        function Shijo() {
+            $('#Shijo').hide();
+        }
+        function Shorario() {
+            $('#Shorario').hide();
+        }
         function verificar(td) {
             var vacuna = td.split("-");
             $.ajax({
@@ -373,7 +399,7 @@
                         $('#noHijos').modal('show');
                     } else {
                         for (var i = 0; i < data.length; i++) {
-                            var id = data[i].nombre;
+                            var id = data[i].id;
                             var nombre = data[i].nombre;
                             var apellido = data[i].apellido;
                             $("#hijos").append('<option value=' + id + '>' + nombre + ' ' + apellido + '</option>');
@@ -387,6 +413,70 @@
 
             });
         }
+        function horario(dia) {
+            $('#Sdia').hide();
+
+            $.ajax({
+                url: "/HospitalWeb/SHospital",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    "dia": dia,
+                    "hospital": hospital
+                }
+                ,
+                success: function (data) {
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        var id = data[i][0].id;
+                        var nombre = data[i][1].nombre;
+                        var apellido = data[i][1].apellido;
+                        var horainicio = data[i][0].horaInicio;
+                        var horafin = data[i][0].horaFin;
+                        $("#horarios").append('<option value=' + id + '>Doctor: ' + nombre + ' ' + apellido + ' | Dispoible De: ' + horainicio + ' - Hasta: ' + horafin + '</option>');
+                    }
+                },
+                error: function () {
+                    console.log("Error");
+                }
+
+            });
+        }
+        $("#btnRegistrar").click(function () {
+            var dia = $("#haDia").val().toString().trim();
+            var idHorario = $("#horarios").val().toString().trim();
+            var hijo = $("#hijos").val().toString().trim();
+            if (hijo === "") {
+                $("#Shijo").show();
+            }
+            if (idHorario === "") {
+                $("#Shorario").show();
+            }
+            if (dia === "") {
+                $("#Sdia").show();
+            }
+            if (hijo === "" && idHorario === "" && dia === "") {
+
+
+            }
+            $.ajax({
+                url: "/HospitalWeb/SHospital",
+                type: "POST",
+                data: {
+                    "idHorario": idHorario,
+                    "hijo": hijo,
+                    "idHospital": hospital
+                },
+                success: function (data) {
+                    alert(data);
+                },
+                error: function () {
+                    console.log("Error");
+                }
+
+            });
+        });
+
 
 
     </script>

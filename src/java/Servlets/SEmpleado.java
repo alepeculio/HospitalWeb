@@ -17,24 +17,24 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "SEmpleado", urlPatterns = {"/SEmpleado"})
 public class SEmpleado extends HttpServlet {
+
     CUsuario cusuario = new CUsuario();
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String accion = request.getParameter("accion");
-        if(accion != null){
+        if (accion != null) {
             switch (accion) {
                 case "inicio":
                     Empleado empleado = cusuario.getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
-                   log(empleado.getTelefonos()[0]);
+                    log(empleado.getTelefonos()[0]);
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
                     break;
             }
         }
-        }
-       
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
