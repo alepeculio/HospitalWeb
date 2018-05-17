@@ -3,8 +3,6 @@
     Created on : 15/05/2018, 02:15:15 PM
     Author     : Ale
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%@page import="Clases.EstadoTurno"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="Clases.Turno"%>
@@ -18,13 +16,12 @@
 <html>
     <head>
         <jsp:include page="include_css.html"/>
-        <jsp:include page="include_js.html"/>
         <link rel="stylesheet" href="styles/empleado.css">
 
         <title>Perfil</title>
         <script>
-            if (!window.location.toString ().includes ("/HospitalWeb/SEmpleado?accion=inicio"))
-                window.location.assign ("/HospitalWeb/SEmpleado?accion=inicio");
+            if (!window.location.toString().includes("/HospitalWeb/SEmpleado?accion=inicio"))
+                window.location.assign("/HospitalWeb/SEmpleado?accion=inicio");
         </script>
 
     </head>
@@ -37,7 +34,7 @@
         %>
 
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
-            <li class="active"><a href="#horariosAtencion" data-toggle="tab">Horarios de atenci√≥n</a></li>
+            <li class="active"><a href="#horariosAtencion" data-toggle="tab">Horarios de atenciÛn</a></li>
             <hr>
             <li><a href="#datosPersonales" data-toggle="tab" >Datos personales</a></li>
         </ul>
@@ -45,7 +42,7 @@
         <div class="panel contenido col-md-8 text-center tab-content">
 
             <div class="tab-pane active pestania" id="horariosAtencion">
-                <h2>Horarios de atenci√≥n</h2>
+                <h2>Horarios de atenciÛn</h2>
                 <hr>
                 <table class="table">
                     <thead>
@@ -70,15 +67,15 @@
                             <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraInicio())%></td>
                             <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
                             <td><%= ha.getClientesMax()%></td>
-                            <td><%= ha.getClienteActual()%></td>
-                            <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>" href="#turnos">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
+                            <td id="ca<%= ha.getId()%>"><%= ha.getClienteActual()%></td>
+                            <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
                         </tr>
                         <tr>
                             <td colspan="7">
-                                <div id="turnos<%=ha.getId()%>" class="collapse">
+                                <div id="turnos<%= ha.getId()%>" class="collapse">
                                     <table class="table">
                                         <thead> 
-                                            <tr><th colspan="3" class="text-center">Turnos</th></tr>
+                                            <tr><th colspan="4" class="text-center">Turnos</th></tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -96,26 +93,26 @@
                                             <tr>
                                                 <td><%= turno.getTipo()%></td>
                                                 <td><%= turno.getNumero()%></td>
+                                                <td><%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%></td>
+                                                <td id="estado<%=turno.getId()%>" ><%= turno.getEstado()%></td>
                                                 <td>
-                                                    <%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%>
+                                                    <%
+                                                        EstadoTurno estado = turno.getEstado();
+                                                        if (estado == EstadoTurno.INICIADO) {
+                                                            out.println("<button class='btn btn-danger' style='width: 80%' id='btnFinalizado" + turno.getId() + "' onclick='cambiarEstadoTurno(\"" + turno.getId() + "\",\"FINALIZADO\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
+                                                        } else if (estado == EstadoTurno.INGRESADO) {
+                                                            out.println("<button class='btn btn-success' style='width: 80%' id='btnIniciado" + turno.getId() + "' onclick='cambiarEstadoTurno(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero()+ "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
+                                                        
+                                                    );
+                                                        }
+                                                    %> 
                                                 </td>
-
-                                                <td><%= turno.getEstado()%></td>
-                                                <td><%
-                                                    EstadoTurno estado = turno.getEstado();
-                                                    if (estado == EstadoTurno.INICIADO) {
-                                                        out.println("<button class='btn btn-danger' style='width: 80%'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
-                                                    } else if (estado == EstadoTurno.INGRESADO) {
-                                                        out.println("<button class='btn btn-success' style='width: 80%'>Iniciar <span class='glyphicon glyphicon-play'></span></button>");
-                                                    }
-
-                                                    %>
-                                                <td>
-                                                    <%}
-                                                   } else {%>
                                             </tr>
+                                            <% } %>
+                                            <% } else {%>
+
                                             <tr class="text-center">
-                                                <td colspan = "3"> No hay turnos reservados en este Horario de atenci√≥n</td>
+                                                <td colspan = "4"> No hay turnos reservados en este Horario de atenciÛn</td>
                                             </tr>
                                             <% }%>
                                         </tbody>
@@ -143,8 +140,8 @@
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Email</strong></span><%= usuario.getCorreo()%></li>
                         <li class="list-group-item text-right">
                             <%
-                                    String[] telefonos = empleado.getTelefonos();
-                                    %>
+                                String[] telefonos = empleado.getTelefonos();
+                            %>
                             <span class="pull-left"><strong>Tel√©fono<%= telefonos.length <= 2 ? "" : "s"%></strong></span>
                             <ul>
                                 <%
@@ -212,9 +209,8 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="dialogos.html"/>
-        <script src="js/empleado.js"></script>
         <jsp:include page="include_js.html"/>
+        <jsp:include page="dialogos.html"/>
         <script src="js/empleado.js"></script>
     </body>
 </html>
