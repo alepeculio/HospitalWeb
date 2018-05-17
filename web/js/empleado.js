@@ -41,7 +41,7 @@ $("#btnCambiar").click(function () {
             } else if (data == "OK") {
                 $("#actualParent").removeClass("has-error");
 
-                pregunta("Esta seguro del cambio de contraseña?", "cambiarPass", "'" + passNueva + "'");
+                pregunta("Esta seguro del cambio de contrase&ntilde;a?", "cambiarPass", "'" + passNueva + "'");
             }
         },
         error: function () {
@@ -63,7 +63,7 @@ function cambiarPass(nueva) {
                 $("#nuevaParent").addClass("has-error");
             } else if (data == "OK") {
                 $("#nuevaParent").removeClass("has-error");
-                mensaje("Contraseña cambiada");
+                mensaje("Contrase&ntilde;a cambiada");
             }
         },
         error: function () {
