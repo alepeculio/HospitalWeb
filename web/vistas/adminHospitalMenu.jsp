@@ -23,7 +23,7 @@
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar cliente</a></li>
             <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar cliente</a></li>
             <hr>
-            <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Relacionar con hijo</a></li>
+            <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Registrar hijo al plan de vacunación</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
             <li><a href="#eliminarMedico" data-toggle="tab" onclick ="cargarMedicos('listMedE', 'medicoEFila', 'MedE')">Eliminar médico</a></li>
@@ -175,7 +175,7 @@
                 <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
             </div>
             <div class="tab-pane pestania text-center" id="relacionarHijo">
-                <h2>Relacionar con hijo</h2>
+                <h2>Registrar hijo al plan de vacunación</h2>
                 <hr>
                 <form>
                     <label>Seleccione el cliente</label>
@@ -190,7 +190,7 @@
                         <li class="list-group-item"><a>No hay clientes</a></li>
                     </ul>
                     <br>
-                    <label>Seleccione el hijo a relacionar con el cliente anterior</label>
+                    <label>Seleccione el hijo a ingresar al plan de vacunación</label>
                     <div class="input-group">
                         <input class="form-control" type="text" id="buscarCliHInput" onkeyup="buscar('buscarCliHInput', 'listCliH')" placeholder="Buscar">
                         <span class="input-group-btn">
@@ -202,7 +202,7 @@
                         <li class="list-group-item"><a>Elija un cliente padre primero</a></li>
                     </ul>
                     <br>
-                    <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
+                    <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Registrar al plan</button> 
                 </form>
             </div>
             <div class="tab-pane pestania" id="ingresarMedico">
