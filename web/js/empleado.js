@@ -95,7 +95,6 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                 mensajeErr("Ocurri&oacute; un error al actualizar el estado del turno");
                 return;
             } else {
-                $("#ca" + idHA).html(numero);
                 if (estado === "FINALIZADO") {
                     $("#btnFinalizado" + idTurno).remove();
                     $("#estado" + idTurno).html("finalizado");
@@ -107,6 +106,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     $("#btnIniciado" + idTurno).html("Finalizar <span class='glyphicon glyphicon-stop'></span>");
                     $("#btnIniciado" + idTurno).attr("id", "btnFinalizado" + idTurno);
                     $("#estado" + idTurno).html("iniciado");
+                    $("#ca" + idHA).html(numero);
                     turnoActual[idHA] = idTurno;
                 }
 
@@ -117,12 +117,15 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     finalizar.setAttribute("onclick", "pregunta('&#191;Est&aacute; seguro que desea finalizar el horario de atenci&oacute;n&#63;,<br> todos sus turnos tambi&eacute;n finalizar&aacute;n.','finalizarHA','" + idHA + "')");
                     $("#estadoHA" + idHA).empty();
                     $("#estadoHA" + idHA).append(finalizar);
+                    $("#ca" + idHA).html(numero);
+
                 }
 
                 if (data === "lastTime") {
                     $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
                     $('[id ="btnEstado"]', '#turnos' + idHA).remove();
                     $('#estadoHA' + idHA).text("finalizado");
+                    $("#ca" + idHA).html('-');
                     turnoActual[idHA] = "";
                 }
             }
@@ -147,6 +150,7 @@ function finalizarHA(idHA) {
                 $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
                 $('[id ="btnEstado"]', '#turnos' + idHA).remove();
                 $('#estadoHA' + idHA).text("finalizado");
+                $("#ca" + idHA).html('-');
                 turnoActual[idHA] = "";
             }
         },
