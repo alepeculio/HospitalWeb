@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Servlets;
 
 import Clases.Cliente;
@@ -29,24 +24,12 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- *
- * @author Ale
- */
+
 @WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
 public class SUsuario extends HttpServlet {
 
     CUsuario cusuario = new CUsuario();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
@@ -242,13 +225,9 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);
                     break;
 
-                case "registrar":
-                    //request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
-                    break;
                 case "obtNoHijosCliente":
                     List<Cliente> hCliente = new CCliente().obtenerNoHijosCliente(request.getParameter("idCliente"));
-                    String json = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (hCliente);
+                    String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hCliente);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
                     break;
@@ -274,7 +253,7 @@ public class SUsuario extends HttpServlet {
                         clientes = CCliente.obtenerClientesNoEmpleados();
                     }
 
-                    String clientesJson = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson(clientes);
+                    String clientesJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(clientes);
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
@@ -291,8 +270,8 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeBajaCliente);
                     break;
                 case "obtEmpleados":
-                    List<Empleado> empleados = cusuario.obtenerEmpleados ();
-                    String empleadosJson = new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson(empleados);
+                    List<Empleado> empleados = CUsuario.obtenerEmpleados();
+                    String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
                     break;
@@ -311,21 +290,21 @@ public class SUsuario extends HttpServlet {
                 case "altaHA":
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    
-                    String[] horaInicio = request.getParameter ("horaInicio").split (":");
-                    String[] horaFin = request.getParameter ("horaFin").split (":");
-                    String cant = request.getParameter ("cant");
-                    
-                    Date hi = new Date (0, 0, 0, Integer.valueOf (horaInicio[0]), Integer.valueOf (horaInicio[1]));
-                    Date hf = new Date (0, 0, 0, Integer.valueOf (horaFin[0]), Integer.valueOf (horaFin[1]));
-                    
-                    HorarioAtencion ha = new HorarioAtencion ();
-                    ha.setDia (request.getParameter ("dia"));
-                    ha.setHoraInicio (hi);
-                    ha.setHoraFin (hf);
-                    ha.setClientesMax (Integer.valueOf (cant));
-                    
-                    if (CHospital.agregaHorarioAtencion ((Usuario) request.getSession ().getAttribute ("usuario"), Integer.valueOf (request.getParameter ("medico")), ha)) {
+
+                    String[] horaInicio = request.getParameter("horaInicio").split(":");
+                    String[] horaFin = request.getParameter("horaFin").split(":");
+                    String cant = request.getParameter("cant");
+
+                    Date hi = new Date(0, 0, 0, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
+                    Date hf = new Date(0, 0, 0, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
+
+                    HorarioAtencion ha = new HorarioAtencion();
+                    ha.setDia(request.getParameter("dia"));
+                    ha.setHoraInicio(hi);
+                    ha.setHoraFin(hf);
+                    ha.setClientesMax(Integer.valueOf(cant));
+
+                    if (CHospital.agregaHorarioAtencion((Usuario) request.getSession().getAttribute("usuario"), Integer.valueOf(request.getParameter("medico")), ha)) {
                         response.getWriter().write("OK");
                     } else {
                         response.getWriter().write("ERR");
@@ -344,24 +323,24 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeVerifCedula);
                     break;
                 case "obtenerHorarioAtencion":
-                    response.setContentType ("application/json");
-                    List<HorarioAtencion> has = CHospital.obtenerHorariosAtencion (Long.valueOf (request.getParameter ("idMedico")), (Usuario) request.getSession ().getAttribute ("usuario"));
-                    response.getWriter ().write (new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (has));
+                    response.setContentType("application/json");
+                    List<HorarioAtencion> has = CHospital.obtenerHorariosAtencion(Long.valueOf(request.getParameter("idMedico")), (Usuario) request.getSession().getAttribute("usuario"));
+                    response.getWriter().write(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(has));
                     break;
                 case "eliminarHA":
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write(CHospital.eliminarHorarioAtencion (Integer.valueOf (request.getParameter ("idHA"))) ? "OK" : "ERR");
+                    response.getWriter().write(CHospital.eliminarHorarioAtencion(Integer.valueOf(request.getParameter("idHA"))) ? "OK" : "ERR");
                     break;
                 case "passCorrecta":
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write(((Usuario) request.getSession ().getAttribute ("usuario")).getContrasenia ().equals (request.getParameter ("pass")) ? "OK" : "ERR");
+                    response.getWriter().write(((Usuario) request.getSession().getAttribute("usuario")).getContrasenia().equals(request.getParameter("pass")) ? "OK" : "ERR");
                     break;
                 case "cambiarPass":
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write(CUsuario.cambiarPass (((Usuario) request.getSession ().getAttribute ("usuario")).getId (), request.getParameter ("pass")) ? "OK" : "ERR");
+                    response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
                     break;
             }
         }

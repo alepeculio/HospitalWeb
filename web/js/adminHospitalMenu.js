@@ -767,11 +767,11 @@ $("#btnVincularCliente").click(function () {
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
                 if (data === "ERR") {
-                    texto.innerHTML = "No se pudo relacionar los clientes seleccionados";
+                    texto.innerHTML = "No se pudo ingresar el hijo al plan de vacunación";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else {
-                    texto.innerHTML = "Clientes relacionados correctamente";
+                    texto.innerHTML = "Hijo ingresado al plan correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("clientePFila", "CliP");
@@ -905,7 +905,7 @@ function eliminarMedicoDeVerdad() {
 
 
 /// ---------------------
-// Ingregas HA
+// Ingresar HA
 
 $("#btnIngresarHA").click(function () {
     var texto = document.getElementById("modalIUMensaje");
