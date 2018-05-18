@@ -961,6 +961,32 @@ $("#btnIngresarHA").click(function () {
         return;
     }
 
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            calcularTiempo: "si",
+            horaInicio: hInicio,
+            horaFin: hFin,
+            cant: cant
+        },
+        success: function (data) {
+            alert (hInicio + " " + hFin);
+            if (data == "ERR") {
+                mensajeErr ("La hora de fin debe ser una hora posterior a la hora de inicio");
+            } else {
+                alert (data);
+                pregunta ("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "'");
+            }
+        },
+        error: function () {
+            mensajeErr("No se pudo contactar el servidor");
+        }
+    });
+});
+
+function agregarHA (med, dia, hInicio, hFin, cant) {
+    var texto = document.getElementById("modalIUMensaje");
     $.ajax({
         type: "POST",
         url: "/HospitalWeb/SUsuario",
@@ -990,7 +1016,7 @@ $("#btnIngresarHA").click(function () {
             $("#modalIngresarUsuario").modal("show");
         }
     });
-});
+}
 
 var haNum = 0;
 
@@ -1024,8 +1050,8 @@ function cargarHorariosAtencion() {
                 nuevo.prop("hidden", false);
                 nuevo.attr("id", "ha" + (haNum + 1));
                 nuevo.find(".haDia").html(data[i].dia);
-                nuevo.find(".haHI").html(data[i].horaInicio);
-                nuevo.find(".haHF").html(data[i].horaFin);
+                nuevo.find(".haHI").html(data[i].horaInicio.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haHF").html(data[i].horaFin.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
                 nuevo.find(".haCant").html(data[i].clientesMax);
                 nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
                 nuevo.insertAfter($("#ha" + haNum));
