@@ -1,0 +1,61 @@
+<div class="modal fade" id="modalDatosMedico" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Datos del M&eacute;dico</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item text-right">
+                        <span class="pull-left"><strong>Nombre completo</strong></span>
+                        <span id="modalDatosMedicoNombreCompleto">-</span>
+                    </li>
+                    <li class="list-group-item text-right">
+                        <span class="pull-left"><strong>Email</strong></span>
+                        <span id="modalDatosMedicoEmail">-</span>
+                    </li>
+                    <li class="list-group-item text-right">
+                        <span class="pull-left"><strong>Especialidades</strong></span>
+                        <ul id="modalDatosMedicoEspecialidades">
+                            
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mostrarDatosMedico (id) {
+        $.ajax ({
+            type: "POST",
+            url: "/HospitalWeb/SEmpleado",
+            data: {
+                accion: "obtEmpleado",
+                id: id
+            },
+            success: function (data) {
+                if (data == "ERR") {
+                    mensajeErr ("No se pudo obtener la informacion del medico");
+                } else {
+                    $("#modalDatosMedicoNombreCompleto").html (data.nombre + " " + data.apellido);
+                    $("#modalDatosMedicoEmail").html (data.usuario.correo);
+                    $("#modalDatosMedicoEspecialidades").html ("");
+                    if (data.especialidades != undefined)
+                        for (var i = 1; i < data.especialidades.length; i++) {
+                            $("#modalDatosMedicoEspecialidades").append ("<li>" + data.especialidades[i] + "</li>");
+                        }
+                    else
+                        $("#modalDatosMedicoEspecialidades").append ("<li>-</li>");
+                        
+                    $("#modalDatosMedico").modal ("show");
+                }
+            },
+            error: function () {
+                mensajeErr ("No se pudo obtener la informacion del medico");
+            }
+        });
+    }
+</script>

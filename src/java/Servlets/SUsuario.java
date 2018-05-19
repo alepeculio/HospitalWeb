@@ -1,16 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Servlets;
 
 import Clases.Cliente;
 import Clases.Empleado;
+import Clases.HorarioAtencion;
+import Clases.TipoTurno;
 import Clases.Usuario;
 import Controladores.CCliente;
+import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
+import Controladores.Singleton;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -20,26 +19,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Date;
 
-/**
- *
- * @author Ale
- */
+
 @WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
 public class SUsuario extends HttpServlet {
 
     CUsuario cusuario = new CUsuario();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String accion = request.getParameter("accion");
@@ -63,15 +54,20 @@ public class SUsuario extends HttpServlet {
                             }
 
                             switch (CUsuario.obtenerTipo(u)) {
+
                                 case "General":
                                 request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                 break;
                                 case "Hospital":
-                                request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
-                                break;
-                                default:
-                                request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                                break;
+                                    request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
+                                    break;
+                                case "Empleado":
+                                    request.getRequestDispatcher("/SEmpleado?accion=inicio").forward(request, response);
+                                    break;
+                                case "Cliente":
+                                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                                    break;
+
                             }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
@@ -79,8 +75,8 @@ public class SUsuario extends HttpServlet {
                         }
                     }
                     break;
-                    case "logout":
-                    request.getSession().removeAttribute("ci");
+                case "logout":
+                    request.getSession().removeAttribute("usuario");
                     Cookie userCookie = new Cookie("ci_HospitalWeb", null);
                     Cookie passCookie = new Cookie("contrasenia_HospitalWeb", null);
                     userCookie.setMaxAge(0);
@@ -88,11 +84,6 @@ public class SUsuario extends HttpServlet {
                     response.addCookie(userCookie);
                     response.addCookie(passCookie);
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
-                    break;
-                    case "perfil":
-                    Empleado empleado = (new CUsuario()).getEmpleado(((Usuario) request.getSession().getAttribute("usuario")).getId());
-                    request.setAttribute("empleado", empleado);
-                    request.getRequestDispatcher("vistas/perfil.jsp").forward(request, response);
                     break;
                     case "menuAdmin":
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
@@ -132,6 +123,7 @@ public class SUsuario extends HttpServlet {
                     c.setMesNacimiento(Integer.parseInt(mes));
                     c.setAnioNacimiento(Integer.parseInt(anio));
                     c.setTelefonos(tels.split("\\|"));
+                    System.out.println(Arrays.toString(tels.split("\\|")));
                     c.setDepartamento(departamento.trim());
                     c.setCiudad(ciudad);
                     c.setCalle(calle);
@@ -142,6 +134,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (CCliente.altaCliente(c)) {
+                        new Thread (new Runnable() {
+                            @Override
+                            public void run() {
+                                CCorreo.enviarContrasenia (c);
+                            }
+                        }).start ();
                         mensaje = "OK";
                     } else {
                         mensaje = "ERR";
@@ -186,8 +184,10 @@ public class SUsuario extends HttpServlet {
                     e.setMesNacimiento(Integer.parseInt(mesMed));
                     e.setAnioNacimiento(Integer.parseInt(anioMed));
                     e.setTelefonos(telsMed.split("\\|"));
+                    System.out.println(Arrays.toString(telsMed.split("\\|")));
                     if (especialidades != null && !especialidades.equals("")) {
                         e.setEspecialidades(especialidades.split("\\|"));
+                        System.out.println(Arrays.toString(especialidades.split("\\|")));
                     }
                     e.setDepartamento(departamentoMed.trim());
                     e.setCiudad(ciudadMed);
@@ -198,7 +198,13 @@ public class SUsuario extends HttpServlet {
                     }
 
                     String mensajeMed = "";
-                    if (CCliente.altaCliente(e)) {
+                    if (Singleton.getInstance().persist(e)) {
+                        new Thread (new Runnable() {
+                            @Override
+                            public void run() {
+                                CCorreo.enviarContrasenia (e);
+                            }
+                        }).start ();
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -223,18 +229,9 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);
                     break;
 
-                    case "reservas":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/reservas.jsp").forward(request, response);
-                    break;
-
-                    case "registrar":
-                    //request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
-                    break;
-                    case "obtNoHijosCliente":
-                    List<Cliente> hCliente = CCliente.obtenerNoHijosCliente(request.getParameter("idCliente"));
-                    String json = new Gson().toJson(hCliente);
+                case "obtNoHijosCliente":
+                    List<Cliente> hCliente = new CCliente().obtenerNoHijosCliente(request.getParameter("idCliente"));
+                    String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hCliente);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
                     break;
@@ -251,19 +248,23 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVinculo);
                     break;
-                    case "obtClientes":
-                    List<Cliente> clientes = CCliente.obtenerClientes();
-                    Gson js = new Gson();
-                    String clientesJson = (js != null)? js.toJson(clientes): "";
+                case "obtClientes":
+                    String conEmpleados = request.getParameter("conEmpleados");
+                    List<Cliente> clientes;
+                    if ("si".equals(conEmpleados)) {
+                        clientes = CCliente.obtenerClientes();
+                    } else {
+                        clientes = CCliente.obtenerClientesNoEmpleados();
+                    }
+
+                    String clientesJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(clientes);
                     response.setContentType("application/json");
                     response.getWriter().write(clientesJson);
                     break;
                     case "eliminarCliente":
                     String idCliEliminar = request.getParameter("idCliente");
-                    Cliente cliente = new Cliente();
-                    cliente.setId(Long.valueOf(idCliEliminar));
                     String mensajeBajaCliente = "";
-                    if (CCliente.bajaCliente(cliente)) {
+                    if (CCliente.bajaCliente(idCliEliminar)) {
                         mensajeBajaCliente = "OK";
                     } else {
                         mensajeBajaCliente = "ERR";
@@ -272,10 +273,86 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
                     break;
-                }
-            }
+                case "obtEmpleados":
+                    List<Empleado> empleados = CUsuario.obtenerEmpleados();
+                    String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
+                    response.setContentType("application/json");
+                    response.getWriter().write(empleadosJson);
+                    break;
+                case "eliminarEmpleado":
+                    String idEmplEliminar = request.getParameter("idEmpleado");
+                    String mensajeBajaEmpleado;
+                    if (cusuario.bajaEmpleado(idEmplEliminar)) {
+                        mensajeBajaEmpleado = "OK";
+                    } else {
+                        mensajeBajaEmpleado = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeBajaEmpleado);
+                    break;
+                case "altaHA":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    
+                    String tipo = request.getParameter ("tipo");
 
+                    String[] horaInicio = request.getParameter("horaInicio").split(":");
+                    String[] horaFin = request.getParameter("horaFin").split(":");
+                    String cant = request.getParameter("cant");
+
+                    Date hi = new Date(0, 0, 0, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
+                    Date hf = new Date(0, 0, 0, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
+
+                    HorarioAtencion ha = new HorarioAtencion();
+                    ha.setDia(request.getParameter("dia"));
+                    ha.setHoraInicio(hi);
+                    ha.setHoraFin(hf);
+                    ha.setTipo(tipo.equals("Atencion") ? TipoTurno.ATENCION : TipoTurno.VACUNACION);
+                    ha.setClienteActual(0);
+                    ha.setClientesMax(Integer.valueOf(cant));
+
+                    if (CHospital.agregaHorarioAtencion((Usuario) request.getSession().getAttribute("usuario"), Integer.valueOf(request.getParameter("medico")), ha)) {
+                        response.getWriter().write("OK");
+                    } else {
+                        response.getWriter().write("ERR");
+                    }
+                    break;
+                case "verificarCedula":
+                    String cedulaVerficar = request.getParameter("cedula");
+                    String mensajeVerifCedula;
+                    if (cusuario.cedulaExiste(cedulaVerficar)) {
+                        mensajeVerifCedula = "OK";
+                    } else {
+                        mensajeVerifCedula = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeVerifCedula);
+                    break;
+                case "obtenerHorarioAtencion":
+                    response.setContentType("application/json");
+                    List<HorarioAtencion> has = CHospital.obtenerHorariosAtencion(Long.valueOf(request.getParameter("idMedico")), (Usuario) request.getSession().getAttribute("usuario"));
+                    response.getWriter().write(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(has));
+                    break;
+                case "eliminarHA":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CHospital.eliminarHorarioAtencion(Integer.valueOf(request.getParameter("idHA"))) ? "OK" : "ERR");
+                    break;
+                case "passCorrecta":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(((Usuario) request.getSession().getAttribute("usuario")).getContrasenia().equals(request.getParameter("pass")) ? "OK" : "ERR");
+                    break;
+                case "cambiarPass":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
+                    break;
+            }
         }
+    }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

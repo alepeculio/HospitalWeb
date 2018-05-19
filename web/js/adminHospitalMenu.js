@@ -115,7 +115,6 @@ function agregarEspecialidad() {
     nuevo.find(".especialidadButton").attr("onclick", "quitarEspecialidad(" + (esp + 1) + ")");
     nuevo.insertAfter($("#esp" + esp));
     esp++;
-    cambiarBotonesEsp();
 }
 
 function quitarEspecialidad(id) {
@@ -125,16 +124,6 @@ function quitarEspecialidad(id) {
     $("#esp" + esp).remove();
     esp--;
     cambiarBotonesEsp();
-}
-
-function cambiarBotonesEsp() {
-    if (esp === 1) {
-        $("#esp1").find(".especialidadButton").prop("disabled", true);
-        return;
-    }
-
-    for (var i = 1; i <= esp; i++)
-        $("#esp" + i).find(".especialidadButton").prop("disabled", false);
 }
 
 
@@ -180,7 +169,7 @@ $(function () {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = departamentos[i];
         departamento.appendChild(opt);
-        
+
         var optMed = document.createElement("option");
         optMed.innerHTML = opt.value = departamentos[i];
         departamentoMed.appendChild(optMed);
@@ -191,7 +180,7 @@ $(function () {
         var ciudad = document.getElementById("ciudad");
         cargarCiudades($("#departamento option:selected").text(), ciudad);
     });
-    
+
     $("#departamentoMed").change(function () {
         $("#ciudadMed").html("");
         var ciudadMed = document.getElementById("ciudadMed");
@@ -199,19 +188,64 @@ $(function () {
     });
 });
 
-$("#btnRegistrarUsuario").click(function () {
-    var errCi = $("#ciError");
+
+function cedulaExiste(tipoUsuario) {
+    var ci, digitoVer, errCi;
+    if (tipoUsuario === "Cliente") {
+        ci = $("#ci").val().toString().trim();
+        digitoVer = $("#digitoVer").val().toString().trim();
+        errCi = $("#ciError");
+    } else {
+        ci = $("#ciMed").val().toString().trim();
+        digitoVer = $("#digitoVerMed").val().toString().trim();
+        errCi = $("#ciMedError");
+    }
+
+    errCi.prop("hidden", true);
+    if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
+        errCi.text("Error: Cedula no valida.");
+        errCi.prop("hidden", false);
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario?accion=verificarCedula",
+        data: {
+            cedula: ci + digitoVer
+        },
+        success: function (data) {
+            if (data === "OK") {
+                errCi.text("Error: Cedula ya ingresada.");
+                errCi.prop("hidden", false);
+            } else {
+                if (tipoUsuario === "Cliente") {
+                    altaCliente(ci, digitoVer);
+                } else {
+                    altaMedico(ci, digitoVer);
+                }
+            }
+        },
+        error: function () {
+        }
+    });
+}
+function altaCliente(ci, digitoVer) {
     var errNombre = $("#nombreError");
     var errApellido = $("#apellidoError");
     var errEmail = $("#emailError");
     var errFecha = $("#fechaError");
-    errCi.prop("hidden", true);
+    var errDepartamento = $("#departamentoError");
+    var errCuidad = $("#ciudadError");
+    var errCalle = $("#calleError");
+    var errNumero = $("#numeroError");
     errNombre.prop("hidden", true);
     errApellido.prop("hidden", true);
     errEmail.prop("hidden", true);
     errFecha.prop("hidden", true);
-    var ci = $("#ci").val().toString().trim();
-    var digitoVer = $("#digitoVer").val().toString().trim();
+    errDepartamento.prop("hidden", true);
+    errCuidad.prop("hidden", true);
+    errNumero.prop("hidden", true);
+    errCalle.prop("hidden", true);
     var nombre = $("#nombre").val().toString().trim();
     var apellido = $("#apellido").val().toString().trim();
     var email = $("#email").val().toString().trim();
@@ -225,14 +259,18 @@ $("#btnRegistrarUsuario").click(function () {
     var apartamento = $("#apartamento").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 1; i < tel; i++)
-        telefonos = telefonos + "|" + ($("#telefono" + (i + 1)).val().toString().trim());
-    var errores = false;
-    if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
-        errCi.text("Error: Cedula no valida.");
-        errCi.prop("hidden", false);
-        errores = true;
+    for (i = 1; i <= tel; i++) {
+        var tt = $("#telefono" + i).val().toString().trim();
+        if (!telefonoCorrecto (tt)){
+            var texto = document.getElementById("modalIUMensaje");
+            texto.innerHTML = "Algun telefono es incorrecto";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+            return;
+        }
+        telefonos = telefonos + (telefonos === "" ? "" : "|") + (tt);
     }
+    var errores = false;
 
     if (!soloLetras(nombre)) {
         errNombre.text("Error: Caracteres invalidos.");
@@ -255,6 +293,30 @@ $("#btnRegistrarUsuario").click(function () {
     if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
         errFecha.text("Error: Fecha no valida.");
         errFecha.prop("hidden", false);
+        errores = true;
+    }
+
+    if (departamento === "") {
+        errDepartamento.text("Error: Departamento no seleccionado.");
+        errDepartamento.prop("hidden", false);
+        errores = true;
+    }
+
+    if (ciudad === "") {
+        errCuidad.text("Error: Cuidad no seleccionada.");
+        errCuidad.prop("hidden", false);
+        errores = true;
+    }
+
+    if (calle === "") {
+        errCalle.text("Error: Calle no valida.");
+        errCalle.prop("hidden", false);
+        errores = true;
+    }
+
+    if (numero === "") {
+        errNumero.text("Error: Numero no valido.");
+        errNumero.prop("hidden", false);
         errores = true;
     }
 
@@ -292,7 +354,8 @@ $("#btnRegistrarUsuario").click(function () {
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC")[0].reset();
-                    cargarClientes("listCliP", "clientePFila", "seleccionarCliP");
+                    setNoCargado("CliP");
+                    setNoCargado("Cli");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -303,21 +366,25 @@ $("#btnRegistrarUsuario").click(function () {
             }
         });
     }
-});
+}
 
-$("#btnRegistrarMedico").click(function () {
-    var errCi = $("#ciMedError");
+function altaMedico(ci, digitoVer) {
     var errNombre = $("#nombreMedError");
     var errApellido = $("#apellidoMedError");
     var errEmail = $("#emailMedError");
     var errFecha = $("#fechaMedError");
-    errCi.prop("hidden", true);
+    var errDepartamento = $("#departamentoMedError");
+    var errCuidad = $("#ciudadMedError");
+    var errCalle = $("#calleMedError");
+    var errNumero = $("#numeroMedError");
     errNombre.prop("hidden", true);
     errApellido.prop("hidden", true);
     errEmail.prop("hidden", true);
     errFecha.prop("hidden", true);
-    var ci = $("#ciMed").val().toString().trim();
-    var digitoVer = $("#digitoVerMed").val().toString().trim();
+    errDepartamento.prop("hidden", true);
+    errCuidad.prop("hidden", true);
+    errNumero.prop("hidden", true);
+    errCalle.prop("hidden", true);
     var nombre = $("#nombreMed").val().toString().trim();
     var apellido = $("#apellidoMed").val().toString().trim();
     var email = $("#emailMed").val().toString().trim();
@@ -331,19 +398,22 @@ $("#btnRegistrarMedico").click(function () {
     var apartamento = $("#apartamentoMed").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 1; i < telMed; i++)
-        telefonos = telefonos + "|" + ($("#telefonoMed" + (i + 1)).val().toString().trim());
-    
+    for (i = 1; i <= telMed; i++) {
+        var tt = $("#telefonoMed" + i).val().toString().trim();
+        if (!telefonoCorrecto (tt)){
+            var texto = document.getElementById("modalIUMensaje");
+            texto.innerHTML = "Algun telefono es incorrecto";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+            return;
+        }
+        telefonos = telefonos + (telefonos === "" ? "" : "|") + (tt);
+    }
     var especialidades = "";
     var j;
-    for (j = 1; j < esp; j++)
-        especialidades = especialidades + "|" + ($("#especialidad" + (j + 1)).val().toString().trim());
+    for (j = 1; j <= esp; j++)
+        especialidades = especialidades + (especialidades === "" ? "" : "|") + ($("#especialidad" + j)).val().toString().trim();
     var errores = false;
-    if (ci.length !== 7 || !cedulaCorrecta(ci, digitoVer)) {
-        errCi.text("Error: Cedula no valida.");
-        errCi.prop("hidden", false);
-        errores = true;
-    }
 
     if (!soloLetras(nombre)) {
         errNombre.text("Error: Caracteres invalidos.");
@@ -366,6 +436,30 @@ $("#btnRegistrarMedico").click(function () {
     if (!fechaCorrecta(dia, obtenerNumeroMes(mes), anio)) {
         errFecha.text("Error: Fecha no valida.");
         errFecha.prop("hidden", false);
+        errores = true;
+    }
+
+    if (departamento === "") {
+        errDepartamento.text("Error: Departamento no seleccionado.");
+        errDepartamento.prop("hidden", false);
+        errores = true;
+    }
+
+    if (ciudad === "") {
+        errCuidad.text("Error: Cuidad no seleccionada.");
+        errCuidad.prop("hidden", false);
+        errores = true;
+    }
+
+    if (calle === "") {
+        errCalle.text("Error: Calle no valida.");
+        errCalle.prop("hidden", false);
+        errores = true;
+    }
+
+    if (numero === "") {
+        errNumero.text("Error: Numero no valido.");
+        errNumero.prop("hidden", false);
         errores = true;
     }
 
@@ -400,10 +494,14 @@ $("#btnRegistrarMedico").click(function () {
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else if (data === "OK") {
-                    texto.innerHTML = "El medico ha sido ingresado correctamente";
+                    texto.innerHTML = "El médico ha sido ingresado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC2")[0].reset();
+                    setNoCargado("CliP");
+                    setNoCargado("MedE");
+                    setNoCargado("MedHA");
+                    setNoCargado("MedHAE");
                 } else {
                     texto.innerHTML = data;
                     texto.style.color = "red";
@@ -414,7 +512,7 @@ $("#btnRegistrarMedico").click(function () {
             }
         });
     }
-});
+}
 
 function cargarCiudades(departamento, ciudad) {
     var def = document.createElement("option");
@@ -458,7 +556,7 @@ function emailCorrecto(email) {
 
 function fechaCorrecta(dia, mes, anio) {
     var d = new Date(anio * 1, mes * 1 - 1, dia);
-    return d && (d.getMonth() + 1) === mes * 1;
+    return d && (d.getMonth() + 1) === mes * 1 && d.getYear() !== 0;
 }
 
 function soloLetras(palabra) {
@@ -474,12 +572,24 @@ function telefonoCorrecto(telefono) {
 
 ////------------------------------------------------------------------------------------------------------------------------
 //Relacionar con hijo
-function cargarClientes(idLista, nombreFila, nombreFunction) {
+
+var cargado = ["Cli", "CliP", "MedE", "MedHA", "MedHAE"];
+cargado["Cli"] = false;
+cargado["CliP"] = false;
+cargado["MedE"] = false;
+cargado["MedHA"] = false;
+cargado["MedHAE"] = false;
+
+function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
+    if (cargado[tipo] === true) {
+        return;
+    }
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtClientes",
         type: "POST",
         dataType: 'json',
         data: {
+            conEmpleados: conEmpleados
         },
         success: function (data) {
             var ul = document.getElementById(idLista);
@@ -498,65 +608,110 @@ function cargarClientes(idLista, nombreFila, nombreFunction) {
                 a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
                 li.setAttribute("id", nombreFila + data[i].id);
                 li.setAttribute("class", "list-group-item");
-                li.setAttribute("onclick", nombreFunction + "(" + data[i].id + ")");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
                 ul.appendChild(li);
                 li.appendChild(a);
             }
+            setCargado(tipo);
         }
     });
 }
 
-cargarClientes("listCliP", "clientePFila", "seleccionarCliP");
+function setCargado(tipo) {
+    cargado[tipo] = true;
+}
+function setNoCargado(tipo) {
+    cargado[tipo] = false;
+}
 
-function buscarCliP() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('buscarCliPInput');
+function buscar(inputid, listaid) {
+
+    var input, filter, ul, li, a, i, contador;
+    input = document.getElementById(inputid);
     filter = input.value.toUpperCase();
-    ul = document.getElementById("listCliP");
+    ul = document.getElementById(listaid);
     li = ul.getElementsByTagName('li');
-    var restantes = 0;
+    contador = li.length;
+
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("a")[0];
         if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
-            restantes--;
+            if (parseInt(contador) < li.length)
+                contador = parseInt(contador) + 1;
         } else {
             li[i].style.display = "none";
-            restantes++;
+            contador = parseInt(contador) - 1;
+
         }
     }
 
-    if (restantes === li.length) {
-        document.getElementById("listCliPNoEncontrado").style.display = "block";
+    var liNoEncontrado = document.getElementById(listaid + "NoEncontrado");
+    if (contador === 0) {
+        if (liNoEncontrado === null) {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
+            li.setAttribute("id", listaid + "NoEncontrado");
+            li.setAttribute("class", "list-group-item");
+            li.style.display = "block";
+            ul.appendChild(li);
+            li.appendChild(a);
+        } else {
+            liNoEncontrado.style.display = "block";
+        }
     } else {
-        document.getElementById("listCliPNoEncontrado").style.display = "none";
+        if (liNoEncontrado !== null) {
+            liNoEncontrado.parentNode.removeChild(liNoEncontrado);
+        }
     }
 }
 
+var seleccionado = ["Cli", "CliP", "CliH", "MedE", "MedHA", "MedHAE"];
+seleccionado["Cli"] = "";
+seleccionado["CliP"] = "";
+seleccionado["CliH"] = "";
+seleccionado["MedE"] = "";
+seleccionado["MedHA"] = "";
+seleccionado["MedHAE"] = "";
 
-var seleccionadoCliP = "";
-function seleccionarCliP(idCliP) {
-    var li = document.getElementById("clientePFila" + idCliP);
+function seleccionar(nombreFila, id, tipo) {
+    if (seleccionado[tipo] === id) {
+        deseleccionar(nombreFila, tipo);
+        return;
+    } else if (seleccionado[tipo] !== "") {
+        deseleccionar(nombreFila, tipo);
+    }
+    var li = document.getElementById(nombreFila + id);
     li.style.background = "#204565c2";
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "white";
-    if (seleccionadoCliP !== "") {
-        deseleccionarCliP();
-    }
-    seleccionadoCliP = idCliP;
-    cargarHijos(seleccionadoCliP);
-}
 
-function deseleccionarCliP() {
-    var li = document.getElementById("clientePFila" + seleccionadoCliP);
+    seleccionado[tipo] = id;
+    if (tipo === "CliP") {
+        cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
+    }
+    if (tipo === "MedHAE")
+        cargarHorariosAtencion();
+}
+function deseleccionar(nombreFila, tipo) {
+    var li = document.getElementById(nombreFila + seleccionado[tipo]);
     li.style.background = "white";
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "black";
-
-    seleccionadoCliP = "";
+    seleccionado[tipo] = "";
+    if (tipo == "MedHAE") {
+        while (haNum >= 1) {
+            $("#ha" + haNum).remove();
+            haNum--;
+        }
+        haNum = 0;
+        $("#mensajeNoHay").html("Seleccione un medico");
+        $("#mensajeNoHay").show();
+    }
 }
 
-function cargarHijos(idCliente) {
+function cargarHijos(idCliente, idLista, nombreFila, tipo) {
     $.ajax({
         url: "/HospitalWeb/SUsuario?accion=obtNoHijosCliente",
         type: "POST",
@@ -565,7 +720,7 @@ function cargarHijos(idCliente) {
             idCliente: idCliente
         },
         success: function (data) {
-            var ul = document.getElementById("listCliH");
+            var ul = document.getElementById(idLista);
             $(ul).empty();
             if (data.length === 0) {
                 var li1 = document.createElement("li");
@@ -579,9 +734,9 @@ function cargarHijos(idCliente) {
                 var li = document.createElement("li");
                 var a = document.createElement("a");
                 a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
-                li.setAttribute("id", "clienteHFila" + data[i].id);
+                li.setAttribute("id", nombreFila + data[i].id);
                 li.setAttribute("class", "list-group-item");
-                li.setAttribute("onclick", "seleccionarCliH(" + data[i].id + ")");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
                 ul.appendChild(li);
                 li.appendChild(a);
             }
@@ -589,71 +744,14 @@ function cargarHijos(idCliente) {
     });
 }
 
-var seleccionadoCliH = "";
-function seleccionarCliH(idCliH) {
-    var li = document.getElementById("clienteHFila" + idCliH);
-    li.style.background = "#204565c2";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "white";
-    if (seleccionadoCliH !== "" && seleccionadoCliH !== idCliH) {
-        deseleccionarCliH();
-    }
-    seleccionadoCliH = idCliH;
-}
-
-function deseleccionarCliH() {
-    var li = document.getElementById("clienteHFila" + seleccionadoCliH);
-    li.style.background = "white";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "black";
-
-    seleccionadoCliH = "";
-}
-
-function buscarCliH() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('buscarCliHInput');
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("listCliH");
-    li = ul.getElementsByTagName('li');
-    var restantes = 0;
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-            restantes--;
-        } else {
-            li[i].style.display = "none";
-            restantes++;
-        }
-    }
-
-    if (restantes === li.length) {
-        var ul = document.getElementById("listCliH");
-        if (document.getElementById("listCliHNoEncontrado") === null) {
-            var li = document.createElement("li");
-            var a = document.createElement("a");
-            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
-            li.setAttribute("id", "listCliHNoEncontrado");
-            li.setAttribute("class", "list-group-item");
-            ul.appendChild(li);
-            li.appendChild(a);
-        }
-    } else {
-        var li = document.getElementById("listCliHNoEncontrado");
-        if (li !== null) {
-            li.parentNode.removeChild(li);
-        }
-    }
-}
 
 $("#btnVincularCliente").click(function () {
-    if (seleccionadoCliP === "") {
+    if (seleccionado["CliP"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó ningun cliente";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
-    } else if (seleccionadoCliH === "") {
+    } else if (seleccionado["CliH"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó un cliente como hijo";
         texto.style.color = "red";
@@ -663,92 +761,37 @@ $("#btnVincularCliente").click(function () {
             url: "/HospitalWeb/SUsuario?accion=vincularHijoCliente",
             type: "POST",
             data: {
-                idClienteP: seleccionadoCliP,
-                idClienteH: seleccionadoCliH
+                idClienteP: seleccionado["CliP"],
+                idClienteH: seleccionado["CliH"]
             },
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
                 if (data === "ERR") {
-                    texto.innerHTML = "No se pudo relacionar los clientes seleccionados";
+                    texto.innerHTML = "No se pudo ingresar el hijo al plan de vacunación";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else {
-                    texto.innerHTML = "Clientes relacionados correctamente";
+                    texto.innerHTML = "Hijo ingresado al plan correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
-
+                    deseleccionar("clientePFila", "CliP");
+                    deseleccionar("clienteHFila", "CliH");
                 }
             }
         });
-        deseleccionarCliP();
-        deseleccionarCliH();
+
     }
 
 });
 //---------------------------------------------------------------------------------------------------------------------
 //Eliminar cliente
 
-cargarClientes("listCli", "clienteFila", "seleccionarCli");
-
-function buscarCli() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('buscarCliInput');
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("listCli");
-    li = ul.getElementsByTagName('li');
-    var restantes = 0;
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-            restantes--;
-        } else {
-            li[i].style.display = "none";
-            restantes++;
-        }
-    }
-
-    if (restantes === li.length) {
-        var ul = document.getElementById("listCli");
-        if (document.getElementById("listCliNoEncontrado") === null) {
-            var li = document.createElement("li");
-            var a = document.createElement("a");
-            a.appendChild(document.createTextNode("No hay resultados para la busqueda"));
-            li.setAttribute("id", "listCliNoEncontrado");
-            li.setAttribute("class", "list-group-item");
-            ul.appendChild(li);
-            li.appendChild(a);
-        }
-    } else {
-        var li = document.getElementById("listCliNoEncontrado");
-        if (li !== null) {
-            li.parentNode.removeChild(li);
-        }
-    }
-}
-
-var seleccionadoCli = "";
-function seleccionarCli(idCli) {
-    var li = document.getElementById("clienteFila" + idCli);
-    li.style.background = "#204565c2";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "white";
-    if (seleccionadoCli !== "" && seleccionadoCli !== idCli) {
-        deseleccionarCli();
-    }
-    seleccionadoCli = idCli;
-}
-
-function deseleccionarCli() {
-    var li = document.getElementById("clienteFila" + seleccionadoCli);
-    li.style.background = "white";
-    var a = li.getElementsByTagName('a')[0];
-    a.style.color = "black";
-
-    seleccionadoCli = "";
-}
 $("#btnEliminarCliente").click(function () {
-    if (seleccionadoCli === "") {
+    pregunta("Desea eliminar el cliente?", "eliminarClienteDeVerdar");
+});
+
+function eliminarClienteDeVerdar() {
+    if (seleccionado["Cli"] === "") {
         var texto = document.getElementById("modalIUMensaje");
         texto.innerHTML = "No seleccionó ningun cliente";
         texto.style.color = "red";
@@ -758,7 +801,7 @@ $("#btnEliminarCliente").click(function () {
             url: "/HospitalWeb/SUsuario?accion=eliminarCliente",
             type: "POST",
             data: {
-                idCliente: seleccionadoCli
+                idCliente: seleccionado["Cli"]
             },
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
@@ -770,18 +813,298 @@ $("#btnEliminarCliente").click(function () {
                     texto.innerHTML = "Cliente eliminado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
-                    deseleccionarCli();
-                    cargarClientes("listCli", "clienteFila", "seleccionarCli");
+                    deseleccionar("clienteFila", "Cli");
+                    setNoCargado("Cli");
+                    cargarClientes("listCli", "clienteFila", "Cli", "no");
+                    setNoCargado("CliP");
                 }
             }
         });
     }
+}
 
+//---------------------------------------------------------------------------------------------------------------------------
+//Eliminar medico
+
+
+function cargarMedicos(idLista, nombreFila, tipo) {
+    if (cargado[tipo] === true) {
+        return;
+    }
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtEmpleados",
+        type: "POST",
+        dataType: 'json',
+        data: {
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay médicos"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+            setCargado(tipo);
+        }
+    });
+}
+
+$("#btnEliminarMedico").click(function () {
+    pregunta("Desea eliminar el medico?", "eliminarMedicoDeVerdad");
 });
 
+function eliminarMedicoDeVerdad() {
+    if (seleccionado["MedE"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun medico";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=eliminarEmpleado",
+            type: "POST",
+            data: {
+                idEmpleado: seleccionado["MedE"]
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo eliminar el médico seleccionado";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Médico eliminado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    deseleccionar("medicoEFila", "MedE");
+                    setNoCargado("MedE");
+                    cargarMedicos("listMedE", "medicoEFila", "MedE");
+                    setNoCargado("CliP");
+                    setNoCargado("MedHA");
+                    setNoCargado("MedHAE");
+
+                }
+            }
+        });
+    }
+}
 
 
+/// ---------------------
+// Ingresar HA
 
+$("#btnIngresarHA").click(function () {
+    var texto = document.getElementById("modalIUMensaje");
+    var med = seleccionado["MedHA"];
 
+    if (med === "") {
+        texto.innerHTML = "Seleccione un medico";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
 
+    var dia = $("#haDia").val();
 
+    if (dia === "") {
+        texto.innerHTML = "Seleccione un dia";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    var hInicio = $("#haHoraInicio").val();
+
+    if (hInicio === "") {
+        texto.innerHTML = "Seleccione una hora de inicio";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    var hFin = $("#haHoraFin").val();
+
+    if (hFin === "") {
+        texto.innerHTML = "Seleccione una hora de fin";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    var cant = $("#haCant").val();
+
+    if (cant === "") {
+        texto.innerHTML = "Seleccione una cantidad de clientes";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    if (cant <= 0) {
+        texto.innerHTML = "Seleccione una cantidad de clientes valida";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    var tipo = $("#haTipo").val();
+
+    if (tipo === "") {
+        texto.innerHTML = "Seleccione un tipo";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            calcularTiempo: "si",
+            horaInicio: hInicio,
+            horaFin: hFin,
+            cant: cant,
+            tipo: tipo
+        },
+        success: function (data) {
+            if (data == "ERR") {
+                mensajeErr ("La hora de fin debe ser una hora posterior a la hora de inicio");
+            } else {
+                pregunta ("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+            }
+        },
+        error: function () {
+            mensajeErr("No se pudo contactar el servidor");
+        }
+    });
+});
+
+function agregarHA (med, dia, hInicio, hFin, cant, tipo) {
+    var texto = document.getElementById("modalIUMensaje");
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "altaHA",
+            medico: med,
+            dia: dia,
+            horaInicio: hInicio,
+            horaFin: hFin,
+            cant: cant,
+            tipo: tipo
+        },
+        success: function (data) {
+            if (data === "ERR") {
+                texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+                texto.style.color = "red";
+                $("#modalIngresarUsuario").modal("show");
+            } else {
+                texto.innerHTML = "Horario de atencion ingresado!";
+                texto.style.color = "green";
+                $("#modalIngresarUsuario").modal("show");
+                $("#formHA")[0].reset();
+            }
+        },
+        error: function () {
+            texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+        }
+    });
+}
+
+var haNum = 0;
+
+function cargarHorariosAtencion() {
+    var texto = document.getElementById("modalIUMensaje");
+    if (seleccionado["MedHAE"] === "")
+        return;
+
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "obtenerHorarioAtencion",
+            idMedico: seleccionado["MedHAE"]
+        },
+        success: function (data) {
+            while (haNum >= 1) {
+                $("#ha" + haNum).remove();
+                haNum--;
+            }
+            haNum = 0;
+            if (data.length === 0) {
+                $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
+                $("#mensajeNoHay").show();
+            } else
+                $("#mensajeNoHay").hide();
+
+            for (var i = 0; i < data.length; i++) {
+                var nuevo = $("#ha" + haNum).clone();
+                nuevo.prop("hidden", false);
+                nuevo.attr("id", "ha" + (haNum + 1));
+                nuevo.find(".haDia").html(data[i].dia);
+                nuevo.find(".haHI").html(data[i].horaInicio.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haHF").html(data[i].horaFin.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haTipo").html(data[i].tipo === "VACUNACION" ? "Vacunación" : "Atención");
+                nuevo.find(".haCant").html(data[i].clientesMax);
+                nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
+                nuevo.insertAfter($("#ha" + haNum));
+                haNum++;
+            }
+        },
+        error: function () {
+            texto.innerHTML = "Error: No se puedo cargar el horario de atencion";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+        }
+    });
+}
+
+function eliminarHA(id) {
+    pregunta("Desea eliminar el horario de atencion?", "eliminarHADeVerdad", id);
+}
+
+function eliminarHADeVerdad(id) {
+    var texto = document.getElementById("modalIUMensaje");
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "eliminarHA",
+            idHA: id
+        },
+        success: function (data) {
+            if (data === "OK") {
+                texto.innerHTML = "Horario de atencion eliminado";
+                texto.style.color = "green";
+                cargarHorariosAtencion();
+                $("#modalIngresarUsuario").modal("show");
+            } else {
+                texto.innerHTML = "Error: No se puedo eliminar el horario de atencion";
+                texto.style.color = "red";
+                $("#modalIngresarUsuario").modal("show");
+            }
+        },
+        error: function () {
+            texto.innerHTML = "Error: No se puedo eliminar el horario de atencion";
+            texto.style.color = "red";
+            $("#modalIngresarUsuario").modal("show");
+        }
+    });
+}

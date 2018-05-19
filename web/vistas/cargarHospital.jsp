@@ -9,6 +9,11 @@
         <jsp:include page="include_js.html"/>
         <title>Registrar Usuario</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
+        
+        <script>
+            if (!window.location.toString ().includes ("/HospitalWeb/SHospital?Administrador"))
+                window.location.assign ("/HospitalWeb/SHospital?Administrador");
+        </script>
 
     </head>
     <body background="img/fondo.png">
@@ -216,11 +221,11 @@
                             </div>
                     <form onsubmit="return false">
                             <label>C.I.</label>
-                            <div class="form-group">
+                            <div class="form-group" id="divCiNuevoAdmin">
                                 <input required class="form-control" placeholder="C.I." type="text" id="ciNuevoAdmin" name="ciAdmin">
                             </div>
                             <label>Correo</label>
-                            <div class="form-group">
+                            <div class="form-group" id="divCorreoNuevoAdmin">
                                 <input required class="form-control" placeholder="Correo" type="text" id="correoNuevoAdmin" name="correoAdmin">
                             </div>
                         </div>
