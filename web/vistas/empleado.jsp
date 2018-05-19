@@ -61,6 +61,7 @@
                             <th>Finaliza</th>
                             <th>Clientes máximos</th>
                             <th>Cliente actual</th>
+                            <th>Tipo</th>
                             <th>Turnos</th>
                             <th>Estado</th>
                         </tr>
@@ -85,32 +86,32 @@
                                         }
                                     }
                                 }%></td>
+                            <td><%= ha.getTipo().toString().toLowerCase()%></td>
                             <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
                             <td id="estadoHA<%= ha.getId()%>">
                                 <%
                                     if (ha.getEstado().equals(EstadoTurno.INICIADO)) {
                                         out.println("<button class ='btn btn-danger' onclick='pregunta(\"&#191;Est&aacute; seguro que desea finalizar el horario de atenci&oacute;n&#63;,<br> todos sus turnos tambi&eacute;n finalizar&aacute;n.\",\"finalizarHA\",\"" + ha.getId() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
                                     } else if (ha.getEstado().equals(EstadoTurno.PENDIENTE)) {
-                                        out.println("<p style='font-weight: bold;'>" + ha.getEstado().toString().toLowerCase() + "</p>");
+                                        out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
                                     } else {
-                                        out.println(ha.getEstado().toString().toLowerCase());
+                                        out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
 
                                     }
                                 %>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="8">
+                            <td colspan="9">
                                 <div id="turnos<%= ha.getId()%>" class="collapse">
                                     <table class="table">
                                         <thead> 
-                                            <tr><th colspan="4" class="text-center">Turnos</th></tr>
+                                            <tr><th colspan="3" class="text-center">Turnos</th></tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <th class="text-center">Número</th>
                                                 <th class="text-center">Cliente</th>
-                                                <th class="text-center">Tipo</th>
                                                 <th class="text-center">Estado</th>
                                                 <th></th>
                                             </tr>
@@ -122,15 +123,25 @@
                                             <tr>
                                                 <td><%= turno.getNumero()%></td>  
                                                 <td><%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%></td>
-                                                <td><%= turno.getTipo().toString().toLowerCase()%></td>
-                                                <td id="estado<%=turno.getId()%>" ><%= turno.getEstado().toString().toLowerCase()%></td>
+                                                <td id="estado<%=turno.getId()%>" >
+                                                    <%
+                                                        if (turno.getEstado().equals(EstadoTurno.INICIADO)) {
+                                                            out.println("<span class='glyphicon glyphicon-play' title='Iniciado'></span>");
+                                                        } else if (turno.getEstado().equals(EstadoTurno.PENDIENTE)) {
+                                                            out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
+                                                        } else {
+                                                            out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
+
+                                                        }
+                                                    %>
+                                                </td>
                                                 <td id="btnEstado">
                                                     <%
                                                         EstadoTurno estado = turno.getEstado();
                                                         if (estado == EstadoTurno.INICIADO) {
-                                                            out.println("<button class='btn btn-danger' style='width: 80%' id='btnFinalizado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
+                                                            out.println("<button class='btn btn-danger' id='btnFinalizado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
                                                         } else if (estado == EstadoTurno.PENDIENTE) {
-                                                            out.println("<button class='btn btn-success' style='width: 80%' id='btnIniciado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
+                                                            out.println("<button class='btn btn-success' id='btnIniciado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
                                                             );
                                                         }
                                                     %> 
@@ -150,7 +161,7 @@
                         <%}
                         } else {%>
                         <tr>
-                            <td colspan="7">No tiene horarios de atención definidos</td>
+                            <td colspan="9">No tiene horarios de atención definidos</td>
                         </tr> 
                         <%}%>
                     </tbody>

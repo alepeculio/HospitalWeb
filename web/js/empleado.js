@@ -88,16 +88,17 @@ function actualizarHA(idTurno, estado, idHA, numero) {
         data: {
             idTurno: idTurno,
             estado: estado,
-            idHA: idHA,
+            idHA: idHA
         },
         success: function (data) {
             if (data === "ERR") {
                 mensajeErr("Ocurri&oacute; un error al actualizar el estado del turno");
-                return;
+            } else if (data === "errDia") {
+                mensajeErr("El d&iacute;a del horario de atenci&oacute;n de este turno no concuerda con el actual");
             } else {
                 if (estado === "FINALIZADO") {
                     $("#btnFinalizado" + idTurno).remove();
-                    $("#estado" + idTurno).html("finalizado");
+                    $("#estado" + idTurno).html("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
                     $("#ca" + idHA).html("-");
                     turnoActual[idHA] = "";
                 } else if (estado === "INICIADO") {
@@ -105,7 +106,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     $("#btnIniciado" + idTurno).attr("class", "btn btn-danger");
                     $("#btnIniciado" + idTurno).html("Finalizar <span class='glyphicon glyphicon-stop'></span>");
                     $("#btnIniciado" + idTurno).attr("id", "btnFinalizado" + idTurno);
-                    $("#estado" + idTurno).html("iniciado");
+                    $("#estado" + idTurno).html("<span class='glyphicon glyphicon-play' title='Iniciado' ></span>");
                     $("#ca" + idHA).html(numero);
                     turnoActual[idHA] = idTurno;
                 }
@@ -118,13 +119,12 @@ function actualizarHA(idTurno, estado, idHA, numero) {
                     $("#estadoHA" + idHA).empty();
                     $("#estadoHA" + idHA).append(finalizar);
                     $("#ca" + idHA).html(numero);
-
                 }
 
                 if (data === "lastTime") {
-                    $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
+                    $('[id^="estado"]', '#turnos' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
                     $('[id ="btnEstado"]', '#turnos' + idHA).remove();
-                    $('#estadoHA' + idHA).text("finalizado");
+                    $('#estadoHA' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
                     $("#ca" + idHA).html('-');
                     turnoActual[idHA] = "";
                 }
@@ -147,9 +147,9 @@ function finalizarHA(idHA) {
             if (data === "ERR") {
                 mensajeErr("Ocurri&oacute; un error al finalizar horario de atenci&oacute;n");
             } else if (data === "OK") {
-                $('[id^="estado"]', '#turnos' + idHA).text("finalizado");
+                $('[id^="estado"]', '#turnos' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
                 $('[id ="btnEstado"]', '#turnos' + idHA).remove();
-                $('#estadoHA' + idHA).text("finalizado");
+                $('#estadoHA' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
                 $("#ca" + idHA).html('-');
                 turnoActual[idHA] = "";
             }
