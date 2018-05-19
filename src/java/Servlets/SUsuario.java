@@ -3,6 +3,7 @@ package Servlets;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.HorarioAtencion;
+import Clases.TipoTurno;
 import Clases.Usuario;
 import Controladores.CCliente;
 import Controladores.CCorreo;
@@ -122,6 +123,7 @@ public class SUsuario extends HttpServlet {
                     c.setMesNacimiento(Integer.parseInt(mes));
                     c.setAnioNacimiento(Integer.parseInt(anio));
                     c.setTelefonos(tels.split("\\|"));
+                    System.out.println(Arrays.toString(tels.split("\\|")));
                     c.setDepartamento(departamento.trim());
                     c.setCiudad(ciudad);
                     c.setCalle(calle);
@@ -182,8 +184,10 @@ public class SUsuario extends HttpServlet {
                     e.setMesNacimiento(Integer.parseInt(mesMed));
                     e.setAnioNacimiento(Integer.parseInt(anioMed));
                     e.setTelefonos(telsMed.split("\\|"));
+                    System.out.println(Arrays.toString(telsMed.split("\\|")));
                     if (especialidades != null && !especialidades.equals("")) {
                         e.setEspecialidades(especialidades.split("\\|"));
+                        System.out.println(Arrays.toString(especialidades.split("\\|")));
                     }
                     e.setDepartamento(departamentoMed.trim());
                     e.setCiudad(ciudadMed);
@@ -290,6 +294,8 @@ public class SUsuario extends HttpServlet {
                 case "altaHA":
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
+                    
+                    String tipo = request.getParameter ("tipo");
 
                     String[] horaInicio = request.getParameter("horaInicio").split(":");
                     String[] horaFin = request.getParameter("horaFin").split(":");
@@ -302,6 +308,8 @@ public class SUsuario extends HttpServlet {
                     ha.setDia(request.getParameter("dia"));
                     ha.setHoraInicio(hi);
                     ha.setHoraFin(hf);
+                    ha.setTipo(tipo.equals("Atencion") ? TipoTurno.ATENCION : TipoTurno.VACUNACION);
+                    ha.setClienteActual(0);
                     ha.setClientesMax(Integer.valueOf(cant));
 
                     if (CHospital.agregaHorarioAtencion((Usuario) request.getSession().getAttribute("usuario"), Integer.valueOf(request.getParameter("medico")), ha)) {

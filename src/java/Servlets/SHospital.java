@@ -8,6 +8,7 @@ import Controladores.CUsuario;
 import Controladores.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -154,6 +155,23 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             CHospital.borrarAdministrador(URLDecoder.decode(request.getParameter("nomHospital")), URLDecoder.decode(request.getParameter("ciAdmin")));
             response.getWriter().write("OK");
+        } else if (request.getParameter("calcularTiempo") != null) {
+            String[] horaInicio = request.getParameter("horaInicio").split(":");
+            String[] horaFin = request.getParameter("horaFin").split(":");
+            int cant = Integer.valueOf (request.getParameter("cant"));
+
+            Date hi = new Date(2018, 5, 16, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
+            Date hf = new Date(2018, 5, 16, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
+            
+            long mins = ((hf.getTime() - hi.getTime()) / cant) / 1000 / 60;
+            
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            
+            if (mins <= 0)
+                response.getWriter().write("ERR");
+            else
+                response.getWriter().write(mins + "");
         }
     }
 }

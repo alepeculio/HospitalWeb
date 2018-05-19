@@ -259,7 +259,7 @@ function altaCliente(ci, digitoVer) {
     var apartamento = $("#apartamento").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 1; i < tel; i++) {
+    for (i = 1; i <= tel; i++) {
         var tt = $("#telefono" + i).val().toString().trim();
         if (!telefonoCorrecto (tt)){
             var texto = document.getElementById("modalIUMensaje");
@@ -268,7 +268,7 @@ function altaCliente(ci, digitoVer) {
             $("#modalIngresarUsuario").modal("show");
             return;
         }
-        telefonos = telefonos + "|" + (tt);
+        telefonos = telefonos + (telefonos === "" ? "" : "|") + (tt);
     }
     var errores = false;
 
@@ -398,7 +398,7 @@ function altaMedico(ci, digitoVer) {
     var apartamento = $("#apartamentoMed").val().toString().trim();
     var telefonos = "";
     var i;
-    for (i = 1; i < telMed; i++) {
+    for (i = 1; i <= telMed; i++) {
         var tt = $("#telefonoMed" + i).val().toString().trim();
         if (!telefonoCorrecto (tt)){
             var texto = document.getElementById("modalIUMensaje");
@@ -407,12 +407,12 @@ function altaMedico(ci, digitoVer) {
             $("#modalIngresarUsuario").modal("show");
             return;
         }
-        telefonos = telefonos + "|" + (tt);
+        telefonos = telefonos + (telefonos === "" ? "" : "|") + (tt);
     }
     var especialidades = "";
     var j;
-    for (j = 0; j < esp; j++)
-        especialidades = especialidades + "|" + ($("#especialidad" + (j + 1)).val().toString().trim());
+    for (j = 1; j <= esp; j++)
+        especialidades = especialidades + (especialidades === "" ? "" : "|") + ($("#especialidad" + j)).val().toString().trim();
     var errores = false;
 
     if (!soloLetras(nombre)) {
@@ -961,6 +961,40 @@ $("#btnIngresarHA").click(function () {
         return;
     }
 
+    var tipo = $("#haTipo").val();
+
+    if (tipo === "") {
+        texto.innerHTML = "Seleccione un tipo";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+        return;
+    }
+
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        data: {
+            calcularTiempo: "si",
+            horaInicio: hInicio,
+            horaFin: hFin,
+            cant: cant,
+            tipo: tipo
+        },
+        success: function (data) {
+            if (data == "ERR") {
+                mensajeErr ("La hora de fin debe ser una hora posterior a la hora de inicio");
+            } else {
+                pregunta ("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+            }
+        },
+        error: function () {
+            mensajeErr("No se pudo contactar el servidor");
+        }
+    });
+});
+
+function agregarHA (med, dia, hInicio, hFin, cant, tipo) {
+    var texto = document.getElementById("modalIUMensaje");
     $.ajax({
         type: "POST",
         url: "/HospitalWeb/SUsuario",
@@ -970,7 +1004,8 @@ $("#btnIngresarHA").click(function () {
             dia: dia,
             horaInicio: hInicio,
             horaFin: hFin,
-            cant: cant
+            cant: cant,
+            tipo: tipo
         },
         success: function (data) {
             if (data === "ERR") {
@@ -990,7 +1025,7 @@ $("#btnIngresarHA").click(function () {
             $("#modalIngresarUsuario").modal("show");
         }
     });
-});
+}
 
 var haNum = 0;
 
@@ -1024,8 +1059,9 @@ function cargarHorariosAtencion() {
                 nuevo.prop("hidden", false);
                 nuevo.attr("id", "ha" + (haNum + 1));
                 nuevo.find(".haDia").html(data[i].dia);
-                nuevo.find(".haHI").html(data[i].horaInicio);
-                nuevo.find(".haHF").html(data[i].horaFin);
+                nuevo.find(".haHI").html(data[i].horaInicio.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haHF").html(data[i].horaFin.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haTipo").html(data[i].tipo === "VACUNACION" ? "Vacunación" : "Atención");
                 nuevo.find(".haCant").html(data[i].clientesMax);
                 nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
                 nuevo.insertAfter($("#ha" + haNum));
