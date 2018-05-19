@@ -169,7 +169,7 @@
                             <%
                                 String[] telefonos = empleado.getTelefonos();
                             %>
-                            <span class="pull-left"><strong>Teléfono<%= telefonos.length <= 2 ? "" : "s"%></strong></span>
+                            <span class="pull-left"><strong>Teléfono<%= telefonos.length > 1 ? "s" : ""%></strong></span>
                             <ul>
                                 <%
                                     if (telefonos != null && telefonos.length != 0) {
@@ -182,17 +182,22 @@
                                 %>
                             </ul>
                         </li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Especialidades</strong></span>
+                        <li class="list-group-item text-right">
                             <%
                                 String[] especialidades = empleado.getEspecialidades();
-                                if (especialidades != null) {
-                                    for (String e : especialidades) {
-                                        out.println(" " + e + " ");
-                                    }
-                                } else {
-                                    out.println("-");
-                                }
                             %>
+                            <span class="pull-left"><strong>Especialidad<%= especialidades != null && especialidades.length > 1 ? "es" : "" %></strong></span>
+                            <ul>
+                                <%
+                                    if (especialidades != null && especialidades.length != 0) {
+                                        for (String t : especialidades) {
+                                            out.println("<li>" + t + "</li>");
+                                        }
+                                    } else {
+                                        out.println("-");
+                                    }
+                                %>
+                            </ul>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Fecha de nacimiento</strong></span><% out.println(empleado.getDiaNacimiento() + "/" + empleado.getMesNacimiento() + "/" + empleado.getAnioNacimiento());%></li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento());%></li>

@@ -378,7 +378,7 @@
                     <div class="datosHorarioAtencion"></div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <label>Día</label>
                                 <select class="form-control" id="haDia" required>
                                     <option value="">--</option>
@@ -392,16 +392,25 @@
                                 </select>
                             </div>
                             <div class="col-sm-3">
-                                <label>Hora de inicio</label>
+                                <label>Inicio</label>
                                 <input class="form-control" type="time" required id="haHoraInicio">
                             </div>
                             <div class="col-sm-3">
-                                <label>Hora de fin</label>
+                                <label>Fin</label>
                                 <input class="form-control" type="time" required id="haHoraFin">
                             </div>
-                            <div class="col-sm-3">
-                                <label>Cantidad de clientes</label>
+                            <div class="col-sm-2">
+                                <label>Pascientes</label>
                                 <input class="form-control" type="number" required id="haCant">
+                            </div>
+                            
+                            <div class="col-sm-2">
+                                <label>Tipo</label>
+                                <select class="form-control" id="haTipo" required>
+                                    <option value="">--</option>
+                                    <option value="Atencion">Atención</option>
+                                    <option value="Vacunacion">Vacunación</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -430,9 +439,10 @@
                     <thead>
                         <tr>
                             <th class="tablaHA">Día</th>
-                            <th class="tablaHA">Hora de inicio</th>
-                            <th class="tablaHA">Hora de fin</th>
-                            <th class="tablaHA">Cantidad de clientes</th>
+                            <th class="tablaHA">Inicio</th>
+                            <th class="tablaHA">Fin</th>
+                            <th class="tablaHA">Pascientes</th>
+                            <th class="tablaHA">Tipo</th>
                             <th class="tablaHA">Eliminar</th>
                         </tr>
                     </thead>
@@ -442,6 +452,7 @@
                             <td class="haHI">23:00</td>
                             <td class="haHF">08:00</td>
                             <td class="haCant">23</td>
+                            <td class="haTipo">Atención</td>
                             <td><button class="btn btn-danger haBoton"><span class="glyphicon glyphicon-remove"></span></button></td>
                         </tr>
                     </tbody>
