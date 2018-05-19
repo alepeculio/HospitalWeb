@@ -86,7 +86,7 @@
                                         }
                                     }
                                 }%></td>
-                            <td></td>
+                            <td><%= ha.getTipo().toString().toLowerCase()%></td>
                             <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
                             <td id="estadoHA<%= ha.getId()%>">
                                 <%
