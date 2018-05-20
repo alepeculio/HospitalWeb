@@ -3,6 +3,8 @@
     Created on : 15/05/2018, 02:15:15 PM
     Author     : Ale
 --%>
+
+<%@page import="com.sun.xml.internal.ws.util.StringUtils"%>
 <%@page import="Clases.EstadoTurno"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="Clases.Turno"%>
@@ -87,7 +89,7 @@
                                             }
                                         }
                                     }%></td>
-                                <td><%= ha.getTipo().toString().toLowerCase()%></td>
+                                <td><%= StringUtils.capitalize(ha.getTipo().toString().toLowerCase().replace("o", "ó"))%></td>
                                 <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
                                 <td id="estadoHA<%= ha.getId()%>">
                                     <%
@@ -160,7 +162,7 @@
                                 </td>
                             </tr> <!-- Hasta aca por Horario -->
                             <%}
-                        } else {%>
+                            } else {%>
                             <tr>
                                 <td colspan="9">No tiene horarios de atención definidos</td>
                             </tr> 
@@ -171,7 +173,7 @@
             </div>
 
 
-            <div class="tab-pane pestania" id="datosPersonales">
+            <div class="tab-pane pestania2" id="datosPersonales">
                 <h2>Datos personales</h2>
                 <hr>
                 <div>
@@ -217,6 +219,7 @@
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + ((empleado.getApartamento() != 0) ? "Apto. " + empleado.getApartamento() : ""));%></li>
                     </ul>
 
+                    <hr>
 
                     <div>
                         <ul class="nav nav-tabs" id="myTab">
