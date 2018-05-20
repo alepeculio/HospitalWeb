@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 @WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
 public class SUsuario extends HttpServlet {
 
@@ -123,7 +122,6 @@ public class SUsuario extends HttpServlet {
                     c.setMesNacimiento(Integer.parseInt(mes));
                     c.setAnioNacimiento(Integer.parseInt(anio));
                     c.setTelefonos(tels.split("\\|"));
-                    System.out.println(Arrays.toString(tels.split("\\|")));
                     c.setDepartamento(departamento.trim());
                     c.setCiudad(ciudad);
                     c.setCalle(calle);
@@ -134,12 +132,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (CCliente.altaCliente(c)) {
-                        new Thread (new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                CCorreo.enviarContrasenia (c);
+                                CCorreo.enviarContrasenia(c);
                             }
-                        }).start ();
+                        }).start();
                         mensaje = "OK";
                     } else {
                         mensaje = "ERR";
@@ -184,10 +182,9 @@ public class SUsuario extends HttpServlet {
                     e.setMesNacimiento(Integer.parseInt(mesMed));
                     e.setAnioNacimiento(Integer.parseInt(anioMed));
                     e.setTelefonos(telsMed.split("\\|"));
-                    System.out.println(Arrays.toString(telsMed.split("\\|")));
                     if (especialidades != null && !especialidades.equals("")) {
                         e.setEspecialidades(especialidades.split("\\|"));
-                        System.out.println(Arrays.toString(especialidades.split("\\|")));
+
                     }
                     e.setDepartamento(departamentoMed.trim());
                     e.setCiudad(ciudadMed);
@@ -199,12 +196,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensajeMed = "";
                     if (Singleton.getInstance().persist(e)) {
-                        new Thread (new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                CCorreo.enviarContrasenia (e);
+                                CCorreo.enviarContrasenia(e);
                             }
-                        }).start ();
+                        }).start();
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -294,8 +291,8 @@ public class SUsuario extends HttpServlet {
                 case "altaHA":
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    
-                    String tipo = request.getParameter ("tipo");
+
+                    String tipo = request.getParameter("tipo");
 
                     String[] horaInicio = request.getParameter("horaInicio").split(":");
                     String[] horaFin = request.getParameter("horaFin").split(":");

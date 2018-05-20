@@ -175,7 +175,8 @@
                 <div>
                     <ul class="list-group">
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Nombre completo</strong></span><%= empleado.getNombre()%> <%= empleado.getApellido()%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Email</strong></span><%= usuario.getCorreo()%></li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>E-mail</strong></span><%= usuario.getCorreo()%></li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>C.I.</strong></span><%= usuario.getCi()%></li>
                         <li class="list-group-item text-right">
                             <%
                                 String[] telefonos = empleado.getTelefonos();
@@ -211,7 +212,7 @@
                             </ul>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Fecha de nacimiento</strong></span><% out.println(empleado.getDiaNacimiento() + "/" + empleado.getMesNacimiento() + "/" + empleado.getAnioNacimiento());%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + empleado.getApartamento());%></li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + ((empleado.getApartamento() != 0)? "Apto. "+empleado.getApartamento():""));%></li>
                     </ul>
 
 
