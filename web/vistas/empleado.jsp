@@ -50,122 +50,124 @@
             <div class="tab-pane active pestania" id="horariosAtencion">
                 <h2>Horarios de atención</h2>
                 <hr>
-                <table class="table">
-                    <thead>
-                    </thead>
-                    <tbody>  
-                        <tr>
-                            <th>Hospital</th>
-                            <th>Día</th>
-                            <th>Inicia</th>
-                            <th>Finaliza</th>
-                            <th>Clientes máximos</th>
-                            <th>Cliente actual</th>
-                            <th>Tipo</th>
-                            <th>Turnos</th>
-                            <th>Estado</th>
-                        </tr>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        </thead>
+                        <tbody>  
+                            <tr>
+                                <th>Hospital</th>
+                                <th>Día</th>
+                                <th>Inicia</th>
+                                <th>Finaliza</th>
+                                <th>Clientes máximos</th>
+                                <th>Cliente actual</th>
+                                <th>Tipo</th>
+                                <th>Turnos</th>
+                                <th>Estado</th>
+                            </tr>
 
-                        <% List<HorarioAtencion> hsa = empleado.getHorariosAtencions();
-                            if (hsa != null && hsa.size() > 0) {
-                                for (HorarioAtencion ha : hsa) {%>
-                        <tr>
-                            <td><%= ha.getHospital().getNombre()%></td>
-                            <td><%= ha.getDia()%></td>
-                            <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraInicio())%></td>
-                            <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
-                            <td><%= ha.getClientesMax()%></td>
-                            <td id="ca<%= ha.getId()%>"><%if (ha.getClienteActual() == 0) {
-                                    out.println("-");
-                                    out.println("<script type='text/javascript'> setTurnoActual('" + ha.getId() + "','');</script>");
-                                } else {
-                                    out.println(ha.getClienteActual());
-                                    for (Turno t : ha.getTurnos()) {
-                                        if (t.getNumero() == ha.getClienteActual()) {
-                                            out.println("<script type='text/javascript'>setTurnoActual('" + ha.getId() + "','" + t.getId() + "');</script>");
-                                        }
-                                    }
-                                }%></td>
-                            <td><%= ha.getTipo().toString().toLowerCase()%></td>
-                            <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
-                            <td id="estadoHA<%= ha.getId()%>">
-                                <%
-                                    if (ha.getEstado().equals(EstadoTurno.INICIADO)) {
-                                        out.println("<button class ='btn btn-danger' onclick='pregunta(\"&#191;Est&aacute; seguro que desea finalizar el horario de atenci&oacute;n&#63;,<br> todos sus turnos tambi&eacute;n finalizar&aacute;n.\",\"finalizarHA\",\"" + ha.getId() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
-                                    } else if (ha.getEstado().equals(EstadoTurno.PENDIENTE)) {
-                                        out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
+                            <% List<HorarioAtencion> hsa = empleado.getHorariosAtencions();
+                                if (hsa != null && hsa.size() > 0) {
+                                    for (HorarioAtencion ha : hsa) {%>
+                            <tr>
+                                <td><%= ha.getHospital().getNombre()%></td>
+                                <td><%= ha.getDia()%></td>
+                                <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraInicio())%></td>
+                                <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
+                                <td><%= ha.getClientesMax()%></td>
+                                <td id="ca<%= ha.getId()%>"><%if (ha.getClienteActual() == 0) {
+                                        out.println("-");
+                                        out.println("<script type='text/javascript'> setTurnoActual('" + ha.getId() + "','');</script>");
                                     } else {
-                                        out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
+                                        out.println(ha.getClienteActual());
+                                        for (Turno t : ha.getTurnos()) {
+                                            if (t.getNumero() == ha.getClienteActual()) {
+                                                out.println("<script type='text/javascript'>setTurnoActual('" + ha.getId() + "','" + t.getId() + "');</script>");
+                                            }
+                                        }
+                                    }%></td>
+                                <td><%= ha.getTipo().toString().toLowerCase()%></td>
+                                <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
+                                <td id="estadoHA<%= ha.getId()%>">
+                                    <%
+                                        if (ha.getEstado().equals(EstadoTurno.INICIADO)) {
+                                            out.println("<button class ='btn btn-danger' onclick='pregunta(\"&#191;Est&aacute; seguro que desea finalizar el horario de atenci&oacute;n&#63;,<br> todos sus turnos tambi&eacute;n finalizar&aacute;n.\",\"finalizarHA\",\"" + ha.getId() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
+                                        } else if (ha.getEstado().equals(EstadoTurno.PENDIENTE)) {
+                                            out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
+                                        } else {
+                                            out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
 
-                                    }
-                                %>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="9">
-                                <div id="turnos<%= ha.getId()%>" class="collapse">
-                                    <table class="table">
-                                        <thead> 
-                                            <tr><th colspan="3" class="text-center">Turnos</th></tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th class="text-center">Número</th>
-                                                <th class="text-center">Cliente</th>
-                                                <th class="text-center">Estado</th>
-                                                <th></th>
-                                            </tr>
-                                            <% List<Turno> turnos = ha.getTurnos();
+                                        }
+                                    %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="9">
+                                    <div id="turnos<%= ha.getId()%>" class="collapse">
+                                        <table class="table">
+                                            <thead> 
+                                                <tr><th colspan="3" class="text-center">Turnos</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-center">Número</th>
+                                                    <th class="text-center">Cliente</th>
+                                                    <th class="text-center">Estado</th>
+                                                    <th></th>
+                                                </tr>
+                                                <% List<Turno> turnos = ha.getTurnos();
 
-                                                if (turnos != null && turnos.size() > 0) {
-                                                    for (Turno turno : turnos) {
-                                            %>
-                                            <tr>
-                                                <td><%= turno.getNumero()%></td>  
-                                                <td><%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%></td>
-                                                <td id="estado<%=turno.getId()%>" >
-                                                    <%
-                                                        if (turno.getEstado().equals(EstadoTurno.INICIADO)) {
-                                                            out.println("<span class='glyphicon glyphicon-play' title='Iniciado'></span>");
-                                                        } else if (turno.getEstado().equals(EstadoTurno.PENDIENTE)) {
-                                                            out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
-                                                        } else {
-                                                            out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
+                                                    if (turnos != null && turnos.size() > 0) {
+                                                        for (Turno turno : turnos) {
+                                                %>
+                                                <tr>
+                                                    <td><%= turno.getNumero()%></td>  
+                                                    <td><%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%></td>
+                                                    <td id="estado<%=turno.getId()%>" >
+                                                        <%
+                                                            if (turno.getEstado().equals(EstadoTurno.INICIADO)) {
+                                                                out.println("<span class='glyphicon glyphicon-play' title='Iniciado'></span>");
+                                                            } else if (turno.getEstado().equals(EstadoTurno.PENDIENTE)) {
+                                                                out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
+                                                            } else {
+                                                                out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
 
-                                                        }
-                                                    %>
-                                                </td>
-                                                <td id="btnEstado">
-                                                    <%
-                                                        EstadoTurno estado = turno.getEstado();
-                                                        if (estado == EstadoTurno.INICIADO) {
-                                                            out.println("<button class='btn btn-danger' id='btnFinalizado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
-                                                        } else if (estado == EstadoTurno.PENDIENTE) {
-                                                            out.println("<button class='btn btn-success' id='btnIniciado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
-                                                            );
-                                                        }
-                                                    %> 
-                                                </td>
-                                            </tr>
-                                            <% } %>
-                                            <% } else {%>
-                                            <tr class="text-center">
-                                                <td colspan = "4"> No hay turnos reservados en este Horario de atención</td>
-                                            </tr>
-                                            <% }%>
-                                        </tbody>
-                                    </table>
-                                </div>     
-                            </td>
-                        </tr> <!-- Hasta aca por Horario -->
-                        <%}
+                                                            }
+                                                        %>
+                                                    </td>
+                                                    <td id="btnEstado">
+                                                        <%
+                                                            EstadoTurno estado = turno.getEstado();
+                                                            if (estado == EstadoTurno.INICIADO) {
+                                                                out.println("<button class='btn btn-danger' id='btnFinalizado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
+                                                            } else if (estado == EstadoTurno.PENDIENTE) {
+                                                                out.println("<button class='btn btn-success' id='btnIniciado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"INICIADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Iniciar <span class='glyphicon glyphicon-play'></span></button>"
+                                                                );
+                                                            }
+                                                        %> 
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                                                <% } else {%>
+                                                <tr class="text-center">
+                                                    <td colspan = "4"> No hay turnos reservados en este Horario de atención</td>
+                                                </tr>
+                                                <% }%>
+                                            </tbody>
+                                        </table>
+                                    </div>     
+                                </td>
+                            </tr> <!-- Hasta aca por Horario -->
+                            <%}
                         } else {%>
-                        <tr>
-                            <td colspan="9">No tiene horarios de atención definidos</td>
-                        </tr> 
-                        <%}%>
-                    </tbody>
-                </table>
+                            <tr>
+                                <td colspan="9">No tiene horarios de atención definidos</td>
+                            </tr> 
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 
@@ -198,7 +200,7 @@
                             <%
                                 String[] especialidades = empleado.getEspecialidades();
                             %>
-                            <span class="pull-left"><strong>Especialidad<%= especialidades != null && especialidades.length > 1 ? "es" : "" %></strong></span>
+                            <span class="pull-left"><strong>Especialidad<%= especialidades != null && especialidades.length > 1 ? "es" : ""%></strong></span>
                             <ul>
                                 <%
                                     if (especialidades != null && especialidades.length != 0) {
@@ -212,7 +214,7 @@
                             </ul>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Fecha de nacimiento</strong></span><% out.println(empleado.getDiaNacimiento() + "/" + empleado.getMesNacimiento() + "/" + empleado.getAnioNacimiento());%></li>
-                        <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + ((empleado.getApartamento() != 0)? "Apto. "+empleado.getApartamento():""));%></li>
+                        <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span><% out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + ((empleado.getApartamento() != 0) ? "Apto. " + empleado.getApartamento() : ""));%></li>
                     </ul>
 
 
