@@ -153,7 +153,7 @@
                                                 <% } %>
                                                 <% } else {%>
                                                 <tr class="text-center">
-                                                    <td colspan = "4"> No hay turnos reservados en este Horario de atención</td>
+                                                    <td colspan = "4"> No hay turnos reservados en este horario de atención</td>
                                                 </tr>
                                                 <% }%>
                                             </tbody>
