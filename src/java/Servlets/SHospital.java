@@ -4,8 +4,10 @@ import Clases.Cliente;
 import Clases.Empleado;
 import Clases.HorarioAtencion;
 import Clases.Hospital;
+import Clases.Turno;
 import Clases.Usuario;
 import Controladores.CCliente;
+import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
@@ -160,6 +162,12 @@ public class SHospital extends HttpServlet {
             Usuario u = new Usuario();
             u.setCi(request.getParameter("ci"));
             u.setCorreo(request.getParameter("correo"));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    CCorreo.enviarContrasenia(u);
+                }
+            }).start();
             response.getWriter().write(CHospital.agregarAdministrador(URLDecoder.decode(request.getParameter("nomHospital"), "UTF-8"), u));
         } else if (request.getParameter("eliminarAdmin") != null) {
             response.setContentType("text/plain");
@@ -168,7 +176,8 @@ public class SHospital extends HttpServlet {
             response.getWriter().write("OK");
         } else if (request.getParameter("edad") != null) {
             System.out.println("Servlets.SHospital.doPost()");
-            Cliente c = CCliente.obtenerCliente("brian");
+            Usuario u = (Usuario) request.getSession().getAttribute("usuario");
+            Cliente c = CCliente.getClientebyUsuario(u.getId());
             if (c.getHijos().isEmpty()) {
                 System.out.println("Servlets.SHospital.doPost().no");
                 String json = new Gson().toJson("no");
@@ -178,14 +187,14 @@ public class SHospital extends HttpServlet {
                 if (CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en")) != null) {
 
                     List<Cliente> hijosXedad = CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en"));
-                    String json = new Gson().toJson(hijosXedad);
+                    String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hijosXedad);
                     response.setContentType("application/json");
                     response.getWriter().write(json);
                 }
             }
         } else if (request.getParameter("dia") != null) {
             long id = CHospital.obtenerHospital(request.getParameter("hospital")).getId();
-            List<HorarioAtencion> horarios = CHospital.obtenerHorariosHospital(id);
+            List<HorarioAtencion> horarios = CHospital.obtenerHorariosConTurnosDisp(id);
             List<Object[]> listafinal = new ArrayList<Object[]>();
             for (HorarioAtencion ha : horarios) {
                 if (ha.getDia().equals(request.getParameter("dia"))) {
@@ -196,7 +205,24 @@ public class SHospital extends HttpServlet {
             response.setContentType("application/json");
             response.getWriter().write(json);
         } else if (request.getParameter("idHorario") != null) {
-            
+            long idHijo = Long.valueOf(request.getParameter("hijo"));
+            Cliente c = CCliente.getCliente(idHijo);
+            System.out.println(idHijo);
+            long idH = Long.valueOf(request.getParameter("idHorario"));
+            long idHospital = Long.valueOf(request.getParameter("idHospital"));
+            String nombreC = c.getNombre();
+            Object[] result = CCliente.ReservarTurnoVacunacion(nombreC, idH, idHospital);
+            String mensaje = "Se reservo hora de Vacunacion para su  hijo " + result[0] + " " + result[1] + ". La hora es " + result[4] + " con el medico " + result[2] + " " + result[3];
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    CCorreo.enviar("brian.gomez2016@outlook.com", "Hospital Web-Registro Vacuna-", mensaje);
+                }
+            }).start();
+
+            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(result);
+            response.setContentType("application/json");
+            response.getWriter().write(json);
         }
 
     }

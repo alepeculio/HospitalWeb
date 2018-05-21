@@ -1,0 +1,54 @@
+<!-- Pregunta -->
+<div class="modal fade" id="modalPregunta" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalPreguntaTexto"></h4>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" data-dismiss="modal" id="btnPreguntaAceptar">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensaje -->
+<div class="modal fade" id="modalMensaje" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalMensajeTexto"></h4>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" data-dismiss="modal" id="btnMensajeAceptar">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function pregunta (pregunta, funcion, params = "") {
+        $("#modalPreguntaTexto").html (pregunta);
+        $("#btnPreguntaAceptar").attr ("onclick", funcion + "(" + params + ")");
+        $("#modalPregunta").modal ("show");
+    }
+    
+    function mensaje (mensaje, funcion = "", params = "") {
+        $("#modalMensajeTexto").html (mensaje);
+        $("#modalMensajeTexto").css ("color", "green");
+        if (funcion != "")
+            $("#btnMensajeAceptar").attr ("onclick", funcion + "(" + params + ")");
+        $("#modalMensaje").modal ("show");
+    }
+    
+    function mensajeErr (mensaje, funcion = "", params = "") {
+        $("#modalMensajeTexto").html (mensaje);
+        $("#modalMensajeTexto").css ("color", "red");
+        if (funcion != "")
+            $("#btnMensajeAceptar").attr ("onclick", funcion + "(" + params + ")");
+        $("#modalMensaje").modal ("show");
+    }
+</script>

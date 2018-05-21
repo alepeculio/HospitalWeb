@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Servlets;
 
 import Clases.Cliente;
@@ -10,6 +5,7 @@ import Clases.Empleado;
 import Clases.HorarioAtencion;
 import Clases.Usuario;
 import Controladores.CCliente;
+import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
@@ -23,28 +19,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.*;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- *
- * @author Ale
- */
+
 @WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
 public class SUsuario extends HttpServlet {
 
     CUsuario cusuario = new CUsuario();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
@@ -147,6 +132,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (CCliente.altaCliente(c)) {
+                        new Thread (new Runnable() {
+                            @Override
+                            public void run() {
+                                CCorreo.enviarContrasenia (c);
+                            }
+                        }).start ();
                         mensaje = "OK";
                     } else {
                         mensaje = "ERR";
@@ -204,6 +195,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensajeMed = "";
                     if (Singleton.getInstance().persist(e)) {
+                        new Thread (new Runnable() {
+                            @Override
+                            public void run() {
+                                CCorreo.enviarContrasenia (e);
+                            }
+                        }).start ();
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -228,10 +225,6 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/registrarVacuna.jsp").forward(request, response);
                     break;
 
-                case "registrar":
-                    //request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/registrar.jsp").forward(request, response);
-                    break;
                 case "obtNoHijosCliente":
                     List<Cliente> hCliente = new CCliente().obtenerNoHijosCliente(request.getParameter("idCliente"));
                     String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hCliente);
@@ -316,18 +309,7 @@ public class SUsuario extends HttpServlet {
                     } else {
                         response.getWriter().write("ERR");
                     }
-                    break;
-                case "verificarCorreo":
-                    String correoVerficar = request.getParameter("correo");
-                    String mensajeVerifCorreo;
-                   /* if (cusuario.correoExiste(correoVerficar)) {
-                        mensajeVerifCorreo = "OK";
-                    } else {
-                        mensajeVerifCorreo = "ERR";
-                    }*/
-                    response.setContentType("text/plain");
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write("OK");
+
                     break;
                 case "verificarCedula":
                     String cedulaVerficar = request.getParameter("cedula");
@@ -351,9 +333,18 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(CHospital.eliminarHorarioAtencion(Integer.valueOf(request.getParameter("idHA"))) ? "OK" : "ERR");
                     break;
+                case "passCorrecta":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(((Usuario) request.getSession().getAttribute("usuario")).getContrasenia().equals(request.getParameter("pass")) ? "OK" : "ERR");
+                    break;
+                case "cambiarPass":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
+                    break;
             }
         }
-
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

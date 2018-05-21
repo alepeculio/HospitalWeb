@@ -339,35 +339,80 @@
                             <h4 class="modal-title">Registro Vacuna</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <form method="POST" action="" >
-                            <div class="modal-body ">
-                                <label>Seleccione el hijo para cual reservara un turno de vacunacion</label>
-                                <select class="form-control" id="hijos" required onclick="Shijo()">
-                                    <option value="">--</option>0
-                                </select>
-                                <span id="Shijo" hidden style="color: red">Debe seleccionar un hijo</span><br>
-                                <label>Seleccione un día para el turno de vacunacion</label>
-                                <select class="form-control" id="haDia" onchange="horario(value)" required>
-                                    <option value="">--</option>
-                                    <option value="Lunes">Lunes</option>
-                                    <option value="Martes">Martes</option>
-                                    <option value="Miercoles">Miercoles</option>
-                                    <option value="Jueves">Jueves</option>
-                                    <option value="Viernes">Viernes</option>
-                                    <option value="Sabado">Sabado</option>
-                                    <option value="Domingo">Domingo</option>
-                                </select>
-                                <span id="Sdia" hidden style="color: red;">Debe seleccionar un dia</span><br>
-                                <label>Seleccione un medico.</label>
-                                <select class="form-control" id="horarios" onclick="Shorario()" >
-                                    <option value="">--</option>
-                                </select>
-                                <span id="Shorario" hidden style="color: red">Debe seleccionar un medico</span><br>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-default" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
-                                <button type="submit" class="btn btn-default" id="btnRegistrar"  name="aceptar" >Registrar Hijo</button>
-                            </div>
+
+                        <div class="modal-body ">
+                            <label>Seleccione el hijo para cual reservara un turno de vacunacion</label>
+                            <select class="form-control" id="hijos" required onclick="Shijo()">
+                                <option value="">--</option>0
+                            </select>
+                            <span id="Shijo" hidden style="color: red">Debe seleccionar un hijo</span><br>
+                            <label>Seleccione un día para el turno de vacunacion</label>
+                            <select class="form-control" id="haDia" onchange="horario(value)" required>
+                                <option value="">--</option>
+                                <option value="Lunes">Lunes</option>
+                                <option value="Martes">Martes</option>
+                                <option value="Miercoles">Miercoles</option>
+                                <option value="Jueves">Jueves</option>
+                                <option value="Viernes">Viernes</option>
+                                <option value="Sabado">Sabado</option>
+                                <option value="Domingo">Domingo</option>
+                            </select>
+                            <span id="Sdia" hidden style="color: red;">Debe seleccionar un dia</span><br>
+                            <label>Seleccione un horario disponible.</label>
+                            <select class="form-control" id="horarios" onclick="Shorario()" >
+                                <option value="">--</option>
+                            </select>
+                            <span id="Shorario" hidden style="color: red">Debe seleccionar un horario disponible</span><br>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
+                            <button class="btn btn-default" id="btnRegistrar" onclick="registrar()" name="aceptar" >Registrar Hijo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="fin" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">	
+                            <h4 class="modal-title">Registro Vacuna</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body ">
+                            <h3>Cliente</h3>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>                           
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="trC">
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h3>Doctor Y Horario</h3>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th> 
+                                        <th>Hora</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="trD">
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -375,6 +420,7 @@
     </body>
     <script>
         var hospital = "<%=h.getNombre()%>";
+        var idhospital = <%=h.getId()%>;
 
         function Shijo() {
             $('#Shijo').hide();
@@ -402,6 +448,8 @@
                             var id = data[i].id;
                             var nombre = data[i].nombre;
                             var apellido = data[i].apellido;
+                            $("#hijos").empty();
+                            $("#hijos").append('<option>--</option>');
                             $("#hijos").append('<option value=' + id + '>' + nombre + ' ' + apellido + '</option>');
                         }
                         $('#correcto').modal('show');
@@ -427,13 +475,19 @@
                 ,
                 success: function (data) {
                     console.log(data);
-                    for (var i = 0; i < data.length; i++) {
-                        var id = data[i][0].id;
-                        var nombre = data[i][1].nombre;
-                        var apellido = data[i][1].apellido;
-                        var horainicio = data[i][0].horaInicio;
-                        var horafin = data[i][0].horaFin;
-                        $("#horarios").append('<option value=' + id + '>Doctor: ' + nombre + ' ' + apellido + ' | Dispoible De: ' + horainicio + ' - Hasta: ' + horafin + '</option>');
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var id = data[i][0].id;
+                            var nombre = data[i][1].nombre;
+                            var apellido = data[i][1].apellido;
+                            var horainicio = data[i][0].horaInicio;
+                            var horafin = data[i][0].horaFin;
+                            $("#horarios").empty();
+                            $("#horarios").append('<option>--</option>');
+                            $("#horarios").append('<option value=' + id + '>Doctor: ' + nombre + ' ' + apellido + ' | Dispoible De: ' + horainicio + ' - Hasta: ' + horafin + '</option>');
+                        }
+                    } else {
+                        $("#horarios").append('<option value=no>No hay horarios dispoibles para este dia </option>');
                     }
                 },
                 error: function () {
@@ -442,7 +496,7 @@
 
             });
         }
-        $("#btnRegistrar").click(function () {
+        function registrar() {
             var dia = $("#haDia").val().toString().trim();
             var idHorario = $("#horarios").val().toString().trim();
             var hijo = $("#hijos").val().toString().trim();
@@ -452,32 +506,38 @@
             if (idHorario === "") {
                 $("#Shorario").show();
             }
+            if (idHorario === "no") {
+                $("#Shorario").show();
+            }
             if (dia === "") {
                 $("#Sdia").show();
             }
-            if (hijo === "" && idHorario === "" && dia === "") {
+            if (dia !== "" && idHorario !== "" && idHorario !== "no" && hijo !== "") {
+                $.ajax({
+                    url: "/HospitalWeb/SHospital",
+                    type: "POST",
+                    data: {
+                        "idHorario": idHorario,
+                        "hijo": hijo,
+                        "idHospital": idhospital
+                    },
+                    success: function (data) {
+                        $('#correcto').modal('toggle');
+                        $("#trC").append('<td >' + data[0] + '</td>');
+                        $("#trC").append('<td >' + data[1] + '</td>');
+                        $("#trD").append('<td >' + data[2] + '</td>');
+                        $("#trD").append('<td >' + data[3] + '</td>');
+                        $("#trD").append('<td >' + data[4] + '</td>');
+                        $("#fin").modal();
 
+                    },
+                    error: function () {
+                        console.log("Error");
+                    }
 
+                });
             }
-            $.ajax({
-                url: "/HospitalWeb/SHospital",
-                type: "POST",
-                data: {
-                    "idHorario": idHorario,
-                    "hijo": hijo,
-                    "idHospital": hospital
-                },
-                success: function (data) {
-                    alert(data);
-                },
-                error: function () {
-                    console.log("Error");
-                }
-
-            });
-        });
-
-
+        }
 
     </script>
 </html>
