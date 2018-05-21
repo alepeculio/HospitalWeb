@@ -123,7 +123,6 @@ public class SUsuario extends HttpServlet {
                     c.setMesNacimiento(Integer.parseInt(mes));
                     c.setAnioNacimiento(Integer.parseInt(anio));
                     c.setTelefonos(tels.split("\\|"));
-                    System.out.println(Arrays.toString(tels.split("\\|")));
                     c.setDepartamento(departamento.trim());
                     c.setCiudad(ciudad);
                     c.setCalle(calle);
@@ -184,10 +183,9 @@ public class SUsuario extends HttpServlet {
                     e.setMesNacimiento(Integer.parseInt(mesMed));
                     e.setAnioNacimiento(Integer.parseInt(anioMed));
                     e.setTelefonos(telsMed.split("\\|"));
-                    System.out.println(Arrays.toString(telsMed.split("\\|")));
                     if (especialidades != null && !especialidades.equals("")) {
                         e.setEspecialidades(especialidades.split("\\|"));
-                        System.out.println(Arrays.toString(especialidades.split("\\|")));
+
                     }
                     e.setDepartamento(departamentoMed.trim());
                     e.setCiudad(ciudadMed);
