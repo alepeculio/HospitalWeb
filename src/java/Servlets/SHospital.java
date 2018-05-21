@@ -1,16 +1,30 @@
 package Servlets;
 
+import Clases.Cliente;
+import Clases.EstadoTurno;
 import Clases.HorarioAtencion;
 import Clases.Hospital;
+import Clases.TipoTurno;
+import Clases.Turno;
 import Clases.Usuario;
+import Controladores.CCliente;
 import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -96,28 +110,16 @@ public class SHospital extends HttpServlet {
                 response.getWriter().write("NOPE");
             }
         } else if (request.getParameter("obtenerHorarios") != null) {
+
+            String hospital = request.getParameter("obtenerHorarios");
+            String dia = request.getParameter("dia");
+            Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
 
-            Hospital h = CHospital.obtenerHospital(request.getParameter("obtenerHorarios"));
-            String dia = request.getParameter("dia");
-            List<HorarioAtencion> ha = h.getHorarioAtencions();
+            String s = CHospital.agregarTurno(hospital, u.getId(), dia);
 
-            for (HorarioAtencion hs : ha) {
-
-                if (hs.getDia().equals(dia)) {
-                    Date hi = hs.getHoraInicio();
-                    Date hf = hs.getHoraFin();
-                    long mins = ((hf.getTime() - hi.getTime()) / hs.getClientesMax()) / 1000 / 60;
-                    
-                    //calculo
-                    
-                    
-                }
-                
-            }
-            
-            response.getWriter().write("algo");
+            response.getWriter().write(s);
 
         } else if (request.getParameter("modificar") != null) {
             response.setContentType("text/plain");

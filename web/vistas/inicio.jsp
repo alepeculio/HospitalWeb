@@ -10,6 +10,7 @@
         <title>Inicio</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
         <link rel="stylesheet" type="text/css" href="css/awesomplete.css">
+        <script src="js/yui-min.js"></script>
     </head>
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>
@@ -37,25 +38,6 @@
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
         </div>
 
-        <!-- MODAL ERRORES DIA -->
-        <div class="modal fade" id="modal_buscar" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="mensaje_buscar"></p>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- MODAL -->
-
         <!-- Panel detalles hospital -->
         <div class="modal fade" id="modalReservas" role="dialog">
             <div class="modal-dialog">
@@ -68,23 +50,12 @@
                             <!-- PRUEBAS -->
 
                             <form onsubmit="return false">
-
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label>Día</label>
-                                        <div class="form-group" id="nombreParent">
-                                            <input type="date" id="dia"  value="yyyy-mm-dd" class="input-medium search-query" onkeydown="return false">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6" id="directoraParent">
-                                        <label>Hora</label>
-                                        <div class="form-group">
-                                            <select id="horarios">
-                                            </select>
-                                        </div>
+                                <div class="row yui3-skin-sam yui3-g">
+                                    <div id="centercolumn" class="yui3-u">
+                                        <!-- Container for the calendar -->
+                                        <div id="mycalendar"></div>
                                     </div>
                                 </div>
-
                                 <!-- FIN PRUEBAS -->
                         </div>
                         <div class="modal-footer" style="text-align: center;">
@@ -97,10 +68,29 @@
 
         <!-- CIERRA MODAL-->
 
+        <!-- MODAL ERRORES DIA -->
+        <div class="modal fade" id="modal_buscar" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <strong style="text-align: center;"><p id="mensaje_buscar"></p></strong>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MODAL -->
+
         <script src="js/reservas.js"></script>
         <% for (Hospital h : hospitales) {%>
         <script>
-                                                agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
+                                agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
         </script>
         <%}
         %>
