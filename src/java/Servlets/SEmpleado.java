@@ -2,6 +2,7 @@ package Servlets;
 
 import Clases.Empleado;
 import Clases.EstadoTurno;
+import Clases.HorarioAtencion;
 import Clases.Usuario;
 import Controladores.CEmpleado;
 import Controladores.CUsuario;
@@ -30,6 +31,9 @@ public class SEmpleado extends HttpServlet {
             switch (accion) {
                 case "inicio":
                     Empleado empleado = cusuario.getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
+                    for (HorarioAtencion ha : empleado.getHorariosAtencions()) {
+                        ha.setTurnos(CEmpleado.obtenerTurnosProximos(ha));
+                    }
                     request.setAttribute("empleado", empleado);
                     request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
                     break;
