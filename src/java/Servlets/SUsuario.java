@@ -64,6 +64,7 @@ public class SUsuario extends HttpServlet {
                                     request.getRequestDispatcher("/SEmpleado?accion=inicio").forward(request, response);
                                     break;
                                 case "Cliente":
+                                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
                                     request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
                                     break;
 
@@ -211,14 +212,14 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeMed);
                     break;
 
+                case "reservas":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                    break;
+
                 case "indicaciones":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
-                    break;
-
-                case "cliente":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
 
                 case "vacunas":

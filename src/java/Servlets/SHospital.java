@@ -1,15 +1,30 @@
 package Servlets;
 
+import Clases.Cliente;
+import Clases.EstadoTurno;
+import Clases.HorarioAtencion;
 import Clases.Hospital;
+import Clases.TipoTurno;
+import Clases.Turno;
 import Clases.Usuario;
+import Controladores.CCliente;
 import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -94,6 +109,18 @@ public class SHospital extends HttpServlet {
             } else {
                 response.getWriter().write("NOPE");
             }
+        } else if (request.getParameter("obtenerHorarios") != null) {
+
+            String hospital = request.getParameter("obtenerHorarios");
+            String dia = request.getParameter("dia");
+            Usuario u = (Usuario) request.getSession().getAttribute("usuario");
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+
+            String s = CHospital.agregarTurno(hospital, u.getId(), dia);
+
+            response.getWriter().write(s);
+
         } else if (request.getParameter("modificar") != null) {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
@@ -143,12 +170,12 @@ public class SHospital extends HttpServlet {
             Usuario u = new Usuario();
             u.setCi(request.getParameter("ci"));
             u.setCorreo(request.getParameter("correo"));
-            new Thread (new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    CCorreo.enviarContrasenia (u);
+                    CCorreo.enviarContrasenia(u);
                 }
-            }).start ();
+            }).start();
             response.getWriter().write(CHospital.agregarAdministrador(URLDecoder.decode(request.getParameter("nomHospital"), "UTF-8"), u));
         } else if (request.getParameter("eliminarAdmin") != null) {
             response.setContentType("text/plain");
@@ -158,20 +185,21 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("calcularTiempo") != null) {
             String[] horaInicio = request.getParameter("horaInicio").split(":");
             String[] horaFin = request.getParameter("horaFin").split(":");
-            int cant = Integer.valueOf (request.getParameter("cant"));
+            int cant = Integer.valueOf(request.getParameter("cant"));
 
             Date hi = new Date(2018, 5, 16, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
             Date hf = new Date(2018, 5, 16, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
-            
+
             long mins = ((hf.getTime() - hi.getTime()) / cant) / 1000 / 60;
-            
+
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
-            
-            if (mins <= 0)
+
+            if (mins <= 0) {
                 response.getWriter().write("ERR");
-            else
+            } else {
                 response.getWriter().write(mins + "");
+            }
         }
     }
 }
