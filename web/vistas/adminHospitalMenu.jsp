@@ -23,7 +23,7 @@
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar cliente</a></li>
             <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar cliente</a></li>
             <hr>
-            <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Relacionar con hijo</a></li>
+            <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Registrar hijo al plan de vacunación</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
             <li><a href="#eliminarMedico" data-toggle="tab" onclick ="cargarMedicos('listMedE', 'medicoEFila', 'MedE')">Eliminar médico</a></li>
@@ -175,7 +175,7 @@
                 <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
             </div>
             <div class="tab-pane pestania text-center" id="relacionarHijo">
-                <h2>Relacionar con hijo</h2>
+                <h2>Registrar hijo al plan de vacunación</h2>
                 <hr>
                 <form>
                     <label>Seleccione el cliente</label>
@@ -190,7 +190,7 @@
                         <li class="list-group-item"><a>No hay clientes</a></li>
                     </ul>
                     <br>
-                    <label>Seleccione el hijo a relacionar con el cliente anterior</label>
+                    <label>Seleccione el hijo a ingresar al plan de vacunación</label>
                     <div class="input-group">
                         <input class="form-control" type="text" id="buscarCliHInput" onkeyup="buscar('buscarCliHInput', 'listCliH')" placeholder="Buscar">
                         <span class="input-group-btn">
@@ -202,7 +202,7 @@
                         <li class="list-group-item"><a>Elija un cliente padre primero</a></li>
                     </ul>
                     <br>
-                    <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Relacionar</button> 
+                    <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Registrar al plan</button> 
                 </form>
             </div>
             <div class="tab-pane pestania" id="ingresarMedico">
@@ -378,7 +378,7 @@
                     <div class="datosHorarioAtencion"></div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <label>Día</label>
                                 <select class="form-control" id="haDia" required>
                                     <option value="">--</option>
@@ -392,16 +392,25 @@
                                 </select>
                             </div>
                             <div class="col-sm-3">
-                                <label>Hora de inicio</label>
+                                <label>Inicio</label>
                                 <input class="form-control" type="time" required id="haHoraInicio">
                             </div>
                             <div class="col-sm-3">
-                                <label>Hora de fin</label>
+                                <label>Fin</label>
                                 <input class="form-control" type="time" required id="haHoraFin">
                             </div>
-                            <div class="col-sm-3">
-                                <label>Cantidad de clientes</label>
+                            <div class="col-sm-2">
+                                <label>Pascientes</label>
                                 <input class="form-control" type="number" required id="haCant">
+                            </div>
+                            
+                            <div class="col-sm-2">
+                                <label>Tipo</label>
+                                <select class="form-control" id="haTipo" required>
+                                    <option value="">--</option>
+                                    <option value="Atencion">Atención</option>
+                                    <option value="Vacunacion">Vacunación</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -430,9 +439,10 @@
                     <thead>
                         <tr>
                             <th class="tablaHA">Día</th>
-                            <th class="tablaHA">Hora de inicio</th>
-                            <th class="tablaHA">Hora de fin</th>
-                            <th class="tablaHA">Cantidad de clientes</th>
+                            <th class="tablaHA">Inicio</th>
+                            <th class="tablaHA">Fin</th>
+                            <th class="tablaHA">Pascientes</th>
+                            <th class="tablaHA">Tipo</th>
                             <th class="tablaHA">Eliminar</th>
                         </tr>
                     </thead>
@@ -442,6 +452,7 @@
                             <td class="haHI">23:00</td>
                             <td class="haHF">08:00</td>
                             <td class="haCant">23</td>
+                            <td class="haTipo">Atención</td>
                             <td><button class="btn btn-danger haBoton"><span class="glyphicon glyphicon-remove"></span></button></td>
                         </tr>
                     </tbody>

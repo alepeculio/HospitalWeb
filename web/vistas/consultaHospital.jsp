@@ -347,16 +347,12 @@
                             </select>
                             <span id="Shijo" hidden style="color: red">Debe seleccionar un hijo</span><br>
                             <label>Seleccione un día para el turno de vacunacion</label>
-                            <select class="form-control" id="haDia" onchange="horario(value)" required>
-                                <option value="">--</option>
-                                <option value="Lunes">Lunes</option>
-                                <option value="Martes">Martes</option>
-                                <option value="Miercoles">Miercoles</option>
-                                <option value="Jueves">Jueves</option>
-                                <option value="Viernes">Viernes</option>
-                                <option value="Sabado">Sabado</option>
-                                <option value="Domingo">Domingo</option>
-                            </select>
+                            <div class="row yui3-skin-sam yui3-g">
+                                <div id="centercolumn" class="yui3-u">
+                                    <!-- Container for the calendar -->
+                                    <div id="mycalendar"></div>
+                                </div>
+                            </div>
                             <span id="Sdia" hidden style="color: red;">Debe seleccionar un dia</span><br>
                             <label>Seleccione un horario disponible.</label>
                             <select class="form-control" id="horarios" onclick="Shorario()" >

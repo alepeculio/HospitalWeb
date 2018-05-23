@@ -3,6 +3,7 @@ package Servlets;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.HorarioAtencion;
+import Clases.TipoTurno;
 import Clases.Usuario;
 import Controladores.CCliente;
 import Controladores.CCorreo;
@@ -23,7 +24,6 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
-
 
 @WebServlet(name = "SUsuario", urlPatterns = {"/SUsuario"})
 public class SUsuario extends HttpServlet {
@@ -64,6 +64,7 @@ public class SUsuario extends HttpServlet {
                                     request.getRequestDispatcher("/SEmpleado?accion=inicio").forward(request, response);
                                     break;
                                 case "Cliente":
+                                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
                                     request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
                                     break;
 
@@ -132,12 +133,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensaje = "";
                     if (CCliente.altaCliente(c)) {
-                        new Thread (new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                CCorreo.enviarContrasenia (c);
+                                CCorreo.enviarContrasenia(c);
                             }
-                        }).start ();
+                        }).start();
                         mensaje = "OK";
                     } else {
                         mensaje = "ERR";
@@ -184,6 +185,7 @@ public class SUsuario extends HttpServlet {
                     e.setTelefonos(telsMed.split("\\|"));
                     if (especialidades != null && !especialidades.equals("")) {
                         e.setEspecialidades(especialidades.split("\\|"));
+
                     }
                     e.setDepartamento(departamentoMed.trim());
                     e.setCiudad(ciudadMed);
@@ -195,12 +197,12 @@ public class SUsuario extends HttpServlet {
 
                     String mensajeMed = "";
                     if (Singleton.getInstance().persist(e)) {
-                        new Thread (new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                CCorreo.enviarContrasenia (e);
+                                CCorreo.enviarContrasenia(e);
                             }
-                        }).start ();
+                        }).start();
                         mensajeMed = "OK";
                     } else {
                         mensajeMed = "ERR";
@@ -210,14 +212,14 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeMed);
                     break;
 
+                case "reservas":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                    break;
+
                 case "indicaciones":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
-                    break;
-
-                case "cliente":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
 
                 case "vacunas":
@@ -291,6 +293,8 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
 
+                    String tipo = request.getParameter("tipo");
+
                     String[] horaInicio = request.getParameter("horaInicio").split(":");
                     String[] horaFin = request.getParameter("horaFin").split(":");
                     String cant = request.getParameter("cant");
@@ -302,6 +306,8 @@ public class SUsuario extends HttpServlet {
                     ha.setDia(request.getParameter("dia"));
                     ha.setHoraInicio(hi);
                     ha.setHoraFin(hf);
+                    ha.setTipo(tipo.equals("Atencion") ? TipoTurno.ATENCION : TipoTurno.VACUNACION);
+                    ha.setClienteActual(0);
                     ha.setClientesMax(Integer.valueOf(cant));
 
                     if (CHospital.agregaHorarioAtencion((Usuario) request.getSession().getAttribute("usuario"), Integer.valueOf(request.getParameter("medico")), ha)) {
