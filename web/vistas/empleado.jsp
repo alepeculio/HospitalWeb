@@ -83,11 +83,8 @@
                                         out.println("<script type='text/javascript'> setTurnoActual('" + ha.getId() + "','');</script>");
                                     } else {
                                         out.println(ha.getClienteActual());
-                                        for (Turno t : ha.getTurnos()) {
-                                            if (t.getNumero() == ha.getClienteActual()) {
-                                                out.println("<script type='text/javascript'>setTurnoActual('" + ha.getId() + "','" + t.getId() + "');</script>");
-                                            }
-                                        }
+                                        out.println("<script type='text/javascript'>setTurnoActual('" + ha.getId() + "','Turno Activo');</script>");
+
                                     }%></td>
                                 <td><%= StringUtils.capitalize(ha.getTipo().toString().toLowerCase().replace("o", "ó"))%></td>
                                 <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
