@@ -78,8 +78,8 @@ function setTurnoActual(idHA, idTurno) {
 }
 
 function actualizarHA(idTurno, estado, idHA, numero) {
-    if (turnoActual[idHA] !== idTurno && turnoActual[idHA] !== "") {
-        mensajeErr("Finalize el turno actual");
+    if (turnoActual[idHA] !== "" && estado === "INICIADO") {
+        mensajeErr("Finalice el turno actual");
         return;
     }
     $.ajax({
