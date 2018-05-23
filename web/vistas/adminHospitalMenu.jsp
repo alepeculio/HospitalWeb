@@ -1,4 +1,3 @@
-
 <%@page import="Clases.Cliente"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -63,7 +62,7 @@
                             <small id="ciError" class="text-danger" hidden>
                                 Error!
                             </small>
-                        </div>
+                        </div>  
                         <div class="col-sm-4 form-group">
                             <input required class="form-control" placeholder="-" type="text" id="digitoVer">
                         </div>
@@ -400,7 +399,7 @@
                                 <input class="form-control" type="time" required id="haHoraFin">
                             </div>
                             <div class="col-sm-2">
-                                <label>Pascientes</label>
+                                <label>Pacientes</label>
                                 <input class="form-control" type="number" required id="haCant">
                             </div>
                             
@@ -441,7 +440,7 @@
                             <th class="tablaHA">Día</th>
                             <th class="tablaHA">Inicio</th>
                             <th class="tablaHA">Fin</th>
-                            <th class="tablaHA">Pascientes</th>
+                            <th class="tablaHA">Pacientes</th>
                             <th class="tablaHA">Tipo</th>
                             <th class="tablaHA">Eliminar</th>
                         </tr>
