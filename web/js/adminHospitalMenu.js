@@ -261,7 +261,7 @@ function altaCliente(ci, digitoVer) {
     var i;
     for (i = 1; i <= tel; i++) {
         var tt = $("#telefono" + i).val().toString().trim();
-        if (!telefonoCorrecto (tt)){
+        if (!telefonoCorrecto(tt)) {
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -400,7 +400,7 @@ function altaMedico(ci, digitoVer) {
     var i;
     for (i = 1; i <= telMed; i++) {
         var tt = $("#telefonoMed" + i).val().toString().trim();
-        if (!telefonoCorrecto (tt)){
+        if (!telefonoCorrecto(tt)) {
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -579,6 +579,7 @@ cargado["CliP"] = false;
 cargado["MedE"] = false;
 cargado["MedHA"] = false;
 cargado["MedHAE"] = false;
+cargado["Sus"] = false;
 
 function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
     if (cargado[tipo] === true) {
@@ -970,7 +971,7 @@ $("#btnIngresarHA").click(function () {
         return;
     }
 
-    $.ajax ({
+    $.ajax({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
@@ -982,9 +983,9 @@ $("#btnIngresarHA").click(function () {
         },
         success: function (data) {
             if (data == "ERR") {
-                mensajeErr ("La hora de fin debe ser una hora posterior a la hora de inicio");
+                mensajeErr("La hora de fin debe ser una hora posterior a la hora de inicio");
             } else {
-                pregunta ("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+                pregunta("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
             }
         },
         error: function () {
@@ -993,7 +994,7 @@ $("#btnIngresarHA").click(function () {
     });
 });
 
-function agregarHA (med, dia, hInicio, hFin, cant, tipo) {
+function agregarHA(med, dia, hInicio, hFin, cant, tipo) {
     var texto = document.getElementById("modalIUMensaje");
     $.ajax({
         type: "POST",
@@ -1059,8 +1060,8 @@ function cargarHorariosAtencion() {
                 nuevo.prop("hidden", false);
                 nuevo.attr("id", "ha" + (haNum + 1));
                 nuevo.find(".haDia").html(data[i].dia);
-                nuevo.find(".haHI").html(data[i].horaInicio.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
-                nuevo.find(".haHF").html(data[i].horaFin.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haHI").html(data[i].horaInicio.replace("Dec 31, 1899 ", "").replace(":00 ", " "));
+                nuevo.find(".haHF").html(data[i].horaFin.replace("Dec 31, 1899 ", "").replace(":00 ", " "));
                 nuevo.find(".haTipo").html(data[i].tipo === "VACUNACION" ? "Vacunación" : "Atención");
                 nuevo.find(".haCant").html(data[i].clientesMax);
                 nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
@@ -1105,6 +1106,115 @@ function eliminarHADeVerdad(id) {
             texto.innerHTML = "Error: No se puedo eliminar el horario de atencion";
             texto.style.color = "red";
             $("#modalIngresarUsuario").modal("show");
+        }
+    });
+}
+
+//----------------------------------------------------------------------------------------------------
+//Suscripciones
+function cargarSuscripciones(idUsuarioAdmin, idLista, nombreFila, tipo) {
+    if (cargado[tipo] === true) {
+        return;
+    }
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtenerSuscripciones",
+        type: "POST",
+        dataType: 'json',
+        data: {
+            idUsuarioAdmin: idUsuarioAdmin
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay suscripciones"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                var aE = document.createElement("a");
+                var estado = data[i].estado.toLowerCase();
+                var nombre = data[i].cliente.nombre;
+                var apellido = data[i].cliente.apellido;
+
+                if (i <= 2) {
+                    a.innerHTML = nombre + " " + apellido;
+                } else {
+                    a.innerHTML = nombre + "para probar " + apellido;
+                }
+                a.setAttribute("style", "float:left");
+
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+
+                aE.innerHTML = estado;
+                aE.setAttribute("style", "font-weight:bold;");
+
+                ul.appendChild(li);
+                li.appendChild(a);
+
+                if (estado === "pendiente") {
+
+                    var btnConfirmar = document.createElement("button");
+                    var btnRechazar = document.createElement("button");
+
+
+                    btnConfirmar.setAttribute("class", "btn btn-success");
+                    btnConfirmar.innerHTML = "Confirmar <span class='glyphicon glyphicon-ok'>";
+                    btnConfirmar.setAttribute("onclick", ""); //Colocar accion
+
+                    btnRechazar.setAttribute("class", "btn btn-danger");
+                    btnRechazar.innerHTML = "Rechazar <span class='glyphicon glyphicon-remove'></span>";
+                    btnRechazar.setAttribute("style", "margin-left: 10px");
+                    btnRechazar.setAttribute("onclick", ""); //Colocar accion
+
+                    aE.innerHTML = estado;
+                    aE.setAttribute("style", "margin-right:1%; font-weight:bold;");
+                    li.appendChild(aE);
+
+
+                    li.appendChild(btnRechazar);
+                    li.appendChild(btnConfirmar);
+
+                } else if (estado === "activa") {
+                    var btnEliminar = document.createElement("button");
+
+                    btnEliminar.setAttribute("class", "btn btn-danger");
+                    btnEliminar.innerHTML = "Eliminar <span class='glyphicon glyphicon-remove'></span>";
+                    btnEliminar.setAttribute("onclick", ""); //Colocar accion
+
+                    aE.innerHTML = estado;
+                    aE.setAttribute("style", "margin-right:24.2%; font-weight:bold;");
+                    li.appendChild(aE);
+
+                    li.appendChild(btnEliminar);
+
+                } else if (estado === "vencida") {
+                    var btnRenovar = document.createElement("button");
+
+                    btnRenovar.setAttribute("class", "btn btn-success");
+                    btnRenovar.innerHTML = "Renovar <span class='glyphicon glyphicon-ok'></span>";
+                    btnRenovar.setAttribute("onclick", ""); //Colocar accion
+
+                    aE.innerHTML = estado;
+                    aE.setAttribute("style", "margin-right:22%; font-weight:bold;");
+                    li.appendChild(aE);
+
+                    li.appendChild(btnRenovar);
+
+                } else if (estado === "rechazada") {
+                    aE.innerHTML = estado;
+                    aE.setAttribute("style", "margin-right:36.7%; font-weight:bold;");
+                    li.appendChild(aE);
+                }
+
+            }
+            setCargado(tipo);
         }
     });
 }

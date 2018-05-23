@@ -1,3 +1,22 @@
+
+.listSus button{
+    float: right;
+    margin-top: -7px;
+    width: 105px;
+}
+
+.listSus li a{
+    text-decoration: none;
+    color: #000;
+}
+.listSus{
+    overflow:auto;
+    max-height:100vh;
+    text-align: right;
+}
+
+/*---------------------------------------------------*/
+
 .contenido{
     margin-left:2%;
     min-height:68vh;
