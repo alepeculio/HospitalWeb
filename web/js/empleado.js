@@ -1,4 +1,4 @@
-$("#btnCambiar").click(function () {
+function cambiarContrasenia() {
     var passActual = $("#passActual").val();
     var passNueva = $("#passNueva").val();
 
@@ -48,7 +48,7 @@ $("#btnCambiar").click(function () {
             alert("Error: No se pudo contactar el servidor");
         }
     });
-});
+}
 
 function cambiarPass(nueva) {
     $.ajax({

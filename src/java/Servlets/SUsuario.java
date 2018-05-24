@@ -9,6 +9,7 @@ import Clases.TipoTurno;
 import Clases.Usuario;
 import Controladores.CCliente;
 import Controladores.CCorreo;
+import Controladores.CEmpleado;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
@@ -53,23 +54,19 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-
-                            switch (CUsuario.obtenerTipo(u)) {
-
+                            String tipoUsuario = CUsuario.obtenerTipo(u);
+                            switch (tipoUsuario) {
                                 case "General":
                                     request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                     break;
                                 case "Hospital":
                                     request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
                                     break;
-                                case "Empleado":
-                                    request.getRequestDispatcher("/SEmpleado?accion=inicio").forward(request, response);
-                                    break;
-                                case "Cliente":
+                                default:
+                                    request.setAttribute("tipo", tipoUsuario);
                                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                                     request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
                                     break;
-
                             }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
@@ -357,12 +354,28 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
                     break;
                 case "mapaUsuario":
+                    request.setAttribute("tipo", CUsuario.obtenerTipo((Usuario) request.getSession().getAttribute("usuario")));
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward(request, response);
                     break;
                 case "panelDatos":
+                    Usuario user = (Usuario) request.getSession().getAttribute("usuario");
+                    String tipoUser = CUsuario.obtenerTipo(user);
+                    if (tipoUser.equals("Empleado")) {
+                        Empleado empleado = cusuario.getEmpleadobyUsuario(user.getId());
+                        for (HorarioAtencion ha1 : empleado.getHorariosAtencions()) {
+                            ha1.setTurnos(CEmpleado.obtenerTurnosProximos(ha1));
+                        }
+                        request.setAttribute("empleado", empleado);
+                    } else if (tipoUser.equals("Cliente")) {
+                        Cliente cliente = CCliente.getClientebyUsuario(user.getId());
+                        request.setAttribute("cliente", cliente);
+                    }
+                    request.setAttribute("tipo", tipoUser);
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
+                    break;
+
                 case "obtenerSuscripciones":
                     String idUsuarioAdmin = request.getParameter("idUsuarioAdmin");
                     List<Suscripcion> suscripciones = CHospital.obtenerSuscripcionesbyUsuarioAdminHospital(Long.valueOf(idUsuarioAdmin));

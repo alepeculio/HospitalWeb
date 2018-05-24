@@ -29,14 +29,6 @@ public class SEmpleado extends HttpServlet {
         String accion = request.getParameter("accion");
         if (accion != null) {
             switch (accion) {
-                case "inicio":
-                    Empleado empleado = cusuario.getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
-                    for (HorarioAtencion ha : empleado.getHorariosAtencions()) {
-                        ha.setTurnos(CEmpleado.obtenerTurnosProximos(ha));
-                    }
-                    request.setAttribute("empleado", empleado);
-                    request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
-                    break;
                 case "obtEmpleado":
                     response.setContentType("application/json");
                     Empleado e = CUsuario.getEmpleado(Long.valueOf(request.getParameter("id")));
