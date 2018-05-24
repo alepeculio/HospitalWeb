@@ -20,12 +20,12 @@
         <jsp:include page="header.jsp"/>
 
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
-            <%Usuario u = (Usuario)request.getSession().getAttribute("usuario"); %>
+            <%Usuario u = (Usuario) request.getSession().getAttribute("usuario");%>
 
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar paciente</a></li>
             <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar paciente</a></li>
             <hr>
-            <li><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>','listSus', 'susFila', 'Sus')">Suscripciones</a></li>
+            <li><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>', 'Sus')">Suscripciones</a></li>
             <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Registrar hijo al plan de vacunación</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
@@ -188,8 +188,20 @@
             <div class="tab-pane pestania" id="suscripciones">
                 <h2>Suscripciones</h2>
                 <hr>
+
+                <!--Elementos para clonar-->
+                <ul>
+                    <li class="list-group-item hidden" id="itemNoSus"><span class="nombre">No hay suscripciones</span></li>
+                    <li class="list-group-item hidden" id="itemPendiente"><span class="nombre">Nombre Apellido</span><span class="estado">Pendiente</span><button class="btn btn-danger">Rechazar <span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-success">Confirmar <span class="glyphicon glyphicon-ok"></span></button></li>
+                    <li class="list-group-item hidden" id="itemVencida"><span class="nombre">Nombre Apellido</span><span class="estado">Vencida</span><button class="btn btn-success">Renovar <span class="glyphicon glyphicon-ok"></span></button></li>
+                    <li class="list-group-item hidden" id="itemActiva"><span class="nombre">Nombre Apellido</span><span class="estado">Activa</span><button class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-remove"></span></button></li>
+                    <li class="list-group-item hidden" id="itemRechazada"><span class="nombre">Nombre Apellido</span><span class="estado">Rechazada</span></li>
+                    <li class="list-group-item hidden" id="itemEliminada"><span class="nombre">Nombre Apellido</span><span class="estado">Eliminada</span></li>
+                </ul>
+
+
                 <ul class="list-group listSus" id="listSus">
-                    <li class="list-group-item"><a>Cargando...</a></li>
+                    <li class="list-group-item" ><span>Cargando...</span></li>
                 </ul>
             </div>
 
