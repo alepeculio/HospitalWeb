@@ -701,7 +701,19 @@ function deseleccionar(nombreFila, tipo) {
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "black";
     seleccionado[tipo] = "";
-    if (tipo == "MedHAE") {
+
+    if (tipo === "CliP") {
+        var ul = document.getElementById("listCliH");
+        $(ul).empty();
+        var li1 = document.createElement("li");
+        var a1 = document.createElement("a");
+        a1.appendChild(document.createTextNode("Seleccione un paciente como padre"));
+        li1.setAttribute("class", "list-group-item");
+        ul.appendChild(li1);
+        li1.appendChild(a1);
+    }
+
+    if (tipo === "MedHAE") {
         while (haNum >= 1) {
             $("#ha" + haNum).remove();
             haNum--;
@@ -726,7 +738,7 @@ function cargarHijos(idCliente, idLista, nombreFila, tipo) {
             if (data.length === 0) {
                 var li1 = document.createElement("li");
                 var a1 = document.createElement("a");
-                a1.appendChild(document.createTextNode("No hay clientes relacionables con el seleccionado"));
+                a1.appendChild(document.createTextNode("No hay pacientes relacionables con el seleccionado"));
                 li1.setAttribute("class", "list-group-item");
                 ul.appendChild(li1);
                 li1.appendChild(a1);
@@ -749,12 +761,12 @@ function cargarHijos(idCliente, idLista, nombreFila, tipo) {
 $("#btnVincularCliente").click(function () {
     if (seleccionado["CliP"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.innerHTML = "No seleccionó ningun paciente";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else if (seleccionado["CliH"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó un cliente como hijo";
+        texto.innerHTML = "No seleccionó un paciente como hijo";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else {
@@ -785,16 +797,16 @@ $("#btnVincularCliente").click(function () {
 
 });
 //---------------------------------------------------------------------------------------------------------------------
-//Eliminar cliente
+//Eliminar paciente
 
 $("#btnEliminarCliente").click(function () {
-    pregunta("Desea eliminar el cliente?", "eliminarClienteDeVerdar");
+    pregunta("Desea eliminar el paciente?", "eliminarClienteDeVerdar");
 });
 
 function eliminarClienteDeVerdar() {
     if (seleccionado["Cli"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.innerHTML = "No seleccionó ningun paciente";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else {
@@ -807,11 +819,11 @@ function eliminarClienteDeVerdar() {
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
                 if (data === "ERR") {
-                    texto.innerHTML = "No se pudo eliminar el cliente seleccionado";
+                    texto.innerHTML = "No se pudo eliminar el paciente seleccionado";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else {
-                    texto.innerHTML = "Cliente eliminado correctamente";
+                    texto.innerHTML = "Paciente eliminado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("clienteFila", "Cli");
@@ -949,14 +961,14 @@ $("#btnIngresarHA").click(function () {
     var cant = $("#haCant").val();
 
     if (cant === "") {
-        texto.innerHTML = "Seleccione una cantidad de clientes";
+        texto.innerHTML = "Seleccione una cantidad de pacientes";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
         return;
     }
 
     if (cant <= 0) {
-        texto.innerHTML = "Seleccione una cantidad de clientes valida";
+        texto.innerHTML = "Seleccione una cantidad de pacientes valida";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
         return;

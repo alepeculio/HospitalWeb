@@ -22,8 +22,8 @@
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
             <%Usuario u = (Usuario)request.getSession().getAttribute("usuario"); %>
 
-            <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar cliente</a></li>
-            <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar cliente</a></li>
+            <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar paciente</a></li>
+            <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar paciente</a></li>
             <hr>
             <li><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>','listSus', 'susFila', 'Sus')">Suscripciones</a></li>
             <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Registrar hijo al plan de vacunación</a></li>
@@ -39,9 +39,9 @@
         <div class="panel contenido col-md-8 text-center tab-content">
 
 
-            <!-- Pestaña ingresar cliente -->
+            <!-- Pestaña ingresar paciente -->
             <div class="tab-pane active pestania" id="ingresarCliente">
-                <h2>Ingresar cliente</h2>
+                <h2>Ingresar paciente</h2>
                 <hr>
                 <form onsubmit="return false" id="formIC">
                     <div class="form-group">
@@ -164,11 +164,11 @@
             </div>
 
 
-            <!-- Pestaña eliminar cliente -->
+            <!-- Pestaña eliminar paciente -->
             <div class="tab-pane pestania" id="eliminarCliente">
-                <h2>Eliminar cliente</h2>
+                <h2>Eliminar paciente</h2>
                 <hr>
-                <label>Seleccione el cliente a eliminar</label>
+                <label>Seleccione el paciente a eliminar</label>
                 <div class="input-group">
                     <input class="form-control" type="text" id="buscarCliInput" onkeyup="buscar('buscarCliInput', 'listCli')" placeholder="Buscar">
                     <span class="input-group-btn">
@@ -177,7 +177,7 @@
                 </div>
 
                 <ul class="list-group listCliP" id="listCli">
-                    <li class="list-group-item"><a>No hay clientes</a></li>
+                    <li class="list-group-item"><a>Cargando...</a></li>
                 </ul>
                 <br>
                 <button type="button" id="btnEliminarCliente" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button> 
@@ -199,7 +199,7 @@
                 <h2>Registrar hijo al plan de vacunación</h2>
                 <hr>
                 <form>
-                    <label>Seleccione el cliente</label>
+                    <label>Seleccione el paciente</label>
                     <div class="input-group">
                         <input class="form-control" type="text" id="buscarCliPInput" onkeyup="buscar('buscarCliPInput', 'listCliP')" placeholder="Buscar">
                         <span class="input-group-btn">
@@ -208,7 +208,7 @@
                     </div>
 
                     <ul class="list-group listCliP" id="listCliP">
-                        <li class="list-group-item"><a>No hay clientes</a></li>
+                        <li class="list-group-item"><a>Cargando...</a></li>
                     </ul>
                     <br>
                     <label>Seleccione el hijo a ingresar al plan de vacunación</label>
@@ -220,7 +220,7 @@
                     </div>
 
                     <ul class="list-group listCliP" id="listCliH">
-                        <li class="list-group-item"><a>Elija un cliente padre primero</a></li>
+                        <li class="list-group-item"><a>Seleccione un paciente como padre</a></li>
                     </ul>
                     <br>
                     <button type="button" id="btnVincularCliente" class="btn btn-lg btn-success btn-block">Registrar al plan</button> 
@@ -378,7 +378,7 @@
                 </div>
 
                 <ul class="list-group listCliP" id="listMedE">
-                    <li class="list-group-item"><a>No hay médicos</a></li>
+                    <li class="list-group-item"><a>Cargando...</a></li>
                 </ul>
                 <br>
                 <button type="button" id="btnEliminarMedico" class="btn btn-lg btn-danger btn-block"><span class="glyphicon glyphicon-bin"></span>Eliminar</button>
@@ -399,7 +399,7 @@
                     </div>
 
                     <ul class="list-group listCliP" id="listMedHA">
-                        <li class="list-group-item"><a>No hay médicos</a></li>
+                        <li class="list-group-item"><a>Cargando...</a></li>
                     </ul>
                     <br>
 
@@ -461,7 +461,7 @@
                 </div>
 
                 <ul class="list-group listCliP" id="listMedHAE">
-                    <li class="list-group-item"><a>No hay médicos</a></li>
+                    <li class="list-group-item"><a>Cargando...</a></li>
                 </ul>
                 <br>
                 <div class="datosHorarioAtencion"></div>
