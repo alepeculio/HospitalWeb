@@ -4,6 +4,7 @@ import Clases.Cliente;
 import Clases.Empleado;
 import Clases.EstadoSuscripcion;
 import Clases.HorarioAtencion;
+import Clases.Hospital;
 import Clases.Suscripcion;
 import Clases.TipoTurno;
 import Clases.Usuario;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.*;
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
@@ -383,11 +385,58 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("application/json");
                     response.getWriter().write(suscripcionesJson);
                     break;
+                case "estaSuscripto":
+                    response.setContentType("application/json");
+                    Usuario usuasd = (Usuario) request.getSession().getAttribute("usuario");
+                    long idcli = CCliente.getClientebyUsuario (usuasd.getId()).getId();
+                    Hospital h = CHospital.obtenerHospital(request.getParameter("nombreHosp"));
+                    Suscripcion sus = CHospital.obtenerEstadoDeSuscripcion(idcli, h.getId ());
+                    
+                    String estado = "NO";
+                    
+                    if (sus == null)
+                        estado = "NO";
+                    if (sus != null)
+                        switch (sus.getEstado ()) {
+                            case ACTIVA:
+                                estado = "Activa (Fecha Vencimiento: " + new SimpleDateFormat ("dd-MM-yyyy").format (sus.getFechaVencimiento ()) + ")";
+                                break;
+                            case PENDIENTE:
+                                estado = "Pendiente";
+                                break;
+                            case VENCIDA:
+                                estado = "Vencida (Fecha Vencimiento: " + new SimpleDateFormat ("dd-MM-yyyy").format (sus.getFechaVencimiento ()) + ")";
+                                break;
+                            case RECHAZADA:
+                                estado = "Rechazada";
+                                break;
+                            case ELIMINADA:
+                                estado = "Eliminada";
+                                break;
+                        }
+                    
+                    response.getWriter().write(new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (new String[] { estado, h.isPublico () ? "Publico" : "Privado"}));
+                    break;
+                case "solicitarSus":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    Usuario usuasd2 = (Usuario) request.getSession().getAttribute("usuario");
+                    long idcli2 = CCliente.getClientebyUsuario(usuasd2.getId()).getId();
+                    Hospital h2 = CHospital.obtenerHospital(request.getParameter("nomHosp"));
+                    try {
+                        CHospital.agregarSuscripcion (idcli2, h2.getId (), Integer.valueOf(request.getParameter("cant")));
+                    } catch (Exception asdasd) {
+                        System.err.println(request.getParameter("cant"));
+                        asdasd.printStackTrace();
+                        response.getWriter().write("Cantidad de meses no valida");
+                        break;
+                    }
+                    response.getWriter().write("OK");
                 case "actualizarSuscripcion":
                     String idSuscripcion = request.getParameter("idSuscripcion");
-                    String estado = request.getParameter("estado");
+                    String estado2 = request.getParameter("estado");
                     String mensajeActSus;
-                    if (CHospital.actualizarSuscripcion(Long.valueOf(idSuscripcion), EstadoSuscripcion.valueOf(estado))) {
+                    if (CHospital.actualizarSuscripcion(Long.valueOf(idSuscripcion), EstadoSuscripcion.valueOf(estado2))) {
                         mensajeActSus = "OK";
                     } else {
                         mensajeActSus = "ERR";
