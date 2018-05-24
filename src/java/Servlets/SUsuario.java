@@ -3,6 +3,7 @@ package Servlets;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.HorarioAtencion;
+import Clases.Suscripcion;
 import Clases.TipoTurno;
 import Clases.Usuario;
 import Controladores.CCliente;
@@ -252,7 +253,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVinculo);
                     break;
-                case "obtClientes":
+                case "obtClientes": //TODO: Hacer que sean de un hospital especifico
                     String conEmpleados = request.getParameter("conEmpleados");
                     List<Cliente> clientes;
                     if ("si".equals(conEmpleados)) {
@@ -277,7 +278,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
                     break;
-                case "obtEmpleados":
+                case "obtEmpleados": //TODO: Hacer que sean de un hospital especifico
                     List<Empleado> empleados = CUsuario.obtenerEmpleados();
                     String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
                     response.setContentType("application/json");
@@ -361,6 +362,12 @@ public class SUsuario extends HttpServlet {
                 case "panelDatos":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales ());
                     request.getRequestDispatcher("vistas/empleado.jsp").forward (request, response);
+                case "obtenerSuscripciones":
+                    String idUsuarioAdmin = request.getParameter("idUsuarioAdmin");
+                    List<Suscripcion> suscripciones = CHospital.obtenerSuscripcionesbyUsuarioAdminHospital(Long.valueOf(idUsuarioAdmin));
+                    String suscripcionesJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(suscripciones);
+                    response.setContentType("application/json");
+                    response.getWriter().write(suscripcionesJson);
                     break;
             }
         }
