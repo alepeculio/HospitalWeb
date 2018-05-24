@@ -58,6 +58,10 @@
                         <button id="btnVerInfo" class="btn btn-default">Ver informacion del hospital</button>
                         <button id="btnReservarTurno" class="btn btn-default">Reservar Turno</button>
                         <button id="btnSuscripcion" class="btn btn-default">Solicitar suscripcion</button>
+                        <div id="divEstadoSus">
+                            <label>Estado de Suscripcion</label>
+                            <p id="estadoDeSusc">Activada</p>
+                        </div>
                         <div id="divMostrarRuta">
                             <label>Mostrar Ruta</label>
                             <select id="mode" name="mode">

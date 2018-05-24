@@ -85,7 +85,7 @@ function initMapa () {
                 title: "Posicion Actual",
                 icon: {
                     url: "img/persona.png",
-                    scaledSize: new google.maps.Size(29, 35)
+                    scaledSize: new google.maps.Size(29, 45)
                 },
                 map: mapa
             });
@@ -114,7 +114,49 @@ function initMapa () {
 
 function clickHospital (hospital) {
     hospitalSeleccionado = hospital;
-    $("#modalOpciones").modal ("show");
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "estaSuscripto",
+            nombreHosp: hospitalSeleccionado.title
+        },
+        success: function (data) {
+            $("#estadoDeSusc").html (data[0]);
+            if (data[0] === "NO") {
+                $("#btnSuscripcion").show ();
+                $("#divEstadoSus").hide ();
+            } else {
+                if (data[0] === "Rechazada" || data[0] === "Eliminada") {
+                    $("#btnSuscripcion").show ();
+                    $("#divEstadoSus").show ();
+                } else if ("Pendiente") {
+                    $("#btnSuscripcion").hide ();
+                    $("#divEstadoSus").show ();
+                } else if (data[0].includes ("Activa")) {
+                    $("#btnSuscripcion").hide ();
+                    $("#divEstadoSus").show ();
+                } else if (data[0].includes ("Vencida")) {
+                    $("#btnSuscripcion").show ();
+                    $("#divEstadoSus").show ();
+                }
+            }
+            
+            if (data[1] === "Privado" && data[0].includes ("Activa"))
+                $("#btnReservarTurno").hide ();
+            
+            if (data[1] === "Publico") {
+                $("#btnReservarTurno").show ();
+                $("#btnSuscripcion").hide ();
+                $("#divEstadoSus").hide ();
+            }
+            
+            $("#modalOpciones").modal ("show");
+        },
+        error: function () {
+            mensajeErr ("Error: No se pudo cargar la informacion del hospital");
+        }
+    });
 }
 
 $("#btnBuscar").click (function () {
@@ -137,12 +179,30 @@ $("#btnVerInfo").click (function () {
 });
 
 $("#btnSuscripcion").click (function () {
-    pregunta ("Desea solicitar suscripcion en " + hospitalSeleccionado.title + "?", "solicitarSuscripcion");
+    preguntaMensaje ("Desea solicitar suscripcion en " + hospitalSeleccionado.title + "?", "Cantidad de meses", "solicitarSuscripcion");
 });
 
-function solicitarSuscripcion () {
-    $("#modalOpciones").modal ("hide");
-    alert ("solicitar en " + hospitalSeleccionado.title);
+function solicitarSuscripcion (cant) {
+    $.ajax ({
+        type: "POST",
+        url: "/HospitalWeb/SUsuario",
+        data: {
+            accion: "solicitarSus",
+            nomHosp: hospitalSeleccionado.title,
+            cant: $("#" + cant).val ()
+        },
+        success: function (data) {
+            if (data !== "OK") {
+                mensajeErr (data);
+                return;
+            }
+            $("#modalOpciones").modal ("hide");
+            mensaje("La solicitud de suscripcion fue enviada")
+        },
+        error: function () {
+            mensajeErr ("Error: No se pudo solicitar la suscripcion.");
+        }
+    });
 }
 
 $("#btnMostrarRuta").click (function () {

@@ -166,3 +166,14 @@
 #divMostrarRuta select {
     width: 100%;
 }
+
+#divEstadoSus {
+    border-radius: 3pt;
+    background-color: #EEE;
+    padding: 3pt 3pt 0 3pt;
+}
+
+#divEstadoSus label,
+#divEstadoSus select {
+    width: 100%;
+}
