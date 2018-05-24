@@ -6,6 +6,14 @@
     padding: 1vw;
 }
 
+.fondo2 {
+    background-color: #FFF;
+    border-radius: 5px;
+    margin-left: 5vw;
+    margin-right: 5vw;
+    padding: 1vw;
+}
+
 .mapa {
     margin-top: 2.24vh;
     box-shadow: 0px 8px 10px 0px rgba(0,0,0,.5);
@@ -31,6 +39,15 @@
     margin-bottom: 1vw;
     margin-right: 1vw;
     font-size: 1.2em;
+    border-radius: 3pt;
+}
+
+#busqueda {
+    border-radius: 3pt;
+    background-color: #fff;
+    margin-top: 1vw;
+    margin-left: 1vw;
+    font-size: 1.2em;
 }
 
 #leyenda h3 {
@@ -46,6 +63,10 @@
 
 #leyenda p {
     margin-top: 1vh;
+}
+
+.iconoLeyenda {
+    margin: 0 1vw 0 0;
 }
 
 .imgLeyenda {
@@ -124,4 +145,24 @@
 #campoCorreo,
 #campoPass {
     display: none;
+}
+
+#divOpciones {
+    text-align: center;
+}
+
+#divOpciones button {
+    width: 100%;
+    margin: 5pt 0;
+}
+
+#divMostrarRuta {
+    border-radius: 3pt;
+    background-color: #EEE;
+    padding: 3pt 3pt 0 3pt;
+}
+
+#divMostrarRuta label,
+#divMostrarRuta select {
+    width: 100%;
 }

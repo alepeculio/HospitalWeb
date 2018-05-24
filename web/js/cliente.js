@@ -18,50 +18,50 @@ function initMapa() {
         disableDefaultUI: true
         ,
         styles: [
-        {
-            "featureType": "administrative",
-            "elementType": "geometry",
-            "stylers": [
             {
-                "visibility": "off"
-            }
-            ]
-        },
-        {
-            "featureType": "landscape",
-            "stylers": [
-            {
-                "visibility": "off"
-            }
-            ]
-        },
-        {
-            "featureType": "poi",
-            "stylers": [
-            {
-                "visibility": "off"
-            }
-            ]
-        },
-        {
-            "featureType": "poi.medical",
-            "stylers": [
-            {
-                "visibility": "off"
+                "featureType": "administrative",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
             },
             {
-                "weight": 5
-            }
-            ]
-        },
-        {
-            "featureType": "transit",
-            "stylers": [
+                "featureType": "landscape",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
             {
-                "visibility": "off"
+                "featureType": "poi",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.medical",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    },
+                    {
+                        "weight": 5
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
             }
-            ]
-        }
         ]
     };
 
@@ -79,40 +79,39 @@ function initMapa() {
         }).addListener("click", function () {
             clickHospital(this);
         });
+}
 
+var hospitalSeleccionado;
+
+function clickHospital(hospital) {
+    hospitalSeleccionado = hospital;
+    window.location = "/HospitalWeb/SHospital?verHospital=" + hospital.title;
+}
+
+$('#btnBuscar').click(function () {
+
+    var texto = $('#txtBuscar').val().toString();
+
+    if (texto == "") {
+
+        document.getElementById('mensaje_buscar').innerHTML = "Ingrese texto a buscar";
+        $("#modal_buscar").modal();
+        return;
     }
 
-    var hospitalSeleccionado;
+    var flag = false;
 
-    function clickHospital(hospital) {
-        hospitalSeleccionado = hospital;
-        window.location = "/HospitalWeb/SHospital?verHospital="+hospital.title;        
+    for (var i = 0; i < hospitales.length; i++) {
+        if (texto.localeCompare(hospitales[i][0]) == 0) {
+            flag = true;
+        }
     }
 
-    $('#btnBuscar').click(function(){
+    if (flag == false) {
+        document.getElementById('mensaje_buscar').innerHTML = "No hay resultados para su búsqueda";
+        $("#modal_buscar").modal();
+        return;
+    }
 
-        var texto = $('#txtBuscar').val().toString();
-
-        if(texto == ""){
-
-            document.getElementById('mensaje_buscar').innerHTML = "Ingrese texto a buscar";
-            $("#modal_buscar").modal();
-            return;
-        }
-
-        var flag = false;
-
-        for (var i = 0; i < hospitales.length; i++){
-            if(texto.localeCompare(hospitales[i][0]) == 0){
-                flag = true;
-            }
-        }
-
-        if(flag == false){
-            document.getElementById('mensaje_buscar').innerHTML = "No hay resultados para su búsqueda";
-            $("#modal_buscar").modal();
-            return;
-        }
-
-        window.location ="/HospitalWeb/SHospital?verHospital="+texto;
-    });
+    window.location = "/HospitalWeb/SHospital?verHospital=" + texto;
+});

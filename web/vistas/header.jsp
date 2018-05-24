@@ -15,9 +15,15 @@
                 <a class="navbar-brand" href="/HospitalWeb/SInicio?accion=inicio" id="titulo">Hospital Web</a>
             </div>
         </div>
-
+        
         <%if (request.getSession().getAttribute("usuario") != null) {%>
         <div class="collapse navbar-collapse" id="c-menu">
+            <!-- TODO: Que esta ul solo aparezca si se esta logueado como un usuario cliente o medico -->
+            <ul class="nav navbar-nav padding">
+                <li><a href="/HospitalWeb/SUsuario?accion=mapaUsuario">Ver Mapa<span class="sr-only"></span></a></li>
+                <li><a href="/HospitalWeb/SUsuario?accion=panelDatos">Panel de Datos</a></li>
+            </ul>
+            
             <button class="btn btn-default" id="btnCerrarSesion" title = "Cerrar sesión" onclick="window.location='/HospitalWeb/SUsuario?accion=logout'"><span class="glyphicon glyphicon-log-out micuenta_icono"></span></a></button>
         </div>
         <% }%>

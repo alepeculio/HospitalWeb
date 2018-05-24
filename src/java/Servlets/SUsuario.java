@@ -354,6 +354,14 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
                     break;
+                case "mapaUsuario":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales ());
+                    request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward (request, response);
+                    break;
+                case "panelDatos":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales ());
+                    request.getRequestDispatcher("vistas/empleado.jsp").forward (request, response);
+                    break;
             }
         }
     }
