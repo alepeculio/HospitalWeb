@@ -2,6 +2,7 @@ package Servlets;
 
 import Clases.Cliente;
 import Clases.Empleado;
+import Clases.EstadoSuscripcion;
 import Clases.HorarioAtencion;
 import Clases.Suscripcion;
 import Clases.TipoTurno;
@@ -253,7 +254,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVinculo);
                     break;
-                case "obtClientes": //TODO: Hacer que sean de un hospital especifico
+                case "obtClientes":
                     String conEmpleados = request.getParameter("conEmpleados");
                     List<Cliente> clientes;
                     if ("si".equals(conEmpleados)) {
@@ -278,7 +279,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
                     break;
-                case "obtEmpleados": //TODO: Hacer que sean de un hospital especifico
+                case "obtEmpleados":
                     List<Empleado> empleados = CUsuario.obtenerEmpleados();
                     String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
                     response.setContentType("application/json");
@@ -356,18 +357,31 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
                     break;
                 case "mapaUsuario":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales ());
-                    request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward (request, response);
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward(request, response);
                     break;
                 case "panelDatos":
-                    request.setAttribute("hospitales", CHospital.obtenerHospitales ());
-                    request.getRequestDispatcher("vistas/empleado.jsp").forward (request, response);
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
                 case "obtenerSuscripciones":
                     String idUsuarioAdmin = request.getParameter("idUsuarioAdmin");
                     List<Suscripcion> suscripciones = CHospital.obtenerSuscripcionesbyUsuarioAdminHospital(Long.valueOf(idUsuarioAdmin));
                     String suscripcionesJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(suscripciones);
                     response.setContentType("application/json");
                     response.getWriter().write(suscripcionesJson);
+                    break;
+                case "actualizarSuscripcion":
+                    String idSuscripcion = request.getParameter("idSuscripcion");
+                    String estado = request.getParameter("estado");
+                    String mensajeActSus;
+                    if (CHospital.actualizarSuscripcion(Long.valueOf(idSuscripcion), EstadoSuscripcion.valueOf(estado))) {
+                        mensajeActSus = "OK";
+                    } else {
+                        mensajeActSus = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeActSus);
                     break;
             }
         }
