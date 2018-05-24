@@ -1187,7 +1187,7 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
 
                         itemLista.removeClass("hidden");
                         spanNombre.html(nombre + " " + apellido);
-                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','RENOVADA','" + nombre + "','" + apellido + "')");
+                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "')");
                         itemLista.attr("id", "sus" + id);
 
                         lista.append(itemLista);
@@ -1227,7 +1227,6 @@ function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido) {
     $.ajax({
         url: "/HospitalWeb/SUsuario",
         type: "POST",
-        dataType: 'json',
         data: {
             accion: "actualizarSuscripcion",
             idSuscripcion: idSuscripcion,
@@ -1236,7 +1235,7 @@ function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido) {
         success: function (data) {
             if (data === "OK") {
                 estado = estado.toLowerCase();
-                if (estado === "activa" || estado === "renovada") {
+                if (estado === "activa") {
                     var itemAterior = $("#sus" + idSuscripcion);
 
                     var itemLista = $("#itemActiva").clone();

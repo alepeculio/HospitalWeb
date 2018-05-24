@@ -256,7 +256,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeVinculo);
                     break;
-                case "obtClientes": //TODO: Hacer que sean de un hospital especifico
+                case "obtClientes":
                     String conEmpleados = request.getParameter("conEmpleados");
                     List<Cliente> clientes;
                     if ("si".equals(conEmpleados)) {
@@ -281,7 +281,7 @@ public class SUsuario extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(mensajeBajaCliente);
                     break;
-                case "obtEmpleados": //TODO: Hacer que sean de un hospital especifico
+                case "obtEmpleados":
                     List<Empleado> empleados = CUsuario.obtenerEmpleados();
                     String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
                     response.setContentType("application/json");
@@ -419,6 +419,18 @@ public class SUsuario extends HttpServlet {
                         break;
                     }
                     response.getWriter().write("OK");
+                case "actualizarSuscripcion":
+                    String idSuscripcion = request.getParameter("idSuscripcion");
+                    String estado2 = request.getParameter("estado");
+                    String mensajeActSus;
+                    if (CHospital.actualizarSuscripcion(Long.valueOf(idSuscripcion), EstadoSuscripcion.valueOf(estado2))) {
+                        mensajeActSus = "OK";
+                    } else {
+                        mensajeActSus = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeActSus);
                     break;
             }
         }
