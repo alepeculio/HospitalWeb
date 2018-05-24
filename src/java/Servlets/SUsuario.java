@@ -197,6 +197,7 @@ public class SUsuario extends HttpServlet {
                     }
 
                     String mensajeMed = "";
+                    // TODO: agregarlo al hospital_cliente
                     if (Singleton.getInstance().persist(e)) {
                         new Thread(new Runnable() {
                             @Override
@@ -221,6 +222,11 @@ public class SUsuario extends HttpServlet {
                 case "indicaciones":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
+                    break;
+
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
 
                 case "vacunas":

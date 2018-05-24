@@ -56,7 +56,6 @@ public class SEmpleado extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write((CEmpleado.finalizarHA(idHAfinalizar)) ? "OK" : "ERR");
                     break;
-
             }
         }
     }
