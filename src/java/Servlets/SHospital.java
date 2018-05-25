@@ -109,7 +109,7 @@ public class SHospital extends HttpServlet {
             } else {
                 response.getWriter().write("NOPE");
             }
-        } else if (request.getParameter("obtenerHorarios") != null) {
+        } else if (request.getParameter("obtenerHorarios") != null && request.getParameter("dia") != null) {
 
             String hospital = request.getParameter("obtenerHorarios");
             String dia = request.getParameter("dia");
@@ -117,9 +117,26 @@ public class SHospital extends HttpServlet {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
 
-            String s = CHospital.agregarTurno(hospital, u.getId(), dia);
+            String s = "";
+            try {
+                s = CHospital.agregarTurno(hospital, u.getId(), dia);
+            } catch (ParseException ex) {
+                Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             response.getWriter().write(s);
+
+        } else if (request.getParameter("horariosOcupados") != null) {
+
+            String hospital = request.getParameter("horariosOcupados");
+            Hospital h = CHospital.obtenerHospital(hospital);
+            long idEmpleado = 2;
+            String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.ATENCION);
+            String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.ATENCION);
+            String resultado = fechas + "&" + dias;
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(resultado);
 
         } else if (request.getParameter("modificar") != null) {
             response.setContentType("text/plain");

@@ -1,3 +1,52 @@
+//Calendario
+var calendar;
+
+YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
+
+    calendar = new Y.Calendar({
+        contentBox: "#mycalendar",
+        width: '340px',
+        showPrevMonth: true,
+        showNextMonth: true,
+        date: new Date()
+    }).render();
+    // Get a reference to Y.DataType.Date
+    var dtdate = Y.DataType.Date;
+
+    // Listen to calendar's selectionChange event.
+    calendar.on("selectionChange", function (ev) {
+
+        var newDate = ev.newSelection[0];
+//        $.ajax({
+//            type: "POST",
+//            url: "/HospitalWeb/SHospital",
+//            data: {
+//                "obtenerHorarios": hospitalSeleccionado.title,
+//                "dia": dtdate.format(newDate)
+//            },
+//            success: function (data) {
+//                if (data == "NOPE") {
+//                    document.getElementById('mensaje_buscar').innerHTML = "No hay horarios disponibles";
+//                    $("#modal_buscar").modal();
+//                } else if (data == "") {
+//
+//                    document.getElementById('mensaje_buscar').innerHTML = "Ho hay horarios de atención para ese día";
+//                    $("#modal_buscar").modal();
+//                } else {
+//                    document.getElementById('mensaje_buscar').innerHTML = data;
+//                    $("#modal_buscar").modal();
+//                }
+//            },
+//            error: function () {
+//                alert("ERROR FUNCTION");
+//                //window.location.assign("/HospitalWeb/SUsuario?accion=reservas");
+//            }
+//        });
+
+    });
+});
+/* FIN CALENDARIO */
+
 var mapa;
 var posInicial;
 var marcadores = [];
@@ -82,38 +131,10 @@ function initMapa() {
 
 }
 
-var hospitalSeleccionado;
+
 function clickHospital(hospital) {
     hospitalSeleccionado = hospital;
-    $.ajax({
-        type: "POST",
-        url: "/HospitalWeb/SHospital",
-        data: {
-            "obtener": hospitalSeleccionado.title
-        },
-        success: function (data) {
-            if (data == "NOPE") {
-                window.location.assign("/HospitalWeb/SHospital?Administrador");
-            } else {
-                var partes = data.split("#");
-                //$("#detnombre").val (partes[0]);
-                //$("#dettipo").attr ("disabled", false);
-                //$("#dettipo").bootstrapToggle (partes[1]);
-                //$("#detdepartamento").val (partes[2]);
-                //$("#detcalle").val (partes[3]);
-                //$("#detnumero").val (partes[4]);
-                //$("#detlat").val (partes[5]);
-                //$("#detlng").val (partes[6]);
-                //$("#detdirectora").val (partes[7]);
-                //$("#detcorreo").val (partes[8]);
-                //$("#dettelefono").val (partes[9]);
-                $("#modalReservas").modal("show");
-            }
-        },
-        error: function () {
-            window.location.assign("/HospitalWeb/SUsuario?accion=reservas");
-        }
-    });
+    $("#modalReservas").modal("show");
 }
 
 var texto;
@@ -127,8 +148,9 @@ $('#btnBuscar').click(function () {
         return;
     }
 
-
-    for (var i = 0; i < marcadores.length; i++) {
+    for (var i = 0; i < marcadores.length;
+            i++
+            ) {
         if (texto.localeCompare(marcadores[i].title) == 0) {
             google.maps.event.trigger(marcadores[i], 'click');
             return;
@@ -139,77 +161,72 @@ $('#btnBuscar').click(function () {
     $("#modal_buscar").modal();
     return;
 });
-var nombreH;
-$('#dia').change(function () {
 
-    var dia = $("#dia").val().toString();
-    //anio-mes-dia
 
-//    if (texto == "") {
-//        nombreH = hospitalSeleccionado.title;
-//    } else {
-//        nombreH = texto;
-//    }
+$('#modalReservas').on('shown.bs.modal', function () {
 
-    console.log(hospitalSeleccionado.title);
+    var rules;
+    var rules2;
 
-});
-
-//Calendario
-
-YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
-
-    // Create a new instance of calendar, placing it in
-    // #mycalendar container, setting its width to 340px,
-    // the flags for showing previous and next month's
-    // dates in available empty cells to true, and setting
-    // the date to today's date.
-    var calendar = new Y.Calendar({
-        contentBox: "#mycalendar",
-        width: '340px',
-        showPrevMonth: true,
-        showNextMonth: true,
-        date: new Date()}).render();
-
-    // Get a reference to Y.DataType.Date
-    var dtdate = Y.DataType.Date;
-
-    // Listen to calendar's selectionChange event.
-    calendar.on("selectionChange", function (ev) {
-
-        var newDate = ev.newSelection[0];
-
-        // Format the date and output it to a DOM
-        // element.
-        //Y.one("#selecteddate").setHTML(dtdate.format(newDate));
-
-        /* SABEEEE */
-
-        $.ajax({
-            type: "POST",
-            url: "/HospitalWeb/SHospital",
-            data: {
-                "obtenerHorarios": hospitalSeleccionado.title,
-                "dia": dtdate.format(newDate)
-            },
-            success: function (data) {
-                if (data == "NOPE") {
-                    document.getElementById('mensaje_buscar').innerHTML = "No hay horarios disponibles";
-                    $("#modal_buscar").modal();
-                } else if (data == "") {
-
-                    document.getElementById('mensaje_buscar').innerHTML = "Ho hay horarios de atención para ese día";
-                    $("#modal_buscar").modal();
-                } else {
-                    document.getElementById('mensaje_buscar').innerHTML = data;
-                    $("#modal_buscar").modal();
-                }
-            },
-            error: function () {
-                alert("ERROR FUNCTION");
-                //window.location.assign("/HospitalWeb/SUsuario?accion=reservas");
-            }
-        });
-
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        async: false,
+        data: {
+            "horariosOcupados": hospitalSeleccionado.title
+        },
+        success: function (data) {
+            var r = data.split("&");
+            rules = datearray2filter(r[0], r[1]);
+        },
+        error: function () {
+            alert("ERROR FUNCTION");
+        }
     });
+
+    var filterFunction = function (date, node, rules) {
+        if (rules.indexOf("disabled" >= 0)) {
+
+        }
+    }
+    ;
+
+    calendar.set("customRenderer", {rules: rules, filterFunction: filterFunction});
+    calendar.set("disabledDatesRule", "disabled");
 });
+
+function datearray2filter(dates, dias) {
+    var ret = {};
+    var partes = dates.split("#");
+    var fechas = [];
+    for (var j in partes) {
+
+        var f = partes[j].split("-");
+        fechas.push(new Date(f[0], f[1] - 1, f[2]));
+    }
+
+    for (var i in fechas) {
+        var d = new Date(fechas[i]),
+                y = d.getFullYear(),
+                m = d.getMonth();
+        if (!ret[y])
+            ret[y] = {};
+        if (!ret[y][m])
+            ret[y][m] = {};
+        ret[y][m][d.getDate()] = "disabled";
+    }
+    //editada
+    var a = "all";
+
+    if (!ret[a])
+        ret[a] = {};
+    if (!ret[a][a])
+        ret[a][a] = {};
+    if (!ret[a][a][a])
+        ret[a][a][a] = {};
+
+    ret[a][a][a][dias] = "disabled";
+    //fin
+    return ret;
+}
+;
