@@ -261,7 +261,7 @@ function altaCliente(ci, digitoVer) {
     var i;
     for (i = 1; i <= tel; i++) {
         var tt = $("#telefono" + i).val().toString().trim();
-        if (!telefonoCorrecto (tt)){
+        if (!telefonoCorrecto(tt)) {
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -400,7 +400,7 @@ function altaMedico(ci, digitoVer) {
     var i;
     for (i = 1; i <= telMed; i++) {
         var tt = $("#telefonoMed" + i).val().toString().trim();
-        if (!telefonoCorrecto (tt)){
+        if (!telefonoCorrecto(tt)) {
             var texto = document.getElementById("modalIUMensaje");
             texto.innerHTML = "Algun telefono es incorrecto";
             texto.style.color = "red";
@@ -579,6 +579,7 @@ cargado["CliP"] = false;
 cargado["MedE"] = false;
 cargado["MedHA"] = false;
 cargado["MedHAE"] = false;
+cargado["Sus"] = false;
 
 function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
     if (cargado[tipo] === true) {
@@ -700,7 +701,19 @@ function deseleccionar(nombreFila, tipo) {
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "black";
     seleccionado[tipo] = "";
-    if (tipo == "MedHAE") {
+
+    if (tipo === "CliP") {
+        var ul = document.getElementById("listCliH");
+        $(ul).empty();
+        var li1 = document.createElement("li");
+        var a1 = document.createElement("a");
+        a1.appendChild(document.createTextNode("Seleccione un paciente como padre"));
+        li1.setAttribute("class", "list-group-item");
+        ul.appendChild(li1);
+        li1.appendChild(a1);
+    }
+
+    if (tipo === "MedHAE") {
         while (haNum >= 1) {
             $("#ha" + haNum).remove();
             haNum--;
@@ -725,7 +738,7 @@ function cargarHijos(idCliente, idLista, nombreFila, tipo) {
             if (data.length === 0) {
                 var li1 = document.createElement("li");
                 var a1 = document.createElement("a");
-                a1.appendChild(document.createTextNode("No hay clientes relacionables con el seleccionado"));
+                a1.appendChild(document.createTextNode("No hay pacientes relacionables con el seleccionado"));
                 li1.setAttribute("class", "list-group-item");
                 ul.appendChild(li1);
                 li1.appendChild(a1);
@@ -748,12 +761,12 @@ function cargarHijos(idCliente, idLista, nombreFila, tipo) {
 $("#btnVincularCliente").click(function () {
     if (seleccionado["CliP"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.innerHTML = "No seleccionó ningun paciente";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else if (seleccionado["CliH"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó un cliente como hijo";
+        texto.innerHTML = "No seleccionó un paciente como hijo";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else {
@@ -784,16 +797,16 @@ $("#btnVincularCliente").click(function () {
 
 });
 //---------------------------------------------------------------------------------------------------------------------
-//Eliminar cliente
+//Eliminar paciente
 
 $("#btnEliminarCliente").click(function () {
-    pregunta("Desea eliminar el cliente?", "eliminarClienteDeVerdar");
+    pregunta("Desea eliminar el paciente?", "eliminarClienteDeVerdar");
 });
 
 function eliminarClienteDeVerdar() {
     if (seleccionado["Cli"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó ningun cliente";
+        texto.innerHTML = "No seleccionó ningun paciente";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else {
@@ -806,11 +819,11 @@ function eliminarClienteDeVerdar() {
             success: function (data) {
                 var texto = document.getElementById("modalIUMensaje");
                 if (data === "ERR") {
-                    texto.innerHTML = "No se pudo eliminar el cliente seleccionado";
+                    texto.innerHTML = "No se pudo eliminar el paciente seleccionado";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else {
-                    texto.innerHTML = "Cliente eliminado correctamente";
+                    texto.innerHTML = "Paciente eliminado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     deseleccionar("clienteFila", "Cli");
@@ -948,14 +961,14 @@ $("#btnIngresarHA").click(function () {
     var cant = $("#haCant").val();
 
     if (cant === "") {
-        texto.innerHTML = "Seleccione una cantidad de clientes";
+        texto.innerHTML = "Seleccione una cantidad de pacientes";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
         return;
     }
 
     if (cant <= 0) {
-        texto.innerHTML = "Seleccione una cantidad de clientes valida";
+        texto.innerHTML = "Seleccione una cantidad de pacientes valida";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
         return;
@@ -970,7 +983,7 @@ $("#btnIngresarHA").click(function () {
         return;
     }
 
-    $.ajax ({
+    $.ajax({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
@@ -982,9 +995,9 @@ $("#btnIngresarHA").click(function () {
         },
         success: function (data) {
             if (data == "ERR") {
-                mensajeErr ("La hora de fin debe ser una hora posterior a la hora de inicio");
+                mensajeErr("La hora de fin debe ser una hora posterior a la hora de inicio");
             } else {
-                pregunta ("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+                pregunta("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
             }
         },
         error: function () {
@@ -993,7 +1006,7 @@ $("#btnIngresarHA").click(function () {
     });
 });
 
-function agregarHA (med, dia, hInicio, hFin, cant, tipo) {
+function agregarHA(med, dia, hInicio, hFin, cant, tipo) {
     var texto = document.getElementById("modalIUMensaje");
     $.ajax({
         type: "POST",
@@ -1059,8 +1072,8 @@ function cargarHorariosAtencion() {
                 nuevo.prop("hidden", false);
                 nuevo.attr("id", "ha" + (haNum + 1));
                 nuevo.find(".haDia").html(data[i].dia);
-                nuevo.find(".haHI").html(data[i].horaInicio.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
-                nuevo.find(".haHF").html(data[i].horaFin.replace ("Dec 31, 1899 ", "").replace (":00 ", " "));
+                nuevo.find(".haHI").html(data[i].horaInicio.replace("Dec 31, 1899 ", "").replace(":00 ", " "));
+                nuevo.find(".haHF").html(data[i].horaFin.replace("Dec 31, 1899 ", "").replace(":00 ", " "));
                 nuevo.find(".haTipo").html(data[i].tipo === "VACUNACION" ? "Vacunación" : "Atención");
                 nuevo.find(".haCant").html(data[i].clientesMax);
                 nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
@@ -1105,6 +1118,167 @@ function eliminarHADeVerdad(id) {
             texto.innerHTML = "Error: No se puedo eliminar el horario de atencion";
             texto.style.color = "red";
             $("#modalIngresarUsuario").modal("show");
+        }
+    });
+}
+
+//----------------------------------------------------------------------------------------------------
+//Suscripciones
+function cargarSuscripciones(idUsuarioAdmin, tipo) {
+    if (cargado[tipo] === true) {
+        return;
+    }
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtenerSuscripciones",
+        type: "POST",
+        dataType: 'json',
+        data: {
+            idUsuarioAdmin: idUsuarioAdmin
+        },
+        success: function (data) {
+            var lista = $("#listSus");
+            lista.empty();
+            if (data.length === 0) {
+                var itemLista = $("#itemNoSus").clone();
+                itemLista.removeClass("hidden");
+                lista.append(itemLista);
+
+            } else {
+                lista.addClass("text-left");
+                for (var i = 0; i < data.length; i++) {
+                    var estado = data[i].estado.toLowerCase();
+                    var nombre = data[i].cliente.nombre;
+                    var apellido = data[i].cliente.apellido;
+                    var id = data[i].id;
+
+                    if (estado === "pendiente") {
+
+                        var itemLista = $("#itemPendiente").clone();
+                        var spanNombre = itemLista.find(".nombre");
+                        var btnConfirmar = itemLista.find(".btn-success");
+                        var btnRechazar = itemLista.find(".btn-danger");
+
+                        itemLista.removeClass("hidden");
+                        spanNombre.html(nombre + " " + apellido);
+                        btnConfirmar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "')");
+                        btnRechazar.attr("onclick", "actualizarSuscripcion('" + id + "','RECHAZADA','" + nombre + "','" + apellido + "')");
+                        itemLista.attr("id", "sus" + id);
+
+                        lista.append(itemLista);
+
+                    } else if (estado === "activa") {
+
+                        var itemLista = $("#itemActiva").clone();
+                        var spanNombre = itemLista.find(".nombre");
+                        var btnEliminar = itemLista.find(".btn-danger");
+
+                        itemLista.removeClass("hidden");
+                        spanNombre.html(nombre + " " + apellido);
+                        btnEliminar.attr("onclick", "actualizarSuscripcion('" + id + "','ELIMINADA','" + nombre + "','" + apellido + "')");
+                        itemLista.attr("id", "sus" + id);
+
+                        lista.append(itemLista);
+
+                    } else if (estado === "vencida") {
+
+                        var itemLista = $("#itemVencida").clone();
+                        var spanNombre = itemLista.find(".nombre");
+                        var btnRenovar = itemLista.find(".btn-success");
+
+                        itemLista.removeClass("hidden");
+                        spanNombre.html(nombre + " " + apellido);
+                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "')");
+                        itemLista.attr("id", "sus" + id);
+
+                        lista.append(itemLista);
+
+                    } else if (estado === "rechazada") {
+
+                        var itemLista = $("#itemRechazada").clone();
+                        var spanNombre = itemLista.find(".nombre");
+
+                        itemLista.removeClass("hidden");
+                        spanNombre.html(nombre + " " + apellido);
+                        itemLista.attr("id", "sus" + id);
+
+                        lista.append(itemLista);
+
+                    } else if (estado === "eliminada") {
+
+                        var itemLista = $("#itemEliminada").clone();
+                        var spanNombre = itemLista.find(".nombre");
+
+                        itemLista.removeClass("hidden");
+                        spanNombre.html(nombre + " " + apellido);
+                        itemLista.attr("id", "sus" + id);
+
+                        lista.append(itemLista);
+
+                    }
+
+                }
+                setCargado(tipo);
+            }
+        }
+    });
+}
+
+function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido) {
+    $.ajax({
+        url: "/HospitalWeb/SUsuario",
+        type: "POST",
+        data: {
+            accion: "actualizarSuscripcion",
+            idSuscripcion: idSuscripcion,
+            estado: estado
+        },
+        success: function (data) {
+            if (data === "OK") {
+                estado = estado.toLowerCase();
+                if (estado === "activa") {
+                    var itemAterior = $("#sus" + idSuscripcion);
+
+                    var itemLista = $("#itemActiva").clone();
+                    var spanNombre = itemLista.find(".nombre");
+                    var btnEliminar = itemLista.find(".btn-danger");
+
+                    itemLista.removeClass("hidden");
+                    spanNombre.html(nombre + " " + apellido);
+                    btnEliminar.attr("onclick", "actualizarSuscripcion('" + idSuscripcion + "','ELIMINADA','" + nombre + "','" + apellido + "')");
+                    itemLista.attr("id", "sus" + idSuscripcion);
+
+                    itemAterior.replaceWith(itemLista);
+
+                } else if (estado === "eliminada") {
+                    var itemAterior = $("#sus" + idSuscripcion);
+
+                    var itemLista = $("#itemEliminada").clone();
+                    var spanNombre = itemLista.find(".nombre");
+
+                    itemLista.removeClass("hidden");
+                    spanNombre.html(nombre + " " + apellido);
+                    itemLista.attr("id", "sus" + idSuscripcion);
+
+                    itemAterior.replaceWith(itemLista);
+
+                } else if (estado === "rechazada") {
+                    var itemAterior = $("#sus" + idSuscripcion);
+
+                    var itemLista = $("#itemRechazada").clone();
+                    var spanNombre = itemLista.find(".nombre");
+
+                    itemLista.removeClass("hidden");
+                    spanNombre.html(nombre + " " + apellido);
+                    itemLista.attr("id", "sus" + idSuscripcion);
+
+                    itemAterior.replaceWith(itemLista);
+                }
+            } else {
+                mensajeErr("No se pudo actualizar la suscripcion");
+            }
+        },
+        error: function () {
+            mensajeErr("Error en el servidor, reintente mas tarde.");
         }
     });
 }

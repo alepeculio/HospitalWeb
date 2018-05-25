@@ -1,6 +1,7 @@
 package Servlets;
 
 import Clases.Cliente;
+import Clases.Empleado;
 import Clases.EstadoTurno;
 import Clases.HorarioAtencion;
 import Clases.Hospital;
@@ -47,13 +48,17 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("verHospital") != null) {
             Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
             request.setAttribute("hospital", h);
-            request.setAttribute("empleados", null);
+            List<Empleado> emps = h.getEmpleados ();
+            Cliente c = CCliente.getClientebyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
+            request.setAttribute("empleados", emps);
+            request.setAttribute("cliente", c);
             request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
         } else if (request.getParameter("Vacuna") != null) {
             request.setAttribute("vacuna", "vacuna");
             request.setAttribute("hospital", "hospital");
             request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
         } else if (request.getParameter("nombreH") != null) {
+            request.setAttribute("hospitales", CHospital.obtenerHospitales ());
             request.setAttribute("verMapa", request.getParameter("nombreH"));
             request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
         }

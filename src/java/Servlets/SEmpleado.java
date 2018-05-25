@@ -2,6 +2,7 @@ package Servlets;
 
 import Clases.Empleado;
 import Clases.EstadoTurno;
+import Clases.HorarioAtencion;
 import Clases.Usuario;
 import Controladores.CEmpleado;
 import Controladores.CUsuario;
@@ -28,11 +29,6 @@ public class SEmpleado extends HttpServlet {
         String accion = request.getParameter("accion");
         if (accion != null) {
             switch (accion) {
-                case "inicio":
-                    Empleado empleado = cusuario.getEmpleadobyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
-                    request.setAttribute("empleado", empleado);
-                    request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
-                    break;
                 case "obtEmpleado":
                     response.setContentType("application/json");
                     Empleado e = CUsuario.getEmpleado(Long.valueOf(request.getParameter("id")));
@@ -52,7 +48,6 @@ public class SEmpleado extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write((CEmpleado.finalizarHA(idHAfinalizar)) ? "OK" : "ERR");
                     break;
-
             }
         }
     }

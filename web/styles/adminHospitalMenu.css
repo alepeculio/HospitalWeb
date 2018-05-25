@@ -1,3 +1,27 @@
+
+.listSus .nombre{
+    display:inline-block;
+    max-width: 45%;
+    min-width: 30%;
+}
+
+.listSus .estado{
+    font-weight: bold;
+}
+
+.listSus button{
+    float: right;
+    margin: -7px 0 0px 10px;
+    width: 105px;
+}
+
+.listSus{
+    overflow:auto;
+    max-height:100vh;
+}
+
+/*---------------------------------------------------*/
+
 .contenido{
     margin-left:2%;
     min-height:68vh;
