@@ -61,6 +61,7 @@
     <% for (Hospital h : hospitales) {%>
     <script>
         agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
+        
     </script>
     <%}
     %>
