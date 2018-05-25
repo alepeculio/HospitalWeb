@@ -67,7 +67,7 @@ public class SUsuario extends HttpServlet {
                                 default:
                                     request.setAttribute("tipo", tipoUsuario);
                                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                                    request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward(request, response);
                                     break;
                             }
                         } else {
@@ -388,24 +388,25 @@ public class SUsuario extends HttpServlet {
                 case "estaSuscripto":
                     response.setContentType("application/json");
                     Usuario usuasd = (Usuario) request.getSession().getAttribute("usuario");
-                    long idcli = CCliente.getClientebyUsuario (usuasd.getId()).getId();
+                    long idcli = CCliente.getClientebyUsuario(usuasd.getId()).getId();
                     Hospital h = CHospital.obtenerHospital(request.getParameter("nombreHosp"));
-                    Suscripcion sus = CHospital.obtenerEstadoDeSuscripcion(idcli, h.getId ());
-                    
+                    Suscripcion sus = CHospital.obtenerEstadoDeSuscripcion(idcli, h.getId());
+
                     String estado = "NO";
-                    
-                    if (sus == null)
+
+                    if (sus == null) {
                         estado = "NO";
-                    if (sus != null)
-                        switch (sus.getEstado ()) {
+                    }
+                    if (sus != null) {
+                        switch (sus.getEstado()) {
                             case ACTIVA:
-                                estado = "Activa (Fecha Vencimiento: " + new SimpleDateFormat ("dd-MM-yyyy").format (sus.getFechaVencimiento ()) + ")";
+                                estado = "Activa<br>(Fecha Vencimiento: " + new SimpleDateFormat("dd-MM-yyyy").format(sus.getFechaVencimiento()) + ")";
                                 break;
                             case PENDIENTE:
                                 estado = "Pendiente";
                                 break;
                             case VENCIDA:
-                                estado = "Vencida (Fecha Vencimiento: " + new SimpleDateFormat ("dd-MM-yyyy").format (sus.getFechaVencimiento ()) + ")";
+                                estado = "Vencida<br>(Fecha Vencimiento: " + new SimpleDateFormat("dd-MM-yyyy").format(sus.getFechaVencimiento()) + ")";
                                 break;
                             case RECHAZADA:
                                 estado = "Rechazada";
@@ -414,8 +415,9 @@ public class SUsuario extends HttpServlet {
                                 estado = "Eliminada";
                                 break;
                         }
-                    
-                    response.getWriter().write(new GsonBuilder ().excludeFieldsWithoutExposeAnnotation ().create ().toJson (new String[] { estado, h.isPublico () ? "Publico" : "Privado"}));
+                    }
+
+                    response.getWriter().write(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(new String[]{estado, h.isPublico() ? "Publico" : "Privado"}));
                     break;
                 case "solicitarSus":
                     response.setContentType("text/plain");
@@ -424,7 +426,7 @@ public class SUsuario extends HttpServlet {
                     long idcli2 = CCliente.getClientebyUsuario(usuasd2.getId()).getId();
                     Hospital h2 = CHospital.obtenerHospital(request.getParameter("nomHosp"));
                     try {
-                        CHospital.agregarSuscripcion (idcli2, h2.getId (), Integer.valueOf(request.getParameter("cant")));
+                        CHospital.agregarSuscripcion(idcli2, h2.getId(), Integer.valueOf(request.getParameter("cant")));
                     } catch (Exception asdasd) {
                         System.err.println(request.getParameter("cant"));
                         asdasd.printStackTrace();
@@ -432,6 +434,7 @@ public class SUsuario extends HttpServlet {
                         break;
                     }
                     response.getWriter().write("OK");
+                    break;
                 case "actualizarSuscripcion":
                     String idSuscripcion = request.getParameter("idSuscripcion");
                     String estado2 = request.getParameter("estado");
