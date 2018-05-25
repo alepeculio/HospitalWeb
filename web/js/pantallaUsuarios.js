@@ -49,7 +49,7 @@ function initMapa() {
                 "featureType": "poi.medical",
                 "stylers": [
                     {
-                        "visibility": "on"
+                        "visibility": "off"
                     },
                     {
                         "weight": 5
