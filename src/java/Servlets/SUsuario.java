@@ -8,6 +8,7 @@ import Clases.Hospital;
 import Clases.Suscripcion;
 import Clases.TipoTurno;
 import Clases.Usuario;
+import Controladores.CAdministradores;
 import Controladores.CCliente;
 import Controladores.CCorreo;
 import Controladores.CEmpleado;
@@ -195,6 +196,10 @@ public class SUsuario extends HttpServlet {
                     if (apartMed != null && !apartMed.equals("")) {
                         e.setApartamento(Integer.parseInt(apartMed));
                     }
+
+                    Usuario admin = (Usuario) request.getSession().getAttribute("usuario");
+                    Hospital hosp = CAdministradores.obtenerHospitalAdministrador(admin.getCi());
+                    hosp.agregarEmpleado(e);
 
                     String mensajeMed = "";
                     // TODO: agregarlo al hospital_cliente
