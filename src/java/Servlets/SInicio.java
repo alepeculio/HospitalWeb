@@ -24,14 +24,15 @@ import javax.servlet.http.HttpServletResponse;
 public class SInicio extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         Usuario u = new Usuario();
         u.setCi("1234");
         u.setCorreo("admin@correo.com");
         u.setContrasenia("1234");
-        
-        if (new CUsuario ().login (u.getCi (), u.getContrasenia ()) == null)
-            CAdministradores.agregarAdminGeneral (u);
+
+        if (new CUsuario().login(u.getCi(), u.getContrasenia()) == null) {
+            CAdministradores.agregarAdminGeneral(u);
+        }
 
         String accion = request.getParameter("accion");
 
@@ -57,12 +58,6 @@ public class SInicio extends HttpServlet {
                 }
             } else {
                 request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
-            }
-        } else {
-            switch (accion) {
-                case "inicio":
-                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                    break;
             }
         }
     }

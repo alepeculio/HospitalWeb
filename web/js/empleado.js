@@ -94,7 +94,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
             if (data === "ERR") {
                 mensajeErr("Ocurri&oacute; un error al actualizar el estado del turno");
             } else if (data === "errDia") {
-                mensajeErr("El d&iacute;a del horario de atenci&oacute;n de este turno no concuerda con el actual");
+                mensajeErr("Solo puede iniciar turnos de horarios de atenci&oacute;n del d&iacute;a de hoy");
             } else {
                 if (estado === "FINALIZADO") {
                     $("#btnFinalizado" + idTurno).remove();
