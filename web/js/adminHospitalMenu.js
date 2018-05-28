@@ -1150,6 +1150,13 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
                     var nombre = data[i].cliente.nombre;
                     var apellido = data[i].cliente.apellido;
                     var id = data[i].id;
+                    var duracion = data[i].cantMeses;
+                    var textMes;
+                    if (duracion === 1) {
+                        textMes = "Mes";
+                    } else {
+                        textMes = "Meses";
+                    }
 
                     if (estado === "pendiente") {
 
@@ -1157,11 +1164,13 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
                         var spanNombre = itemLista.find(".nombre");
                         var btnConfirmar = itemLista.find(".btn-success");
                         var btnRechazar = itemLista.find(".btn-danger");
+                        var spanDuracion = itemLista.find(".duracion");
 
                         itemLista.removeClass("hidden");
                         spanNombre.html(nombre + " " + apellido);
-                        btnConfirmar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "')");
-                        btnRechazar.attr("onclick", "actualizarSuscripcion('" + id + "','RECHAZADA','" + nombre + "','" + apellido + "')");
+                        spanDuracion.html(duracion + " " + textMes);
+                        btnConfirmar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
+                        btnRechazar.attr("onclick", "actualizarSuscripcion('" + id + "','RECHAZADA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
                         itemLista.attr("id", "sus" + id);
 
                         lista.append(itemLista);
@@ -1171,10 +1180,13 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
                         var itemLista = $("#itemActiva").clone();
                         var spanNombre = itemLista.find(".nombre");
                         var btnEliminar = itemLista.find(".btn-danger");
+                        var spanDuracion = itemLista.find(".duracion");
+
 
                         itemLista.removeClass("hidden");
                         spanNombre.html(nombre + " " + apellido);
-                        btnEliminar.attr("onclick", "actualizarSuscripcion('" + id + "','ELIMINADA','" + nombre + "','" + apellido + "')");
+                        spanDuracion.html(duracion + " " + textMes);
+                        btnEliminar.attr("onclick", "actualizarSuscripcion('" + id + "','ELIMINADA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
                         itemLista.attr("id", "sus" + id);
 
                         lista.append(itemLista);
@@ -1184,10 +1196,13 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
                         var itemLista = $("#itemVencida").clone();
                         var spanNombre = itemLista.find(".nombre");
                         var btnRenovar = itemLista.find(".btn-success");
+                        var spanDuracion = itemLista.find(".duracion");
+
 
                         itemLista.removeClass("hidden");
                         spanNombre.html(nombre + " " + apellido);
-                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "')");
+                        spanDuracion.html(duracion + " " + textMes);
+                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
                         itemLista.attr("id", "sus" + id);
 
                         lista.append(itemLista);
@@ -1223,7 +1238,7 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
     });
 }
 
-function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido) {
+function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido, duracion, textMes) {
     $.ajax({
         url: "/HospitalWeb/SUsuario",
         type: "POST",
@@ -1241,10 +1256,12 @@ function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido) {
                     var itemLista = $("#itemActiva").clone();
                     var spanNombre = itemLista.find(".nombre");
                     var btnEliminar = itemLista.find(".btn-danger");
+                    var spanDuracion = itemLista.find(".duracion");
 
                     itemLista.removeClass("hidden");
                     spanNombre.html(nombre + " " + apellido);
-                    btnEliminar.attr("onclick", "actualizarSuscripcion('" + idSuscripcion + "','ELIMINADA','" + nombre + "','" + apellido + "')");
+                    spanDuracion.html(duracion + " " + textMes);
+                    btnEliminar.attr("onclick", "actualizarSuscripcion('" + idSuscripcion + "','ELIMINADA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
                     itemLista.attr("id", "sus" + idSuscripcion);
 
                     itemAterior.replaceWith(itemLista);

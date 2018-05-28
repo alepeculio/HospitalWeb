@@ -1,4 +1,3 @@
-
 .listSus .nombre{
     display:inline-block;
     max-width: 45%;
@@ -6,7 +5,9 @@
 }
 
 .listSus .estado{
+    display: inline-block;
     font-weight: bold;
+    width: 15%;
 }
 
 .listSus button{

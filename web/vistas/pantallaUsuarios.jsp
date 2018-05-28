@@ -112,17 +112,20 @@
 
         <!-- Panel Calendario -->
         <div class="modal fade" id="modalCalendario" role="dialog">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" style="text-align: center;">
+                         <strong>Calendario de horarios</strong>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <!--prueba-->
+                    </div>
+                    <div class="modal-body">
                         <div class="yui3-skin-sam" align="center">
                             <div id="mycalendar"></div>
                         </div>
                         <!--end prueba-->
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="text-align: center;">
                         <strong>Seleccione un dia para reservar.</strong>
                     </div>
                 </div>
