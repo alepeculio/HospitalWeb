@@ -136,6 +136,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
     });
 }
 
+
 function finalizarHA(idHA) {
     $.ajax({
         type: "POST",
@@ -147,7 +148,14 @@ function finalizarHA(idHA) {
             if (data === "ERR") {
                 mensajeErr("Ocurri&oacute; un error al finalizar horario de atenci&oacute;n");
             } else if (data === "OK") {
-                $('[id^="estado"]', '#turnos' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
+                var estados = $('[class^="glyphicon"]', '#turnos' + idHA);
+                estados.each(function () {
+                    if ($(this).attr('title') === "Pendiente") {
+                        $(this).replaceWith("<span class='glyphicon glyphicon-remove' style='color:blue' title='Ausente' ></span>");
+                    } else {
+                        $(this).replaceWith("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
+                    }
+                });
                 $('[id ="btnEstado"]', '#turnos' + idHA).remove();
                 $('#estadoHA' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
                 $("#ca" + idHA).html('-');

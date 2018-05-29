@@ -131,19 +131,21 @@
                                                     <td><%= turno.getCliente().getNombre() + " " + turno.getCliente().getApellido()%></td>
                                                     <td id="estado<%=turno.getId()%>" >
                                                         <%
-                                                            if (turno.getEstado().equals(EstadoTurno.INICIADO)) {
-                                                                out.println("<span class='glyphicon glyphicon-play' title='Iniciado'></span>");
-                                                            } else if (turno.getEstado().equals(EstadoTurno.PENDIENTE)) {
-                                                                out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
-                                                            } else {
-                                                                out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
+                                                            EstadoTurno estado = turno.getEstado();
 
+                                                            if (estado == EstadoTurno.INICIADO) {
+                                                                out.println("<span class='glyphicon glyphicon-play' title='Iniciado'></span>");
+                                                            } else if (estado == EstadoTurno.PENDIENTE) {
+                                                                out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
+                                                            } else if (estado == EstadoTurno.FINALIZADO) {
+                                                                out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
+                                                            } else if (estado == EstadoTurno.AUSENTE) {
+                                                                out.println("<span class='glyphicon glyphicon-remove' style='color:blue' title='Ausente' ></span>");
                                                             }
                                                         %>
                                                     </td>
                                                     <td id="btnEstado">
                                                         <%
-                                                            EstadoTurno estado = turno.getEstado();
                                                             if (estado == EstadoTurno.INICIADO) {
                                                                 out.println("<button class='btn btn-danger' id='btnFinalizado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
                                                             } else if (estado == EstadoTurno.PENDIENTE) {
@@ -156,7 +158,7 @@
                                                 <% } %>
                                                 <% } else {%>
                                                 <tr class="text-center">
-                                                    <td colspan = "4"> No hay turnos reservados actualmente</td>
+                                                    <td colspan = "4"> No hay turnos reservados para el próximo <%=ha.getDia().toLowerCase()%></td>
                                                 </tr>
                                                 <% }%>
                                             </tbody>
