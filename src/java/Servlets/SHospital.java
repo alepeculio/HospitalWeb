@@ -126,24 +126,15 @@ public class SHospital extends HttpServlet {
             } else {
                 response.getWriter().write("NOPE");
             }
-        } else if (request.getParameter("obtenerHorarios") != null && request.getParameter("dia") != null && request.getParameter("medico") != null) {
+        } else if (request.getParameter("obtenerHorarios") != null) {
 
             String hospital = request.getParameter("obtenerHorarios");
             String dia = request.getParameter("dia");
-            String ciEmpleado = request.getParameter("medico");
-            String especialidad = request.getParameter("especialidad");
-            String horario = request.getParameter("horarioAtencion");
-
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
 
-            String s = "";
-            try {
-                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado), especialidad, horario);
-            } catch (ParseException ex) {
-                Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            String s = CHospital.agregarTurno(hospital, u.getId(), dia);
 
             response.getWriter().write(s);
 
