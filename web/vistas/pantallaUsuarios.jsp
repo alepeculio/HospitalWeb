@@ -140,7 +140,7 @@
                         <br>
                         <div class="modal-footer" style="text-align: center;">
                             <div class="row" style="text-align: center">
-                                <button id="btnReserva" class="btn btn-default" data-dismiss="modal">Continuar</button>
+                                <strong id="mensaje_jornadas"></strong>
                             </div>
                         </div>
                     </div>
@@ -148,8 +148,6 @@
             </div>
 
             <!-- CIERRA MODAL TURNO -->
-
-
 
             <jsp:include page="dialogos.html"/>
             <script src="js/pantallaUsuarios.js"></script>

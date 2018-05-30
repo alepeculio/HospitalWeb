@@ -367,6 +367,18 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 
         var comboJornada = document.getElementById("jornadas");
 
+        var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        var d = newDate;
+        var dia = dias[d.getDay()];
+        var comboDia = comboJornada.value.split(" ");
+
+        if (dia.localeCompare(comboDia[0]) != 0) {
+            document.getElementById('mensaje_jornadas').innerHTML = "El día seleccionado no coincide con el horario elegido";
+            return;
+        } else {
+            document.getElementById('mensaje_jornadas').innerHTML = "";
+        }
+
         $.ajax({
             type: "POST",
             url: "/HospitalWeb/SHospital",
