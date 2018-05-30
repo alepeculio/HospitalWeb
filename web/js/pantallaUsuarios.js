@@ -314,7 +314,7 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
         showPrevMonth: false,
         showNextMonth: false,
         minimumDate: new Date() ,
-        date: new Date(),
+        date: new Date()
     }).render();
     // Get a reference to Y.DataType.Date
     var dtdate = Y.DataType.Date;
@@ -330,10 +330,10 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
                 "obtenerHorarios": hospitalSeleccionado.title,
                 "dia": dtdate.format(newDate),
                 "medico": medico,
-                "especialidad": espec,
+                "especialidad": espec
             },
             success: function (data) {
-                mensaje(data, "refresh")
+                mensaje(data, "refresh");
             },
             error: function () {
                 mensajeErr("Error: No se pudo conectar con el servidor.");
