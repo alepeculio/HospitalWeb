@@ -115,34 +115,49 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header" style="text-align: center;">
-                         <strong>Calendario de horarios</strong>
+                        <strong>Calendario de horarios</strong>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <!--prueba-->
                     </div>
                     <div class="modal-body">
+
+                        <div class="row" style="text-align: center;">
+                            <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
+                        </div>
+                        <br>
+
+
                         <div class="yui3-skin-sam" align="center">
                             <div id="mycalendar"></div>
                         </div>
+                        <br>
                         <!--end prueba-->
-                    </div>
-                    <div class="modal-footer" style="text-align: center;">
-                        <strong>Seleccione un dia para reservar.</strong>
+                        <div class="row" style="text-align:center;">
+                            <strong>Horarios</strong>
+                            <select id="jornadas">
+                            </select>
+                        </div>
+                        <br>
+                        <div class="modal-footer" style="text-align: center;">
+                            <div class="row" style="text-align: center">
+                                <button id="btnReserva" class="btn btn-default" data-dismiss="modal">Continuar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- CIERRA MODAL TURNO -->
-
+            <!-- CIERRA MODAL TURNO -->
 
 
-        <jsp:include page="dialogos.html"/>
-        <script src="js/pantallaUsuarios.js"></script>
-        <%  for (Hospital h : hospitales) {%>
-        <script>
+
+            <jsp:include page="dialogos.html"/>
+            <script src="js/pantallaUsuarios.js"></script>
+            <%  for (Hospital h : hospitales) {%>
+            <script>
             agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);</script>
-            <%  }%>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
-        <script src="js/awesomplete.js" type="text/javascript" async></script>
+                <%  }%>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
+            <script src="js/awesomplete.js" type="text/javascript" async></script>
     </body>
 </html>

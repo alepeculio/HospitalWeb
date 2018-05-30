@@ -120,13 +120,15 @@ public class SHospital extends HttpServlet {
             String dia = request.getParameter("dia");
             String ciEmpleado = request.getParameter("medico");
             String especialidad = request.getParameter("especialidad");
+            String horario = request.getParameter("horarioAtencion");
+
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
 
             String s = "";
             try {
-                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado),especialidad);
+                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado), especialidad, horario);
             } catch (ParseException ex) {
                 Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -140,7 +142,8 @@ public class SHospital extends HttpServlet {
             long idEmpleado = Long.valueOf(request.getParameter("medico"));
             String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.ATENCION);
             String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.ATENCION);
-            String resultado = fechas + "&" + dias;
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital);
+            String resultado = fechas + "&" + dias + "&" + jornadas;
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(resultado);

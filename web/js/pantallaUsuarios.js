@@ -298,54 +298,8 @@ $("#btnMedicos").click(function () {
     }
 
     $("#modalMedicos").modal("hide");
-    $("#modalCalendario").modal("show");
 
-
-});
-
-//Calendario
-var calendar;
-
-YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
-
-    calendar = new Y.Calendar({
-        contentBox: "#mycalendar",
-        width: '340px',
-        showPrevMonth: false,
-        showNextMonth: false,
-        minimumDate: new Date() ,
-        date: new Date()
-    }).render();
-    // Get a reference to Y.DataType.Date
-    var dtdate = Y.DataType.Date;
-
-    // Listen to calendar's selectionChange event.
-    calendar.on("selectionChange", function (ev) {
-
-        var newDate = ev.newSelection[0];
-        $.ajax({
-            type: "POST",
-            url: "/HospitalWeb/SHospital",
-            data: {
-                "obtenerHorarios": hospitalSeleccionado.title,
-                "dia": dtdate.format(newDate),
-                "medico": medico,
-                "especialidad": espec
-            },
-            success: function (data) {
-                mensaje(data, "refresh");
-            },
-            error: function () {
-                mensajeErr("Error: No se pudo conectar con el servidor.");
-            }
-        });
-
-    });
-});
-/* FIN CALENDARIO */
-
-$('#modalCalendario').on('shown.bs.modal', function () {
-
+    /* PRUEBA */
     var rules;
     var rules2;
 
@@ -360,6 +314,12 @@ $('#modalCalendario').on('shown.bs.modal', function () {
         success: function (data) {
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
+            var jornadas = r[2].split("/");
+
+            var comboJornadas = document.getElementById("jornadas");
+
+            for (var i in jornadas)
+                comboJornadas.options[i] = new Option(jornadas[i]);
         },
         error: function () {
             mensajeErr("Error: No se pudo conectar con el servidor.");
@@ -376,7 +336,58 @@ $('#modalCalendario').on('shown.bs.modal', function () {
 
     calendar.set("customRenderer", {rules: rules, filterFunction: filterFunction});
     calendar.set("disabledDatesRule", "disabled");
+    /**/
+    $("#modalCalendario").modal("show");
+
+
 });
+
+//Calendario
+var calendar;
+
+YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
+
+    calendar = new Y.Calendar({
+        contentBox: "#mycalendar",
+        width: '340px',
+        showPrevMonth: false,
+        showNextMonth: false,
+        minimumDate: new Date(),
+        date: new Date()
+    }).render();
+    // Get a reference to Y.DataType.Date
+    var dtdate = Y.DataType.Date;
+
+
+
+    // Listen to calendar's selectionChange event.
+    calendar.on("selectionChange", function (ev) {
+
+        var newDate = ev.newSelection[0];
+
+        var comboJornada = document.getElementById("jornadas");
+
+        $.ajax({
+            type: "POST",
+            url: "/HospitalWeb/SHospital",
+            data: {
+                "obtenerHorarios": hospitalSeleccionado.title,
+                "dia": dtdate.format(newDate),
+                "medico": medico,
+                "especialidad": espec,
+                "horarioAtencion": comboJornada.value
+            },
+            success: function (data) {
+                mensaje(data, "refresh");
+            },
+            error: function () {
+                mensajeErr("Error: No se pudo conectar con el servidor.");
+            }
+        });
+
+    });
+});
+/* FIN CALENDARIO */
 
 function datearray2filter(dates, dias) {
     var ret = {};
@@ -414,8 +425,7 @@ function datearray2filter(dates, dias) {
 }
 ;
 
-function refresh(){
-    window.location.assign ("/HospitalWeb/SUsuario?accion=mapaUsuario");
+function refresh() {
+    $("#modalCalendario").modal("hide");
+    window.location.assign("/HospitalWeb/SUsuario?accion=mapaUsuario");
 }
-
-
