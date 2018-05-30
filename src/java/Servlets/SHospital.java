@@ -51,15 +51,20 @@ public class SHospital extends HttpServlet {
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         } else if (request.getParameter("verHospital") != null) {
             // Obtener Usuario Sesion 
-            Cliente c = CCliente.obtenerCliente("brian");
+            if (request.getSession().getAttribute("usuario") != null) {
+                Usuario user = (Usuario) request.getSession().getAttribute("usuario");
+                Cliente c = CCliente.getClientebyUsuario(user.getId());
+                Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
+                List<Empleado> empleados;
+                empleados = h.getEmpleados();
+                request.setAttribute("cliente", c);
+                request.setAttribute("empleados", empleados);
+                request.setAttribute("hospital", h);
+                request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/SInicio").forward(request, response);
+            }
 
-            Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
-            List<Empleado> empleados;
-            empleados = h.getEmpleados();
-            request.setAttribute("cliente", c);
-            request.setAttribute("empleados", empleados);
-            request.setAttribute("hospital", h);
-            request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
         } else if (request.getParameter("Vacuna") != null) {
             request.setAttribute("vacuna", "vacuna");
             request.setAttribute("hospital", "hospital");
@@ -194,7 +199,7 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             CHospital.borrarAdministrador(URLDecoder.decode(request.getParameter("nomHospital")), URLDecoder.decode(request.getParameter("ciAdmin")));
             response.getWriter().write("OK");
-        
+
         } else if (request.getParameter("edad") != null) {
             System.out.println("Servlets.SHospital.doPost()");
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
