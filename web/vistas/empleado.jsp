@@ -49,6 +49,8 @@
             <hr>
             <%}%>
             <li <%if (tipo.equals("Cliente")) {%> class="active" <%}%> ><a href="#datosPersonales" data-toggle="tab" >Datos personales</a></li>
+            <li><a href="#reservas" data-toggle="tab">Reservas</a></li>
+
         </ul>
 
         <div class="panel contenido col-md-8 text-center tab-content">
@@ -275,6 +277,51 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="tab-pane pestania2" id="reservas">
+                <h2>Reservas</h2>
+                <hr>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Hospital</th>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Fecha</th>
+                            <th>Especialidad</th>
+                            <th>Estado</th>
+                            <th><th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            List<Turno> turnos = (List<Turno>) (tipo.equals("Cliente") ? cliente.getTurnos() : empleado.getTurnos());
+                            if (turnos != null && !turnos.isEmpty()) {
+                                for (Turno t : turnos) {%>
+
+                        <tr id="turno<%= t.getId()%>">
+                            <td><%= t.getHorarioAtencion().getHospital().getNombre()%></td>
+                            <td><%= t.getNumero()%></td>
+                            <td><%= StringUtils.capitalize(t.getTipo().toString().toLowerCase().replace("o", "ó"))%></td>
+                            <td><%= t.getFecha().toString()%></td>
+                            <td><%= t.getEspecialidad()%></td>
+                            <td><%= StringUtils.capitalize(t.getEstado().toString().toLowerCase())%></td>
+                            <td><%= t.getEstado() == EstadoTurno.PENDIENTE ? "<span class='btn btn-danger' title='Cancelar' onclick='cancelarTurno(" + t.getId() + ")'><span class='glyphicon glyphicon-remove'></span></span>" : ""%></td>
+                        </tr>
+
+                        <%}
+                        } else {%>
+                        <tr>
+                            <td colspan="6">No tienes turnos reservados</td>
+                        </tr>
+
+                        <%}
+                        %>
+
+                    </tbody>
+                </table>
+
             </div>
         </div>
     </body>
