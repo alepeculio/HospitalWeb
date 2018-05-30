@@ -134,9 +134,9 @@ public class SHospital extends HttpServlet {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
 
-            String s = CHospital.agregarTurno(hospital, u.getId(), dia);
+            //String s = CHospital.agregarTurno(hospital, u.getId(), dia);
 
-            response.getWriter().write(s);
+            //response.getWriter().write(s);
 
         } else if (request.getParameter("modificar") != null) {
             response.setContentType("text/plain");
