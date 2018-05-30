@@ -336,7 +336,7 @@ $("#btnMedicos").click(function () {
 
     calendar.set("customRenderer", {rules: rules, filterFunction: filterFunction});
     calendar.set("disabledDatesRule", "disabled");
-    /**/
+
     $("#modalCalendario").modal("show");
 
 
