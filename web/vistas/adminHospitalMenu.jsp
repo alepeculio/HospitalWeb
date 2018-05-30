@@ -192,11 +192,11 @@
                 <!--Elementos para clonar-->
                 <ul>
                     <li class="list-group-item hidden" id="itemNoSus"><span class="nombre">No hay suscripciones</span></li>
-                    <li class="list-group-item hidden" id="itemPendiente"><span class="nombre">Nombre Apellido</span><span class="estado">Pendiente</span><button class="btn btn-danger">Rechazar <span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-success">Confirmar <span class="glyphicon glyphicon-ok"></span></button></li>
-                    <li class="list-group-item hidden" id="itemVencida"><span class="nombre">Nombre Apellido</span><span class="estado">Vencida</span><button class="btn btn-success">Renovar <span class="glyphicon glyphicon-ok"></span></button></li>
-                    <li class="list-group-item hidden" id="itemActiva"><span class="nombre">Nombre Apellido</span><span class="estado">Activa</span><button class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-remove"></span></button></li>
-                    <li class="list-group-item hidden" id="itemRechazada"><span class="nombre">Nombre Apellido</span><span class="estado">Rechazada</span></li>
-                    <li class="list-group-item hidden" id="itemEliminada"><span class="nombre">Nombre Apellido</span><span class="estado">Eliminada</span></li>
+                    <li class="list-group-item hidden" id="itemPendiente"><span class="nombre" title="Nombre del solicitante">Nombre Apellido</span><span class="estado" title="Estado">Pendiente </span><span class="duracion" title="Duración"></span><button class="btn btn-danger">Rechazar <span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-success">Confirmar <span class="glyphicon glyphicon-ok"></span></button></li>
+                    <li class="list-group-item hidden" id="itemVencida"><span class="nombre" title="Nombre del solicitante">Nombre Apellido</span><span class="estado" title="Estado">Vencida </span><span class="duracion" title="Duración"></span><button class="btn btn-success">Renovar <span class="glyphicon glyphicon-ok"></span></button></li>
+                    <li class="list-group-item hidden" id="itemActiva"><span class="nombre" title="Nombre del solicitante">Nombre Apellido</span><span class="estado" title="Estado">Activa </span><span class="duracion" title="Duración"></span><button class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-remove"></span></button></li>
+                    <li class="list-group-item hidden" id="itemRechazada"><span class="nombre" title="Nombre del solicitante">Nombre Apellido</span><span class="estado" title="Estado">Rechazada</span></span></li>
+                    <li class="list-group-item hidden" id="itemEliminada"><span class="nombre" title="Nombre del solicitante">Nombre Apellido</span><span class="estado" title="Estado">Eliminada</span></span></li>
                 </ul>
 
 

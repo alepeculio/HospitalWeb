@@ -311,9 +311,10 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
     calendar = new Y.Calendar({
         contentBox: "#mycalendar",
         width: '340px',
-        showPrevMonth: true,
-        showNextMonth: true,
-        date: new Date()
+        showPrevMonth: false,
+        showNextMonth: false,
+        minimumDate: new Date() ,
+        date: new Date(),
     }).render();
     // Get a reference to Y.DataType.Date
     var dtdate = Y.DataType.Date;
