@@ -31,8 +31,6 @@ public class SInicio extends HttpServlet {
         u.setCi("1234");
         u.setCorreo("admin@correo.com");
         u.setContrasenia("1234");
-         
-        Usuario u2 = new Usuario();
 
         if (new CUsuario().login(u.getCi(), u.getContrasenia()) == null) {
             CAdministradores.agregarAdminGeneral(u);
@@ -62,12 +60,6 @@ public class SInicio extends HttpServlet {
                 }
             } else {
                 request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
-            }
-        } else {
-            switch (accion) {
-                case "inicio":
-                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
-                    break;
             }
         }
     }

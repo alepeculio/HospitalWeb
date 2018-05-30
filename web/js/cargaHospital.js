@@ -597,3 +597,11 @@ function cedulaCorrecta(ci, digVer) {
         sum += (ci[i] * dig[i]) % 10;
     return 10 - sum % 10 === digVer * 1;
 }
+
+$("#modalIngresado").on ("hidden.bs.modal", function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+$("#modalAdministradorIngresadoConExito").on ("hidden.bs.modal", function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});

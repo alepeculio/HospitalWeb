@@ -13,6 +13,7 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="js/yui-min.js"></script>
 
         <%
             Hospital h = (Hospital) request.getAttribute("hospital");
@@ -340,11 +341,8 @@
                             </select>
                             <span id="Shijo" hidden style="color: red">Debe seleccionar un hijo</span><br>
                             <label>Seleccione un día para el turno de vacunacion</label>
-                            <div class="row yui3-skin-sam yui3-g">
-                                <div id="centercolumn" class="yui3-u">
-                                    <!-- Container for the calendar -->
-                                    <div id="mycalendar"></div>
-                                </div>
+                            <div class="yui3-skin-sam" align="center">
+                                <div id="mycalendar"></div>
                             </div>
                             <span id="Sdia" hidden style="color: red;">Debe seleccionar un dia</span><br>
                             <label>Seleccione un horario disponible.</label>
@@ -412,8 +410,8 @@
     <jsp:include page="dialogos.html"/>
     <script src="js/consultaHospital.js"></script>
     <script>
-        var hospital = "<%=h.getNombre()%>";
-        var idhospital = <%=h.getId()%>;
+                                var hospital = "<%=h.getNombre()%>";
+                                var idhospital = <%=h.getId()%>;
     </script>
 </html>
 

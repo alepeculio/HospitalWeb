@@ -2,11 +2,17 @@ package Servlets;
 
 import Clases.Cliente;
 import Clases.Empleado;
+import Clases.EstadoSuscripcion;
+import Clases.EstadoTurno;
 import Clases.HorarioAtencion;
+import Clases.Hospital;
+import Clases.Suscripcion;
 import Clases.TipoTurno;
 import Clases.Usuario;
+import Controladores.CAdministradores;
 import Controladores.CCliente;
 import Controladores.CCorreo;
+import Controladores.CEmpleado;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
@@ -21,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.*;
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,23 +58,19 @@ public class SUsuario extends HttpServlet {
                                 response.addCookie(userCookie);
                                 response.addCookie(passCookie);
                             }
-
-                            switch (CUsuario.obtenerTipo(u)) {
-
+                            String tipoUsuario = CUsuario.obtenerTipo(u);
+                            switch (tipoUsuario) {
                                 case "General":
                                     request.getRequestDispatcher("/SHospital?Administrador=si").forward(request, response);
                                     break;
                                 case "Hospital":
                                     request.getRequestDispatcher("/SUsuario?accion=menuAdmin").forward(request, response);
                                     break;
-                                case "Empleado":
-                                    request.getRequestDispatcher("/SEmpleado?accion=inicio").forward(request, response);
-                                    break;
-                                case "Cliente":
+                                default:
+                                    request.setAttribute("tipo", tipoUsuario);
                                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
-                                    request.getRequestDispatcher("vistas/inicio.jsp").forward(request, response);
+                                    request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward(request, response);
                                     break;
-
                             }
                         } else {
                             request.setAttribute("mensaje_error", "C.I y/o contraseña incorrectos");
@@ -195,7 +198,12 @@ public class SUsuario extends HttpServlet {
                         e.setApartamento(Integer.parseInt(apartMed));
                     }
 
+                    Usuario admin = (Usuario) request.getSession().getAttribute("usuario");
+                    Hospital hosp = CAdministradores.obtenerHospitalAdministrador(admin.getCi());
+                    hosp.agregarEmpleado(e);
+
                     String mensajeMed = "";
+                    // TODO: agregarlo al hospital_cliente
                     if (Singleton.getInstance().persist(e)) {
                         new Thread(new Runnable() {
                             @Override
@@ -220,6 +228,11 @@ public class SUsuario extends HttpServlet {
                 case "indicaciones":
                     request.setAttribute("hospitales", CHospital.obtenerHospitales());
                     request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
+                    break;
+
+                case "cliente":
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/cliente.jsp").forward(request, response);
                     break;
 
                 case "vacunas":
@@ -348,6 +361,99 @@ public class SUsuario extends HttpServlet {
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write(CUsuario.cambiarPass(((Usuario) request.getSession().getAttribute("usuario")).getId(), request.getParameter("pass")) ? "OK" : "ERR");
+                    break;
+                case "mapaUsuario":
+                    request.setAttribute("tipo", CUsuario.obtenerTipo((Usuario) request.getSession().getAttribute("usuario")));
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/pantallaUsuarios.jsp").forward(request, response);
+                    break;
+                case "panelDatos":
+                    Usuario user = (Usuario) request.getSession().getAttribute("usuario");
+                    String tipoUser = CUsuario.obtenerTipo(user);
+                    if (tipoUser.equals("Empleado")) {
+                        Empleado empleado = cusuario.getEmpleadobyUsuario(user.getId());
+                        for (HorarioAtencion ha1 : empleado.getHorariosAtencions()) {
+                            ha1.setTurnos(CEmpleado.obtenerTurnosProximos(ha1));
+                        }
+                        request.setAttribute("empleado", empleado);
+                    } else if (tipoUser.equals("Cliente")) {
+                        Cliente cliente = CCliente.getClientebyUsuario(user.getId());
+                        request.setAttribute("cliente", cliente);
+                    }
+                    request.setAttribute("tipo", tipoUser);
+                    request.setAttribute("hospitales", CHospital.obtenerHospitales());
+                    request.getRequestDispatcher("vistas/empleado.jsp").forward(request, response);
+                    break;
+
+                case "obtenerSuscripciones":
+                    String idUsuarioAdmin = request.getParameter("idUsuarioAdmin");
+                    List<Suscripcion> suscripciones = CHospital.obtenerSuscripcionesbyUsuarioAdminHospital(Long.valueOf(idUsuarioAdmin));
+                    String suscripcionesJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(suscripciones);
+                    response.setContentType("application/json");
+                    response.getWriter().write(suscripcionesJson);
+                    break;
+                case "estaSuscripto":
+                    response.setContentType("application/json");
+                    Usuario usuasd = (Usuario) request.getSession().getAttribute("usuario");
+                    long idcli = CCliente.getClientebyUsuario(usuasd.getId()).getId();
+                    Hospital h = CHospital.obtenerHospital(request.getParameter("nombreHosp"));
+                    Suscripcion sus = CHospital.obtenerEstadoDeSuscripcion(idcli, h.getId());
+
+                    String estado = "NO";
+
+                    if (sus == null) {
+                        estado = "NO";
+                    }
+                    if (sus != null) {
+                        switch (sus.getEstado()) {
+                            case ACTIVA:
+                                estado = "Activa<br>(Fecha Vencimiento: " + new SimpleDateFormat("dd-MM-yyyy").format(sus.getFechaVencimiento()) + ")";
+                                break;
+                            case PENDIENTE:
+                                estado = "Pendiente";
+                                break;
+                            case VENCIDA:
+                                estado = "Vencida<br>(Fecha Vencimiento: " + new SimpleDateFormat("dd-MM-yyyy").format(sus.getFechaVencimiento()) + ")";
+                                break;
+                            case RECHAZADA:
+                                estado = "Rechazada";
+                                break;
+                            case ELIMINADA:
+                                estado = "Eliminada";
+                                break;
+                        }
+                    }
+
+                    response.getWriter().write(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(new String[]{estado, h.isPublico() ? "Publico" : "Privado"}));
+                    break;
+                case "solicitarSus":
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    Usuario usuasd2 = (Usuario) request.getSession().getAttribute("usuario");
+                    long idcli2 = CCliente.getClientebyUsuario(usuasd2.getId()).getId();
+                    Hospital h2 = CHospital.obtenerHospital(request.getParameter("nomHosp"));
+                    try {
+                        CHospital.agregarSuscripcion(idcli2, h2.getId(), Integer.valueOf(request.getParameter("cant")));
+                    } catch (Exception asdasd) {
+                        System.err.println(request.getParameter("cant"));
+                        asdasd.printStackTrace();
+                        response.getWriter().write("Cantidad de meses no valida");
+                        break;
+                    }
+                    response.getWriter().write("OK");
+                    break;
+                case "actualizarSuscripcion":
+                    String idSuscripcion = request.getParameter("idSuscripcion");
+                    String estado2 = request.getParameter("estado");
+                    String mensajeActSus;
+                    if (CHospital.actualizarSuscripcion(Long.valueOf(idSuscripcion), EstadoSuscripcion.valueOf(estado2))) {
+                        mensajeActSus = "OK";
+                    } else {
+                        mensajeActSus = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeActSus);
                     break;
             }
         }

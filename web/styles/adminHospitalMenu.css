@@ -1,3 +1,16 @@
+.table .btn-danger{
+   margin-left: 10px; 
+}
+
+.table button{
+    margin: -5px 0 -5px 0;
+}
+.table .estado{
+    font-weight: bold;
+}
+
+/*---------------------------------------------------*/
+
 .contenido{
     margin-left:2%;
     min-height:68vh;
