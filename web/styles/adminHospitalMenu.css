@@ -1,24 +1,12 @@
-.listSus .nombre{
-    display:inline-block;
-    max-width: 45%;
-    min-width: 30%;
+.table .btn-danger{
+   margin-left: 10px; 
 }
 
-.listSus .estado{
-    display: inline-block;
+.table button{
+    margin: -5px 0 -5px 0;
+}
+.table .estado{
     font-weight: bold;
-    width: 15%;
-}
-
-.listSus button{
-    float: right;
-    margin: -7px 0 0px 10px;
-    width: 105px;
-}
-
-.listSus{
-    overflow:auto;
-    max-height:100vh;
 }
 
 /*---------------------------------------------------*/

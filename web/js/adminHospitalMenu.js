@@ -1136,15 +1136,14 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
             idUsuarioAdmin: idUsuarioAdmin
         },
         success: function (data) {
-            var lista = $("#listSus");
-            lista.empty();
-            if (data.length === 0) {
-                var itemLista = $("#itemNoSus").clone();
-                itemLista.removeClass("hidden");
-                lista.append(itemLista);
+            //Tabla
+            var tabla = $("#tablaSus");
+            var body = tabla.find("tbody");
+            body.empty();
 
+            if (data.length === 0) {
+                body.append($("#filaNoSus").clone());
             } else {
-                lista.addClass("text-left");
                 for (var i = 0; i < data.length; i++) {
                     var estado = data[i].estado.toLowerCase();
                     var nombre = data[i].cliente.nombre;
@@ -1158,87 +1157,70 @@ function cargarSuscripciones(idUsuarioAdmin, tipo) {
                         textMes = "Meses";
                     }
 
+                    var filaGeneral = $("#filaGeneral").clone();
+                    var tdNombre = filaGeneral.find(".nombre");
+                    var tdEstado = filaGeneral.find(".estado");
+                    var tdDuracion = filaGeneral.find(".duracion");
+                    tdNombre.html(nombre + " " + apellido);
+                    tdDuracion.html(duracion + " " + textMes);
+
                     if (estado === "pendiente") {
 
-                        var itemLista = $("#itemPendiente").clone();
-                        var spanNombre = itemLista.find(".nombre");
-                        var btnConfirmar = itemLista.find(".btn-success");
-                        var btnRechazar = itemLista.find(".btn-danger");
-                        var spanDuracion = itemLista.find(".duracion");
-
-                        itemLista.removeClass("hidden");
-                        spanNombre.html(nombre + " " + apellido);
-                        spanDuracion.html(duracion + " " + textMes);
-                        btnConfirmar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
-                        btnRechazar.attr("onclick", "actualizarSuscripcion('" + id + "','RECHAZADA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
-                        itemLista.attr("id", "sus" + id);
-
-                        lista.append(itemLista);
+                        tdEstado.html("Pendiente");
+                        var filaPendiente = $("#filaPendiente").clone();
+                        var btnConfirmar = filaPendiente.find(".btn-success");
+                        var btnRechazar = filaPendiente.find(".btn-danger");
+                        btnConfirmar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA')");
+                        btnRechazar.attr("onclick", "actualizarSuscripcion('" + id + "','RECHAZADA')");
+                        filaGeneral.append(filaPendiente);
 
                     } else if (estado === "activa") {
 
-                        var itemLista = $("#itemActiva").clone();
-                        var spanNombre = itemLista.find(".nombre");
-                        var btnEliminar = itemLista.find(".btn-danger");
-                        var spanDuracion = itemLista.find(".duracion");
-
-
-                        itemLista.removeClass("hidden");
-                        spanNombre.html(nombre + " " + apellido);
-                        spanDuracion.html(duracion + " " + textMes);
-                        btnEliminar.attr("onclick", "actualizarSuscripcion('" + id + "','ELIMINADA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
-                        itemLista.attr("id", "sus" + id);
-
-                        lista.append(itemLista);
+                        tdEstado.html("Activa");
+                        var filaActiva = $("#filaActiva").clone();
+                        var btnEliminar = filaActiva.find(".btn-danger");
+                        btnEliminar.attr("onclick", "actualizarSuscripcion('" + id + "','ELIMINADA')");
+                        filaGeneral.append(filaActiva);
 
                     } else if (estado === "vencida") {
 
-                        var itemLista = $("#itemVencida").clone();
-                        var spanNombre = itemLista.find(".nombre");
-                        var btnRenovar = itemLista.find(".btn-success");
-                        var spanDuracion = itemLista.find(".duracion");
-
-
-                        itemLista.removeClass("hidden");
-                        spanNombre.html(nombre + " " + apellido);
-                        spanDuracion.html(duracion + " " + textMes);
-                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
-                        itemLista.attr("id", "sus" + id);
-
-                        lista.append(itemLista);
-
-                    } else if (estado === "rechazada") {
-
-                        var itemLista = $("#itemRechazada").clone();
-                        var spanNombre = itemLista.find(".nombre");
-
-                        itemLista.removeClass("hidden");
-                        spanNombre.html(nombre + " " + apellido);
-                        itemLista.attr("id", "sus" + id);
-
-                        lista.append(itemLista);
+                        tdEstado.html("Vencida");
+                        var filaVencida = $("#filaVencida").clone();
+                        var btnRenovar = filaVencida.find(".btn-success");
+                        btnRenovar.attr("onclick", "actualizarSuscripcion('" + id + "','ACTIVA')");
+                        filaGeneral.append(filaVencida);
 
                     } else if (estado === "eliminada") {
 
-                        var itemLista = $("#itemEliminada").clone();
-                        var spanNombre = itemLista.find(".nombre");
+                        tdEstado.html("Eliminada");
+                        tdDuracion.html("-");
+                        filaGeneral.append("<td></td>");
 
-                        itemLista.removeClass("hidden");
-                        spanNombre.html(nombre + " " + apellido);
-                        itemLista.attr("id", "sus" + id);
+                    } else if (estado === "rechazada") {
 
-                        lista.append(itemLista);
+                        tdEstado.html("Rechazada");
+                        tdDuracion.html("-");
+                        filaGeneral.append("<td></td>");
 
                     }
 
+                    filaGeneral.attr("id", "trSus" + id);
+                    body.prepend(filaGeneral);
                 }
-                setCargado(tipo);
+
             }
+            setCargado(tipo);
         }
+
     });
 }
 
-function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido, duracion, textMes) {
+//Poner en mayusculas la primer letra
+function capitalize(s) {
+    return s && s[0].toUpperCase() + s.slice(1);
+}
+
+function actualizarSuscripcion(idSuscripcion, estado) {
     $.ajax({
         url: "/HospitalWeb/SUsuario",
         type: "POST",
@@ -1249,46 +1231,23 @@ function actualizarSuscripcion(idSuscripcion, estado, nombre, apellido, duracion
         },
         success: function (data) {
             if (data === "OK") {
-                estado = estado.toLowerCase();
-                if (estado === "activa") {
-                    var itemAterior = $("#sus" + idSuscripcion);
+                estado = capitalize(estado.toLowerCase());
+                var trSus = $("#trSus" + idSuscripcion);
+                var tdEstado = trSus.find(".estado");
+                tdEstado.html(estado);
+                trSus.find("td").last().remove();
 
-                    var itemLista = $("#itemActiva").clone();
-                    var spanNombre = itemLista.find(".nombre");
-                    var btnEliminar = itemLista.find(".btn-danger");
-                    var spanDuracion = itemLista.find(".duracion");
+                if (estado === "Activa") {
+                    var filaActiva = $("#filaActiva").clone();
+                    var btnEliminar = filaActiva.find(".btn-danger");
 
-                    itemLista.removeClass("hidden");
-                    spanNombre.html(nombre + " " + apellido);
-                    spanDuracion.html(duracion + " " + textMes);
-                    btnEliminar.attr("onclick", "actualizarSuscripcion('" + idSuscripcion + "','ELIMINADA','" + nombre + "','" + apellido + "','" + duracion + "','" + textMes + "')");
-                    itemLista.attr("id", "sus" + idSuscripcion);
+                    btnEliminar.attr("onclick", "actualizarSuscripcion('" + idSuscripcion + "','ELIMINADA')");
 
-                    itemAterior.replaceWith(itemLista);
-
-                } else if (estado === "eliminada") {
-                    var itemAterior = $("#sus" + idSuscripcion);
-
-                    var itemLista = $("#itemEliminada").clone();
-                    var spanNombre = itemLista.find(".nombre");
-
-                    itemLista.removeClass("hidden");
-                    spanNombre.html(nombre + " " + apellido);
-                    itemLista.attr("id", "sus" + idSuscripcion);
-
-                    itemAterior.replaceWith(itemLista);
-
-                } else if (estado === "rechazada") {
-                    var itemAterior = $("#sus" + idSuscripcion);
-
-                    var itemLista = $("#itemRechazada").clone();
-                    var spanNombre = itemLista.find(".nombre");
-
-                    itemLista.removeClass("hidden");
-                    spanNombre.html(nombre + " " + apellido);
-                    itemLista.attr("id", "sus" + idSuscripcion);
-
-                    itemAterior.replaceWith(itemLista);
+                    trSus.append(filaActiva);
+                } else if (estado === "Eliminada" || estado === "Rechazada") {
+                    var tdDuracion = trSus.find(".duracion");
+                    tdDuracion.html("-");
+                    trSus.append("<td></td>");
                 }
             } else {
                 mensajeErr("No se pudo actualizar la suscripcion");
