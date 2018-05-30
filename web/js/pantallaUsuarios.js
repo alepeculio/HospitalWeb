@@ -332,7 +332,7 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
                 "especialidad": espec,
             },
             success: function (data) {
-                mensaje(data)
+                mensaje(data, "refresh")
             },
             error: function () {
                 mensajeErr("Error: No se pudo conectar con el servidor.");
@@ -412,5 +412,9 @@ function datearray2filter(dates, dias) {
     return ret;
 }
 ;
+
+function refresh(){
+    window.location.assign ("/HospitalWeb/SUsuario?accion=mapaUsuario");
+}
 
 
