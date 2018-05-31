@@ -697,7 +697,7 @@ function seleccionar(nombreFila, id, tipo) {
 }
 function deseleccionar(nombreFila, tipo) {
     var li = document.getElementById(nombreFila + seleccionado[tipo]);
-    li.style.background = "white";
+    li.removeAttribute("style");
     var a = li.getElementsByTagName('a')[0];
     a.style.color = "black";
     seleccionado[tipo] = "";
