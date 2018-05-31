@@ -168,6 +168,6 @@ function finalizarHA(idHA) {
     });
 }
 
-
-
-//mostrarDatosMedico(1);
+function cancelarTurno(idTurno){
+   $("#turno"+idTurno).remove();
+}
