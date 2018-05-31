@@ -1,7 +1,8 @@
 <%@page import="Clases.Usuario"%>
 <link rel="stylesheet" href="styles/header.css">
 
-<%String tipo = (String) request.getAttribute("tipo");
+<%
+    String tipo = (String) request.getAttribute("tipo");
     Usuario u = (Usuario) request.getSession().getAttribute("usuario");
 %>
 
@@ -22,13 +23,20 @@
         </div>
         <%if (u != null) {%>
         <div class="collapse navbar-collapse" id="c-menu">
-            <!-- TODO: Que esta ul solo aparezca si se esta logueado como un usuario cliente o medico -->
+           <!-- TODO: Que esta ul solo aparezca si se esta logueado como un usuario cliente o medico -->
             <%if (tipo != null && tipo == "Empleado" || tipo == "Cliente") {%>
             <ul class="nav navbar-nav padding">
                 <li><a href="/HospitalWeb/SUsuario?accion=mapaUsuario">Ver mapa<span class="sr-only"></span></a></li>
                 <li><a href="/HospitalWeb/SUsuario?accion=panelDatos">Panel de datos</a></li>
             </ul>
-            <%}%>
+            <%} else if (tipo != null && tipo == "Hospital") {
+                String nombre = (String) request.getAttribute("nombreHospital");
+                if (nombre != null) {%>
+            <ul class="nav navbar-nav padding active">
+                 <li><a style="font-weight: bold; color:white">Administrando: <%= nombre%><span class="sr-only"></span></a></li>
+            </ul>
+            <%}}%>
+
             <button class="btn btn-default" id="btnCerrarSesion" title = "Cerrar sesión" onclick="window.location = '/HospitalWeb/SUsuario?accion=logout'"><span class="glyphicon glyphicon-log-out micuenta_icono"></span></a></button>
         </div>
         <% }%>
