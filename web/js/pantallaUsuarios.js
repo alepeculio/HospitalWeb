@@ -229,7 +229,6 @@ $("#btnReservarTurno").click(function () {
             obtenerMedicos: hospitalSeleccionado.title
         },
         success: function (data) {
-
             if (data.length == 0) {
                 mensajeErr("No hay médicos en este hospital");
                 return;
