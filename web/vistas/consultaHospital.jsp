@@ -26,7 +26,7 @@
 
 
     <body background="img/fondo.png">
-
+        <jsp:include page="header.jsp"/>
 
         <div class="vl" style="margin-left: 49%; height:200%; position:absolute;   margin-top: 6%;"></div>
         <!-- Icono Hospital -->
@@ -347,6 +347,12 @@
                                         <option>Lista deshabilitada</option>
                                     </select>
                                 </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Seleccione un horario</div>
+                                    <ul class="list-group listCliP">
+                                        <li class="list-group-item">Horario 1</li>
+                                        <li class="list-group-item">Horario</li>
+                                    </ul>
                             </fieldset>
                         </div>
                         <div class="modal-footer">

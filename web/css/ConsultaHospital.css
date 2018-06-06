@@ -10,7 +10,10 @@ img {
     height: auto;
     border-radius: 110px;
 }
-
+.listCliP li:hover{
+    background-color:#e2dada;
+    cursor:pointer;
+}
 #vacuna{
 
     background-image: url(../img/click.png);

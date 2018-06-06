@@ -1,5 +1,6 @@
 package Servlets;
 
+
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.EstadoTurno;
@@ -41,9 +42,9 @@ public class SHospital extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
         if (request.getParameter("Administrador") != null) {
-            request.setAttribute("hospitales", CHospital.obtenerHospitales());
+            List<Hospital> hospitales = CHospital.obtenerHospitales();
+            request.setAttribute("hospitales", hospitales);
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
         } else if (request.getParameter("verHospital") != null) {
             // Obtener Usuario Sesion 
@@ -103,6 +104,7 @@ public class SHospital extends HttpServlet {
             h.setNumero(Integer.valueOf(request.getParameter("nro")));
             h.setLatitud(Double.valueOf(request.getParameter("lat")));
             h.setLongitud(Double.valueOf(request.getParameter("lng")));
+            h.setActivado(true);
             Singleton.getInstance().persist(h);
             request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
@@ -256,7 +258,6 @@ public class SHospital extends HttpServlet {
             System.out.println("Servlets.SHospital.doPost()");
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             Cliente c = CCliente.getClientebyUsuario(u.getId());
-
             if (c.getHijos() == null) {
                 System.out.println("Servlets.SHospital.doPost().no");
                 String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson("no");
