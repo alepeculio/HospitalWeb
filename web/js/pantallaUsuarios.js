@@ -373,6 +373,8 @@ $("#btnMedicos").click(function () {
             rules = datearray2filter(r[0], r[1]);
             var jornadas = r[2].split("/");
 
+            //split a las jornadas por un guion bajo
+
             var comboJornadas = document.getElementById("jornadas");
 
             for (var i in jornadas)
