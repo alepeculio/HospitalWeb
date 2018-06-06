@@ -86,6 +86,7 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital();
             h.setNombre(URLDecoder.decode(request.getParameter("nombre"), "UTF-8"));
+            h.setActivado(true);
             h.setDirectora(URLDecoder.decode(request.getParameter("directora"), "UTF-8"));
             h.setPublico(request.getParameter("tipo").equals("on"));
             h.setCorreo(URLDecoder.decode(request.getParameter("correo"), "UTF-8"));
@@ -224,7 +225,7 @@ public class SHospital extends HttpServlet {
 
             Date hi = new Date(2018, 5, 16, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
             Date hf = new Date(2018, 5, 16, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
-
+            
             long mins = ((hf.getTime() - hi.getTime()) / cant) / 1000 / 60;
 
             response.setContentType("text/plain");

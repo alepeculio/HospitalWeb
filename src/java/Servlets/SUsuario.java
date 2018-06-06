@@ -1,5 +1,6 @@
 package Servlets;
 
+import Clases.Administrador;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.EstadoSuscripcion;
@@ -48,6 +49,12 @@ public class SUsuario extends HttpServlet {
                     String recordarme = request.getParameter("recordarme");
                     if (ci != null && contrasenia != null) {
                         Usuario u = cusuario.login(ci, contrasenia);
+                        
+                        Administrador a = CAdministradores.getAdminByUsuario(u.getId());
+                        if (a != null) {
+                            if (a.getHospital() != null && !a.getHospital().isActivado())
+                                u = null;
+                        }
                         if (u != null) {
                             request.getSession().setAttribute("usuario", u);
                             if (recordarme != null) {

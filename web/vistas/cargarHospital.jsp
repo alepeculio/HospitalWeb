@@ -212,7 +212,7 @@
                         <div class="modal-body">
                             <div id="divListadoAdministradores">
                                 <p id="msjUsuario">
-                                    Click en un administrador para elimminarlo.
+                                    Click en un administrador para eliminarlo.
                                 </p>
                                 <label>Administradores</label>
                                 <div class="list-group" id="listadoAdministradores">
