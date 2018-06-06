@@ -94,6 +94,7 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital();
             h.setNombre(URLDecoder.decode(request.getParameter("nombre"), "UTF-8"));
+            h.setActivado(true);
             h.setDirectora(URLDecoder.decode(request.getParameter("directora"), "UTF-8"));
             h.setPublico(request.getParameter("tipo").equals("on"));
             h.setCorreo(URLDecoder.decode(request.getParameter("correo"), "UTF-8"));
