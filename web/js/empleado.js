@@ -1,4 +1,4 @@
-$("#btnCambiar").click(function () {
+function cambiarContrasenia() {
     var passActual = $("#passActual").val();
     var passNueva = $("#passNueva").val();
 
@@ -48,7 +48,7 @@ $("#btnCambiar").click(function () {
             alert("Error: No se pudo contactar el servidor");
         }
     });
-});
+}
 
 function cambiarPass(nueva) {
     $.ajax({
@@ -94,7 +94,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
             if (data === "ERR") {
                 mensajeErr("Ocurri&oacute; un error al actualizar el estado del turno");
             } else if (data === "errDia") {
-                mensajeErr("El d&iacute;a del horario de atenci&oacute;n de este turno no concuerda con el actual");
+                mensajeErr("Solo puede iniciar turnos de horarios de atenci&oacute;n del d&iacute;a de hoy");
             } else {
                 if (estado === "FINALIZADO") {
                     $("#btnFinalizado" + idTurno).remove();
@@ -136,6 +136,7 @@ function actualizarHA(idTurno, estado, idHA, numero) {
     });
 }
 
+
 function finalizarHA(idHA) {
     $.ajax({
         type: "POST",
@@ -147,7 +148,14 @@ function finalizarHA(idHA) {
             if (data === "ERR") {
                 mensajeErr("Ocurri&oacute; un error al finalizar horario de atenci&oacute;n");
             } else if (data === "OK") {
-                $('[id^="estado"]', '#turnos' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
+                var estados = $('[class^="glyphicon"]', '#turnos' + idHA);
+                estados.each(function () {
+                    if ($(this).attr('title') === "Pendiente") {
+                        $(this).replaceWith("<span class='glyphicon glyphicon-remove' style='color:blue' title='Ausente' ></span>");
+                    } else {
+                        $(this).replaceWith("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
+                    }
+                });
                 $('[id ="btnEstado"]', '#turnos' + idHA).remove();
                 $('#estadoHA' + idHA).html("<span class='glyphicon glyphicon-ok' style='color:green;'></span>");
                 $("#ca" + idHA).html('-');
@@ -160,6 +168,6 @@ function finalizarHA(idHA) {
     });
 }
 
-
-
-//mostrarDatosMedico(1);
+function cancelarTurno(idTurno){
+   $("#turno"+idTurno).remove();
+}

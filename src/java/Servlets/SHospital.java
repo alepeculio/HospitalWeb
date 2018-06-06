@@ -48,7 +48,7 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("verHospital") != null) {
             Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
             request.setAttribute("hospital", h);
-            List<Empleado> emps = h.getEmpleados ();
+            List<Empleado> emps = h.getEmpleados();
             Cliente c = CCliente.getClientebyUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId());
             request.setAttribute("empleados", emps);
             request.setAttribute("cliente", c);
@@ -58,7 +58,7 @@ public class SHospital extends HttpServlet {
             request.setAttribute("hospital", "hospital");
             request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
         } else if (request.getParameter("nombreH") != null) {
-            request.setAttribute("hospitales", CHospital.obtenerHospitales ());
+            request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.setAttribute("verMapa", request.getParameter("nombreH"));
             request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
         }
@@ -115,17 +115,47 @@ public class SHospital extends HttpServlet {
             } else {
                 response.getWriter().write("NOPE");
             }
-        } else if (request.getParameter("obtenerHorarios") != null) {
+        } else if (request.getParameter("obtenerHorarios") != null && request.getParameter("dia") != null && request.getParameter("medico") != null) {
 
             String hospital = request.getParameter("obtenerHorarios");
             String dia = request.getParameter("dia");
+            String ciEmpleado = request.getParameter("medico");
+            String especialidad = request.getParameter("especialidad");
+            String horario = request.getParameter("horarioAtencion");
+
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
 
-            String s = CHospital.agregarTurno(hospital, u.getId(), dia);
+            String s = "";
+            try {
+                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado), especialidad, horario);
+            } catch (ParseException ex) {
+                Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             response.getWriter().write(s);
+
+        } else if (request.getParameter("horariosOcupados") != null) {
+
+            String hospital = request.getParameter("horariosOcupados");
+            Hospital h = CHospital.obtenerHospital(hospital);
+            long idEmpleado = Long.valueOf(request.getParameter("medico"));
+            String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.ATENCION);
+            String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.ATENCION);
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital);
+            String resultado = fechas + "&" + dias + "&" + jornadas;
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(resultado);
+
+        } else if (request.getParameter("obtenerMedicos") != null) {
+
+            Hospital h = CHospital.obtenerHospital(request.getParameter("obtenerMedicos"));
+            List<Empleado> empleados = h.getEmpleadosActivos();
+            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
+            response.setContentType("application/json");
+            response.getWriter().write(json);
 
         } else if (request.getParameter("modificar") != null) {
             response.setContentType("text/plain");
@@ -209,3 +239,4 @@ public class SHospital extends HttpServlet {
         }
     }
 }
+//Esto es un comentario de prueba

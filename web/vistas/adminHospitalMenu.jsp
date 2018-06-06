@@ -189,20 +189,40 @@
                 <h2>Suscripciones</h2>
                 <hr>
 
-                <!--Elementos para clonar-->
-                <ul>
-                    <li class="list-group-item hidden" id="itemNoSus"><span class="nombre">No hay suscripciones</span></li>
-                    <li class="list-group-item hidden" id="itemPendiente"><span class="nombre">Nombre Apellido</span><span class="estado">Pendiente</span><button class="btn btn-danger">Rechazar <span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-success">Confirmar <span class="glyphicon glyphicon-ok"></span></button></li>
-                    <li class="list-group-item hidden" id="itemVencida"><span class="nombre">Nombre Apellido</span><span class="estado">Vencida</span><button class="btn btn-success">Renovar <span class="glyphicon glyphicon-ok"></span></button></li>
-                    <li class="list-group-item hidden" id="itemActiva"><span class="nombre">Nombre Apellido</span><span class="estado">Activa</span><button class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-remove"></span></button></li>
-                    <li class="list-group-item hidden" id="itemRechazada"><span class="nombre">Nombre Apellido</span><span class="estado">Rechazada</span></li>
-                    <li class="list-group-item hidden" id="itemEliminada"><span class="nombre">Nombre Apellido</span><span class="estado">Eliminada</span></li>
-                </ul>
+                <!-- Tabla con elementos para clonar -->
+                <table hidden>
+                    <tbody>
+                        <tr id="filaGeneral">
+                            <td class="text-left nombre">Nombre Apellido</td>
+                            <td class="text-left estado">Estado</td>
+                            <td class="text-left duracion">Duracion Meses</td>
+                        </tr>
+
+                        <tr><td class="text-right" id="filaPendiente" ><button class="btn btn-success">Confirmar <span class="glyphicon glyphicon-ok"></span></button><button class="btn btn-danger">Rechazar <span class="glyphicon glyphicon-remove"></span></button></td></tr>
+                        <tr><td class="text-right" id="filaVencida"><button class="btn btn-success">Renovar <span class="glyphicon glyphicon-ok"></span></button></td></tr>
+                        <tr><td class="text-right" id="filaActiva"><button class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-remove"></span></button></td></tr>
+
+                        <tr id="filaNoSus"><td colspan="4">No hay suscripciones</td></tr>
+                    </tbody>
+                </table>
 
 
-                <ul class="list-group listSus" id="listSus">
-                    <li class="list-group-item" ><span>Cargando...</span></li>
-                </ul>
+                <!-- Tabla de suscripciones-->
+                <div class="table-responsive">
+                    <table class="tablaSus table" id="tablaSus">
+                        <thead>
+                            <tr>
+                                <th>Solicitante</th>
+                                <th>Estado</th>
+                                <th>Duración</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="4">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 
@@ -425,10 +445,10 @@
                                     <option value="">--</option>
                                     <option value="Lunes">Lunes</option>
                                     <option value="Martes">Martes</option>
-                                    <option value="Miercoles">Miercoles</option>
+                                    <option value="Miércoles">Miércoles</option>
                                     <option value="Jueves">Jueves</option>
                                     <option value="Viernes">Viernes</option>
-                                    <option value="Sabado">Sabado</option>
+                                    <option value="Sábado">Sábado</option>
                                     <option value="Domingo">Domingo</option>
                                 </select>
                             </div>

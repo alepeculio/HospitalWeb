@@ -38,35 +38,67 @@
             <div id="mapa" style="width: 78vw; height: 70vh;"></div>
         </div>
 
-        <!-- Panel detalles hospital -->
-        <div class="modal fade" id="modalReservas" role="dialog">
+        <!-- Panel medicos hospital -->
+        <div class="modal fade" id="modalMedicos" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form onsubmit="return false">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h3 class="modal-title" style="text-align: center;">Reserva Web</h3>
-
-                            <!-- PRUEBAS -->
-
-                            <form onsubmit="return false">
-                                <div class="row yui3-skin-sam yui3-g">
-                                    <div id="centercolumn" class="yui3-u">
-                                        <!-- Container for the calendar -->
-                                        <div id="mycalendar"></div>
-                                    </div>
-                                </div>
-                                <!-- FIN PRUEBAS -->
+                            <h3 class="modal-title" style="text-align: center;"><strong>Reserva web</strong></h3>
                         </div>
+                        <!-- PRUEBAS -->
+
+                        <div class="modal-body"> 
+                            
+                        </div>
+                        <!-- FIN PRUEBAS -->
+
                         <div class="modal-footer" style="text-align: center;">
-                            <button type="button" class="btn btn-lg btn-successs" id="btnContinuar">Continuar</button>  
+                            <strong>Seleccione un médico.</strong>
+                            <p id="mensaje_medicos"> </p>
                         </div>
-                    </form>
+
                 </div>
             </div>
         </div>
 
         <!-- CIERRA MODAL-->
+
+        <!-- Panel medicos hospital -->
+        <div class="modal fade" id="modalReservas" role="dialog" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form onsubmit="return false">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3 class="modal-title" style="text-align: center;"><strong>Reserva web</strong></h3>
+                        </div>
+                        <!-- PRUEBAS -->
+
+                        <div class="modal-body"> 
+                            <div class="yui3-skin-sam" align="center">
+                                
+                                <div id="mycalendar"></div>
+                            </div>
+                        </div>
+                        <!-- FIN PRUEBAS -->
+
+                        <div class="modal-footer" style="text-align: center;">
+                            <strong>Seleccione un día para reservar su turno.</strong>
+                        </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- CIERRA MODAL-->
+
+
+
+
+
+
 
         <!-- MODAL ERRORES DIA -->
         <div class="modal fade" id="modal_buscar" role="dialog">
@@ -87,10 +119,12 @@
 
         <!-- MODAL -->
 
+
+
         <script src="js/reservas.js"></script>
         <% for (Hospital h : hospitales) {%>
         <script>
-                                agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
+                        agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);
         </script>
         <%}
         %>
