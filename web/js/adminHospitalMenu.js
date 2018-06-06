@@ -982,22 +982,43 @@ $("#btnIngresarHA").click(function () {
         $("#modalIngresarUsuario").modal("show");
         return;
     }
-
+    
     $.ajax({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
-            calcularTiempo: "si",
+            disponible: "si",
             horaInicio: hInicio,
             horaFin: hFin,
-            cant: cant,
-            tipo: tipo
+            medico: med,
+            diaaaaaa: dia
         },
         success: function (data) {
-            if (data == "ERR") {
-                mensajeErr("La hora de fin debe ser una hora posterior a la hora de inicio");
+            if (data === "OK") {
+                $.ajax({
+                    type: "POST",
+                    url: "/HospitalWeb/SHospital",
+                    data: {
+                        calcularTiempo: "si",
+                        horaInicio: hInicio,
+                        horaFin: hFin,
+                        cant: cant,
+                        tipo: tipo
+                    },
+                    success: function (data) {
+                        if (data == "ERR") {
+                            mensajeErr("La hora de fin debe ser una hora posterior a la hora de inicio");
+                        } else {
+                            pregunta("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+                        }
+                    },
+                    error: function () {
+                        mensajeErr("No se pudo contactar el servidor");
+                    }
+                });
             } else {
-                pregunta("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+                $("#pinfosobrelapa").html (data);
+                $("#modalsobrelapan").modal ("show");
             }
         },
         error: function () {
