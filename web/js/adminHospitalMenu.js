@@ -1061,14 +1061,14 @@ function cargarHorariosAtencion() {
                 haNum--;
             }
             haNum = 0;
-            if (data.length === 0) {
-                $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
-                $("#mensajeNoHay").show();
-            } else
-                $("#mensajeNoHay").hide();
 
+                console.log (data);
+                var mos = 0;
             for (var i = 0; i < data.length; i++) {
                 var nuevo = $("#ha" + haNum).clone();
+                if (data[i].eliminado)
+                    continue;
+                mos++;
                 nuevo.prop("hidden", false);
                 nuevo.attr("id", "ha" + (haNum + 1));
                 nuevo.find(".haDia").html(data[i].dia);
@@ -1076,10 +1076,23 @@ function cargarHorariosAtencion() {
                 nuevo.find(".haHF").html(data[i].horaFin.replace("Dec 31, 1899 ", "").replace(":00 ", " "));
                 nuevo.find(".haTipo").html(data[i].tipo === "VACUNACION" ? "Vacunación" : "Atención");
                 nuevo.find(".haCant").html(data[i].clientesMax);
-                nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
+                console.log (data[i].desactivado);
+                if (data[i].desactivado === true) {
+                    nuevo.find(".haBoton").prop ("disabled", true);
+                    nuevo.find(".haBoton").attr ("title", "Esperando a que terminen todos los turnos pendientes");
+                } else {
+                    nuevo.find(".haBoton").prop ("disabled", false);
+                    nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
+                }
                 nuevo.insertAfter($("#ha" + haNum));
                 haNum++;
             }
+            
+            if (mos === 0) {
+                $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
+                $("#mensajeNoHay").show();
+            } else
+                $("#mensajeNoHay").hide();
         },
         error: function () {
             texto.innerHTML = "Error: No se puedo cargar el horario de atencion";
