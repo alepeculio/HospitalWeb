@@ -543,6 +543,25 @@
                 </div>
             </div>
         </div>
+        
+
+
+        <!--Notificacion de ingresar usuario -->
+        <div class="modal fade" id="modalsobrelapan" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="color: red">Horario del medico esta ocupado</h4>
+                    </div>
+                    <div class="modal-footer" id="pinfosobrelapa" style="text-align: left">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-info" data-dismiss="modal">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <jsp:include page="dialogos.html"/>
         <jsp:include page="include_js.html"/>

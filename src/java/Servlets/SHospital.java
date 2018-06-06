@@ -302,6 +302,16 @@ public class SHospital extends HttpServlet {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(result);
             response.setContentType("application/json");
             response.getWriter().write(json);
+        } else if (request.getParameter("disponible") != null) {
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            
+            String hInicio = request.getParameter("horaInicio");
+            String hFin = request.getParameter("horaFin");
+            long medico = Long.valueOf(request.getParameter("medico"));
+            String dia = request.getParameter("diaaaaaa");
+            
+            response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible (hInicio, hFin, medico, dia));
         }
     }
 }
