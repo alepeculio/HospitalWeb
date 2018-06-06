@@ -49,11 +49,14 @@ public class SUsuario extends HttpServlet {
                     String recordarme = request.getParameter("recordarme");
                     if (ci != null && contrasenia != null) {
                         Usuario u = cusuario.login(ci, contrasenia);
-                        
-                        Administrador a = CAdministradores.getAdminByUsuario(u.getId());
-                        if (a != null) {
-                            if (a.getHospital() != null && !a.getHospital().isActivado())
-                                u = null;
+
+                        if (u != null) {
+                            Administrador a = CAdministradores.getAdminByUsuario(u.getId());
+                            if (a != null) {
+                                if (a.getHospital() != null && !a.getHospital().isActivado()) {
+                                    u = null;
+                                }
+                            }
                         }
                         if (u != null) {
                             request.getSession().setAttribute("usuario", u);
@@ -96,9 +99,9 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "menuAdmin":
-                    Hospital hospital =  CAdministradores.getAdminByUsuario(((Usuario)request.getSession().getAttribute("usuario")).getId()).getHospital();
+                    Hospital hospital = CAdministradores.getAdminByUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId()).getHospital();
                     request.setAttribute("tipo", "Hospital");
-                    request.setAttribute("hospital",hospital);
+                    request.setAttribute("hospital", hospital);
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
                     break;
                 case "altaCliente":
