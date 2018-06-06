@@ -357,7 +357,6 @@ $("#btnMedicos").click(function () {
 
     /* PRUEBA */
     var rules;
-    var rules2;
 
     $.ajax({
         type: "POST",

@@ -118,7 +118,6 @@
                         <!--prueba-->
                     </div>
                     <div class="modal-body">
-
                         <div class="row" style="text-align: center;">
                             <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
                         </div>

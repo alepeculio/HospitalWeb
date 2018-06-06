@@ -49,12 +49,13 @@ public class SUsuario extends HttpServlet {
                     String recordarme = request.getParameter("recordarme");
                     if (ci != null && contrasenia != null) {
                         Usuario u = cusuario.login(ci, contrasenia);
-                        
+
                         if (u != null) {
                             Administrador a = CAdministradores.getAdminByUsuario(u.getId());
                             if (a != null) {
-                                if (a.getHospital() != null && !a.getHospital().isActivado())
+                                if (a.getHospital() != null && !a.getHospital().isActivado()) {
                                     u = null;
+                                }
                             }
                         }
                         if (u != null) {
@@ -98,8 +99,9 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "menuAdmin":
+                    Hospital hospital = CAdministradores.getAdminByUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId()).getHospital();
                     request.setAttribute("tipo", "Hospital");
-                    request.setAttribute("nombreHospital", CAdministradores.getAdminByUsuario(((Usuario)request.getSession().getAttribute("usuario")).getId()).getHospital().getNombre());
+                    request.setAttribute("hospital", hospital);
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
                     break;
                 case "altaCliente":
@@ -296,7 +298,7 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeBajaCliente);
                     break;
                 case "obtEmpleados":
-                    List<Empleado> empleados = CUsuario.obtenerEmpleados();
+                    List<Empleado> empleados = cusuario.obtenerEmpleados();
                     String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
@@ -341,6 +343,7 @@ public class SUsuario extends HttpServlet {
                     } else {
                         response.getWriter().write("ERR");
                     }
+
                     break;
                 case "verificarCedula":
                     String cedulaVerficar = request.getParameter("cedula");
