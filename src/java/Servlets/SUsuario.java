@@ -89,8 +89,9 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "menuAdmin":
+                    Hospital hospital =  CAdministradores.getAdminByUsuario(((Usuario)request.getSession().getAttribute("usuario")).getId()).getHospital();
                     request.setAttribute("tipo", "Hospital");
-                    request.setAttribute("nombreHospital", CAdministradores.getAdminByUsuario(((Usuario)request.getSession().getAttribute("usuario")).getId()).getHospital().getNombre());
+                    request.setAttribute("hospital",hospital);
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
                     break;
                 case "altaCliente":
