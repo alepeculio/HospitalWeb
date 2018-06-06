@@ -217,7 +217,7 @@ public class SUsuario extends HttpServlet {
 
                     String mensajeMed = "";
                     // TODO: agregarlo al hospital_cliente
-                    if (Singleton.getInstance().persist(e)) {
+                    if (Singleton.getInstance().merge(hosp)) {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -331,6 +331,8 @@ public class SUsuario extends HttpServlet {
                     HorarioAtencion ha = new HorarioAtencion();
                     ha.setDia(request.getParameter("dia"));
                     ha.setHoraInicio(hi);
+                    ha.setDesactivado(false);
+                    ha.setEliminado(false);
                     ha.setHoraFin(hf);
                     ha.setTipo(tipo.equals("Atencion") ? TipoTurno.ATENCION : TipoTurno.VACUNACION);
                     ha.setClienteActual(0);
