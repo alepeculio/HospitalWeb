@@ -1,8 +1,8 @@
 package Servlets;
 
 import Clases.Cliente;
-import Clases.EstadoTurno;
 import Clases.Empleado;
+import Clases.EstadoTurno;
 import Clases.HorarioAtencion;
 import Clases.Hospital;
 import Clases.TipoTurno;
@@ -13,19 +13,14 @@ import Controladores.CCorreo;
 import Controladores.CHospital;
 import Controladores.CUsuario;
 import Controladores.Singleton;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +41,7 @@ public class SHospital extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
         if (request.getParameter("Administrador") != null) {
             request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.getRequestDispatcher("vistas/cargarHospital.jsp").forward(request, response);
@@ -70,10 +66,10 @@ public class SHospital extends HttpServlet {
             request.setAttribute("hospital", "hospital");
             request.getRequestDispatcher("vistas/registroVacuna.jsp").forward(request, response);
         } else if (request.getParameter("nombreH") != null) {
+            request.setAttribute("hospitales", CHospital.obtenerHospitales());
             request.setAttribute("verMapa", request.getParameter("nombreH"));
             request.getRequestDispatcher("vistas/indicaciones.jsp").forward(request, response);
         }
-
     }
 
     @Override
@@ -126,17 +122,56 @@ public class SHospital extends HttpServlet {
             } else {
                 response.getWriter().write("NOPE");
             }
-        } else if (request.getParameter("obtenerHorarios") != null) {
-
+        } else if (request.getParameter("obtenerHorarios") != null && request.getParameter("dia") != null && request.getParameter("medico") != null) {
             String hospital = request.getParameter("obtenerHorarios");
             String dia = request.getParameter("dia");
+            String ciEmpleado = request.getParameter("medico");
+            String especialidad = request.getParameter("especialidad");
+            String horario = request.getParameter("horarioAtencion");
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
+            String s = "";
+            try {
+                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado), especialidad, horario);
+            } catch (ParseException ex) {
+                Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-            //String s = CHospital.agregarTurno(hospital, u.getId(), dia);
+            response.getWriter().write(s);
 
-            //response.getWriter().write(s);
+        } else if (request.getParameter("horariosOcupados") != null) {
+
+            String hospital = request.getParameter("horariosOcupados");
+            Hospital h = CHospital.obtenerHospital(hospital);
+            long idEmpleado = Long.valueOf(request.getParameter("medico"));
+            String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.ATENCION);
+            String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.ATENCION);
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital,TipoTurno.ATENCION);
+            String resultado = fechas + "&" + dias + "&" + jornadas;
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(resultado);
+
+        } else if (request.getParameter("horariosOcupadosVacunacion") != null) {
+            String hospital = request.getParameter("horariosOcupadosVacunacion");
+            Hospital h = CHospital.obtenerHospital(hospital);
+            long idEmpleado = Long.valueOf(request.getParameter("medico"));
+            String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.VACUNACION);
+            String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.VACUNACION);
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital,TipoTurno.VACUNACION);
+            String resultado = fechas + "&" + dias + "&" + jornadas;
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(resultado);
+
+        } else if (request.getParameter("obtenerMedicos") != null) {
+
+            Hospital h = CHospital.obtenerHospital(request.getParameter("obtenerMedicos"));
+            List<Empleado> empleados = h.getEmpleados();
+            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
+            response.setContentType("application/json");
+            response.getWriter().write(json);
 
         } else if (request.getParameter("modificar") != null) {
             response.setContentType("text/plain");
@@ -199,19 +234,36 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             CHospital.borrarAdministrador(URLDecoder.decode(request.getParameter("nomHospital")), URLDecoder.decode(request.getParameter("ciAdmin")));
             response.getWriter().write("OK");
+        } else if (request.getParameter("calcularTiempo") != null) {
+            String[] horaInicio = request.getParameter("horaInicio").split(":");
+            String[] horaFin = request.getParameter("horaFin").split(":");
+            int cant = Integer.valueOf(request.getParameter("cant"));
 
+            Date hi = new Date(2018, 5, 16, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
+            Date hf = new Date(2018, 5, 16, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
+
+            long mins = ((hf.getTime() - hi.getTime()) / cant) / 1000 / 60;
+
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+
+            if (mins <= 0) {
+                response.getWriter().write("ERR");
+            } else {
+                response.getWriter().write(mins + "");
+            }
         } else if (request.getParameter("edad") != null) {
             System.out.println("Servlets.SHospital.doPost()");
             Usuario u = (Usuario) request.getSession().getAttribute("usuario");
             Cliente c = CCliente.getClientebyUsuario(u.getId());
-            if (c.getHijos().isEmpty()) {
+
+            if (c.getHijos() == null) {
                 System.out.println("Servlets.SHospital.doPost().no");
-                String json = new Gson().toJson("no");
+                String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson("no");
                 response.setContentType("application/json");
                 response.getWriter().write(json);
             } else {
                 if (CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en")) != null) {
-
                     List<Cliente> hijosXedad = CCliente.edad(c, Integer.parseInt(request.getParameter("edad")), request.getParameter("en"));
                     String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hijosXedad);
                     response.setContentType("application/json");
@@ -249,24 +301,7 @@ public class SHospital extends HttpServlet {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(result);
             response.setContentType("application/json");
             response.getWriter().write(json);
-        } else if (request.getParameter("calcularTiempo") != null) {
-            String[] horaInicio = request.getParameter("horaInicio").split(":");
-            String[] horaFin = request.getParameter("horaFin").split(":");
-            int cant = Integer.valueOf(request.getParameter("cant"));
-
-            Date hi = new Date(2018, 5, 16, Integer.valueOf(horaInicio[0]), Integer.valueOf(horaInicio[1]));
-            Date hf = new Date(2018, 5, 16, Integer.valueOf(horaFin[0]), Integer.valueOf(horaFin[1]));
-
-            long mins = ((hf.getTime() - hi.getTime()) / cant) / 1000 / 60;
-
-            response.setContentType("text/plain");
-            response.setCharacterEncoding("UTF-8");
-
-            if (mins <= 0) {
-                response.getWriter().write("ERR");
-            } else {
-                response.getWriter().write(mins + "");
-            }
         }
     }
 }
+//Esto es un comentario de prueba

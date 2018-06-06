@@ -120,7 +120,6 @@
                         <!--prueba-->
                     </div>
                     <div class="modal-body">
-
                         <div class="row" style="text-align: center;">
                             <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
                         </div>
@@ -146,6 +145,7 @@
                     </div>
                 </div>
             </div>
+        </div>
 
             <!-- CIERRA MODAL TURNO -->
 
@@ -153,7 +153,7 @@
             <script src="js/pantallaUsuarios.js"></script>
             <%  for (Hospital h : hospitales) {%>
             <script>
-            agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);</script>
+                agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);</script>
                 <%  }%>
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
             <script src="js/awesomplete.js" type="text/javascript" async></script>

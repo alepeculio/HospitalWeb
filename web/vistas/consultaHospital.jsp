@@ -333,27 +333,59 @@
                             <h4 class="modal-title">Registro Vacuna</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-
                         <div class="modal-body ">
-                            <label>Seleccione el hijo para cual reservara un turno de vacunacion</label>
-                            <select class="form-control" id="hijos" required onclick="Shijo()">
-                                <option value="">--</option>0
-                            </select>
-                            <span id="Shijo" hidden style="color: red">Debe seleccionar un hijo</span><br>
-                            <label>Seleccione un día para el turno de vacunacion</label>
+                            <fieldset >
+                                <div class="form-group">
+                                    <label for="listaDeshabilitada">Hijo para vacunar</label>
+                                    <select class="form-control" id="hijos" required >
+                                        <option>Lista deshabilitada</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="listaDeshabilitada">Medico</label>
+                                    <select class="form-control" id="medicos" required >
+                                        <option>Lista deshabilitada</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
+                            <button class="btn btn-success"  name="aceptar" onclick="fecha()">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="Calendario" role="dialog">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header" style="text-align: center;">
+                            <strong>Calendario de horarios</strong>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <!--prueba-->
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" style="text-align: center;">
+                                <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
+                            </div>
+                            <br>
                             <div class="yui3-skin-sam" align="center">
                                 <div id="mycalendar"></div>
                             </div>
-                            <span id="Sdia" hidden style="color: red;">Debe seleccionar un dia</span><br>
-                            <label>Seleccione un horario disponible.</label>
-                            <select class="form-control" id="horarios" onclick="Shorario()" >
-                                <option value="">--</option>
-                            </select>
-                            <span id="Shorario" hidden style="color: red">Debe seleccionar un horario disponible</span><br>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
-                            <button class="btn btn-default" id="btnRegistrar" onclick="registrar()" name="aceptar" >Registrar Hijo</button>
+                            <br>
+                            <!--end prueba-->
+                            <div class="row" style="text-align:center;">
+                                <strong>Horarios</strong>
+                                <select id="jornadas">
+                                </select>
+                            </div>
+                            <br>
+                            <div class="modal-footer" style="text-align: center;">
+                                <div class="row" style="text-align: center">
+                                    <strong id="mensaje_jornadas"></strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -403,6 +435,17 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal -->
+            <div class="modal fade bd-example-modal-sm" id="fecha"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm" style="margin-top:15vh">
+                    <div class="modal-content">
+                        <div class="yui3-skin-sam" align="center">
+                            <div id="mycalendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </body>
 

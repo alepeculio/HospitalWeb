@@ -392,7 +392,7 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
                 mensaje(data, "refresh");
             },
             error: function () {
-                mensajeErr("Error: No se pudo conectar con el servidor.");
+                mensajeErr()("Error: No se pudo conectar con el servidor.");
             }
         });
 
