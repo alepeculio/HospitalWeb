@@ -238,7 +238,6 @@ $("#btnReservarTurno").click(function () {
 
                 for (var i in data) {
                     $("#medicos").empty();
-                    $("#medicos").append('<option>--</option>');
                     $("#medicos").append('<option value=' + data[i].id + '> ' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                 }
 
@@ -294,6 +293,7 @@ $('#medicos').change(function () {
 });
 
 var medico, espec;
+var jornadas_array = [];
 //Calendario
 var calendar;
 YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
@@ -321,13 +321,21 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
         var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         var d = newDate;
         var dia = dias[d.getDay()];
-        var comboDia = comboJornada.value.split("-");
+        //var comboDia = comboJornada.value.split("-");
+        //combo
+        //dia seleccionado = Lunes
 
-        if (dia.localeCompare(comboDia[0]) != 0) {
-            document.getElementById('mensaje_jornadas').innerHTML = "El día seleccionado no coincide con el horario elegido";
-            return;
-        } else {
-            document.getElementById('mensaje_jornadas').innerHTML = "";
+        for (var j in jornadas_array) {
+            var aux = jornadas_array[j].split("-");
+            // 0 id y 1 dia
+            if (aux[0] == comboJornada.value) {
+                if (aux[1].localeCompare(dia) != 0) {
+                    document.getElementById('mensaje_jornadas').innerHTML = "El día seleccionado no coincide con el horario elegido";
+                    return;
+                } else {
+                    document.getElementById('mensaje_jornadas').innerHTML = "";
+                }
+            }
         }
 
         $.ajax({
@@ -380,15 +388,15 @@ $("#btnMedicos").click(function () {
         success: function (data) {
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
-            var jorn = r[2].split("/");
-            var jornadas = jorn.split("-");
-            //split a las jornadas por un guion bajo
-
+            var jornadas = r[2].split("/");
+            $("#jornadas").empty();
             for (var i in jornadas) {
-                $("#jornadas").empty();
-                $("#jornadas").append('<option>---</option>');
-                $("#jornadas").append('<option value=' + jornadas[0] + '>' + jornadas[1] + " - " + jornadas[2] + " - " + jornadas[3] + '</option>');
+                jornadas_array.push(jornadas[i]);
+                var batman = jornadas[i].split("-");
+                $("#jornadas").append('<option value=' + batman[0] + '>' + batman[1] + " - " + batman[2] + " - " + batman[3] + '</option>');
             }
+
+            console.log(jornadas_array);
         },
         error: function () {
             mensajeErr("Error: No se pudo conectar con el servidor.");
