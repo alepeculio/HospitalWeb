@@ -6,11 +6,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <jsp:include page="include_css.html"/>
-        <jsp:include page="include_js.html"/>
         <title>Mapa Usuario</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
         <link rel="stylesheet" type="text/css" href="css/awesomplete.css">
-        <script src="js/yui-min.js"></script>
 
         <script>
             if (!window.location.toString().includes("/HospitalWeb/SUsuario?accion=mapaUsuario"))
@@ -120,7 +118,6 @@
                         <!--prueba-->
                     </div>
                     <div class="modal-body">
-
                         <div class="row" style="text-align: center;">
                             <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
                         </div>
@@ -146,16 +143,19 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- CIERRA MODAL TURNO -->
+        <!-- CIERRA MODAL TURNO -->
 
-            <jsp:include page="dialogos.html"/>
-            <script src="js/pantallaUsuarios.js"></script>
-            <%  for (Hospital h : hospitales) {%>
-            <script>
+        <jsp:include page="include_js.html"/>
+        <jsp:include page="dialogos.html"/>
+        <script src="js/yui-min.js"></script>
+        <script src="js/pantallaUsuarios.js"></script>
+        <%  for (Hospital h : hospitales) {%>
+        <script>
             agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);</script>
-                <%  }%>
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
-            <script src="js/awesomplete.js" type="text/javascript" async></script>
+            <%  }%>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
+        <script src="js/awesomplete.js" type="text/javascript" async></script>
     </body>
 </html>

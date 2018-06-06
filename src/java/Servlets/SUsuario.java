@@ -1,5 +1,6 @@
 package Servlets;
 
+import Clases.Administrador;
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.EstadoSuscripcion;
@@ -48,6 +49,15 @@ public class SUsuario extends HttpServlet {
                     String recordarme = request.getParameter("recordarme");
                     if (ci != null && contrasenia != null) {
                         Usuario u = cusuario.login(ci, contrasenia);
+
+                        if (u != null) {
+                            Administrador a = CAdministradores.getAdminByUsuario(u.getId());
+                            if (a != null) {
+                                if (a.getHospital() != null && !a.getHospital().isActivado()) {
+                                    u = null;
+                                }
+                            }
+                        }
                         if (u != null) {
                             request.getSession().setAttribute("usuario", u);
                             if (recordarme != null) {
@@ -89,8 +99,9 @@ public class SUsuario extends HttpServlet {
                     request.getRequestDispatcher("vistas/login.jsp").forward(request, response);
                     break;
                 case "menuAdmin":
+                    Hospital hospital = CAdministradores.getAdminByUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId()).getHospital();
                     request.setAttribute("tipo", "Hospital");
-                    request.setAttribute("nombreHospital", CAdministradores.getAdminByUsuario(((Usuario)request.getSession().getAttribute("usuario")).getId()).getHospital().getNombre());
+                    request.setAttribute("hospital", hospital);
                     request.getRequestDispatcher("vistas/adminHospitalMenu.jsp").forward(request, response);
                     break;
                 case "altaCliente":
@@ -206,7 +217,7 @@ public class SUsuario extends HttpServlet {
 
                     String mensajeMed = "";
                     // TODO: agregarlo al hospital_cliente
-                    if (Singleton.getInstance().persist(e)) {
+                    if (Singleton.getInstance().merge(hosp)) {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -287,7 +298,7 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeBajaCliente);
                     break;
                 case "obtEmpleados":
-                    List<Empleado> empleados = CUsuario.obtenerEmpleados();
+                    List<Empleado> empleados = cusuario.obtenerEmpleados();
                     String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
@@ -320,6 +331,8 @@ public class SUsuario extends HttpServlet {
                     HorarioAtencion ha = new HorarioAtencion();
                     ha.setDia(request.getParameter("dia"));
                     ha.setHoraInicio(hi);
+                    ha.setDesactivado(false);
+                    ha.setEliminado(false);
                     ha.setHoraFin(hf);
                     ha.setTipo(tipo.equals("Atencion") ? TipoTurno.ATENCION : TipoTurno.VACUNACION);
                     ha.setClienteActual(0);
@@ -330,6 +343,7 @@ public class SUsuario extends HttpServlet {
                     } else {
                         response.getWriter().write("ERR");
                     }
+
                     break;
                 case "verificarCedula":
                     String cedulaVerficar = request.getParameter("cedula");

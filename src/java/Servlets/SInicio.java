@@ -5,6 +5,8 @@
  */
 package Servlets;
 
+import Clases.Cliente;
+import Clases.Empleado;
 import Clases.Usuario;
 import Controladores.CAdministradores;
 import Controladores.CUsuario;

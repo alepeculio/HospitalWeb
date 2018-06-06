@@ -229,7 +229,6 @@ $("#btnReservarTurno").click(function () {
             obtenerMedicos: hospitalSeleccionado.title
         },
         success: function (data) {
-
             if (data.length == 0) {
                 mensajeErr("No hay médicos en este hospital");
                 return;
@@ -238,17 +237,18 @@ $("#btnReservarTurno").click(function () {
                 medicos = data;
 
                 for (var i in data) {
-                    comboMedicos.options[i] = new Option(data[i].nombre + " " + data[i].apellido);
+                    $("#medicos").empty();
+                    $("#medicos").append('<option>--</option>');
+                    $("#medicos").append('<option value=' + data[i].id + '> ' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                 }
 
-                var e = 0;
+
 
                 for (var j in medicos[0].especialidades) {
-                    e++;
-                    comboEspecialidad.options[j] = new Option(medicos[0].especialidades[j]);
+                    $("#especialidad").empty();
+                    $("#especialidad").append('<option>General</option>');
+                    $("#especialidad").append('<option value=' + medicos[0].especialidades[j] + '> ' + medicos[0].especialidades[j] + '</option>');
                 }
-
-                comboEspecialidad.options[e] = new Option("General");
 
                 $("#modalOpciones").modal("hide");
                 $("#modalMedicos").modal("show");
@@ -264,22 +264,32 @@ $("#btnReservarTurno").click(function () {
 $('#medicos').change(function () {
     var comboMedicos = document.getElementById("medicos");
     var comboEspecialidad = document.getElementById("especialidad");
-    var l = 0;
-    comboEspecialidad.options.length = 0;
+    //var l = 0;
+    //comboEspecialidad.options.length = 0;
 
     for (var i in medicos) {
 
-        var nombreMedico = medicos[i].nombre + " " + medicos[i].apellido;
-
-        if (nombreMedico.localeCompare(comboMedicos.value) == 0) {
-
+        if (medicos[i].id == comboMedicos.value) {
             for (var j in medicos[i].especialidades) {
-                l++;
-                comboEspecialidad.options[j] = new Option(medicos[i].especialidades[j]);
-            }
 
-            comboEspecialidad.options[l] = new Option("General");
+                $("#especialidad").empty();
+                $("#especialidad").append('<option>General</option>');
+                $("#especialidad").append('<option value=' + medicos[i].especialidades[j] + '> ' + medicos[i].especialidades[j] + '</option>');
+
+            }
         }
+
+        //var nombreMedico = medicos[i].nombre + " " + medicos[i].apellido;
+
+        //if (nombreMedico.localeCompare(comboMedicos.value) == 0) {
+
+        // for (var j in medicos[i].especialidades) {
+        //   l++;
+        //   comboEspecialidad.options[j] = new Option(medicos[i].especialidades[j]);
+        // }
+
+        // comboEspecialidad.options[l] = new Option("General");
+        // }
     }
 });
 
@@ -311,7 +321,7 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
         var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         var d = newDate;
         var dia = dias[d.getDay()];
-        var comboDia = comboJornada.value.split(" ");
+        var comboDia = comboJornada.value.split("-");
 
         if (dia.localeCompare(comboDia[0]) != 0) {
             document.getElementById('mensaje_jornadas').innerHTML = "El día seleccionado no coincide con el horario elegido";
@@ -346,19 +356,18 @@ $("#btnMedicos").click(function () {
 
     var medicoValor = document.getElementById("medicos").value;
     espec = document.getElementById("especialidad").value;
-
-    for (var i in medicos) {
-        var a = medicos[i].nombre + " " + medicos[i].apellido;
-        if (a.localeCompare(medicoValor) == 0) {
-            medico = medicos[i].id;
-        }
-    }
+    medico = medicoValor;
+//    for (var i in medicos) {
+//        var a = medicos[i].nombre + " " + medicos[i].apellido;
+//        if (a.localeCompare(medicoValor) == 0) {
+//            medico = medicos[i].id;
+//        }
+//    }
 
     $("#modalMedicos").modal("hide");
 
     /* PRUEBA */
     var rules;
-    var rules2;
 
     $.ajax({
         type: "POST",
@@ -371,14 +380,15 @@ $("#btnMedicos").click(function () {
         success: function (data) {
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
-            var jornadas = r[2].split("/");
-
+            var jorn = r[2].split("/");
+            var jornadas = jorn.split("-");
             //split a las jornadas por un guion bajo
 
-            var comboJornadas = document.getElementById("jornadas");
-
-            for (var i in jornadas)
-                comboJornadas.options[i] = new Option(jornadas[i]);
+            for (var i in jornadas) {
+                $("#jornadas").empty();
+                $("#jornadas").append('<option>---</option>');
+                $("#jornadas").append('<option value=' + jornadas[0] + '>' + jornadas[1] + " - " + jornadas[2] + " - " + jornadas[3] + '</option>');
+            }
         },
         error: function () {
             mensajeErr("Error: No se pudo conectar con el servidor.");

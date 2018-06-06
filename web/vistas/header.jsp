@@ -1,3 +1,4 @@
+<%@page import="Clases.Hospital"%>
 <%@page import="Clases.Usuario"%>
 <link rel="stylesheet" href="styles/header.css">
 
@@ -30,10 +31,10 @@
                 <li><a href="/HospitalWeb/SUsuario?accion=panelDatos">Panel de datos</a></li>
             </ul>
             <%} else if (tipo != null && tipo == "Hospital") {
-                String nombre = (String) request.getAttribute("nombreHospital");
-                if (nombre != null) {%>
+                Hospital h = (Hospital) request.getAttribute("hospital");
+                if (h != null) {%>
             <ul class="nav navbar-nav padding active">
-                 <li><a style="font-weight: bold; color:white">Administrando: <%= nombre%><span class="sr-only"></span></a></li>
+                 <li><a style="font-weight: bold; color:white">Administrando: <%= h.getNombre()%><span class="sr-only"></span></a></li>
             </ul>
             <%}}%>
 
