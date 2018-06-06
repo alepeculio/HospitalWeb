@@ -1,7 +1,7 @@
 
+
 //Calendario
 var calendar;
-
 YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 
     calendar = new Y.Calendar({
@@ -14,9 +14,6 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
     }).render();
     // Get a reference to Y.DataType.Date
     var dtdate = Y.DataType.Date;
-
-
-
     // Listen to calendar's selectionChange event.
     calendar.on("selectionChange", function (ev) {
         var newDate = ev.newSelection[0];
@@ -37,10 +34,50 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
                 mensajeErr("Error: No se pudo conectar con el servidor.");
             }
         });
-
     });
 });
 /* FIN CALENDARIO */
+
+function fecha() {
+    var rules;
+    var medico = $("#medicos").val().toString().trim();
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SHospital",
+        async: false,
+        data: {
+            "horariosOcupadosVacunacion": hospital,
+            "medico": medico,
+        },
+        success: function (data) {
+            var r = data.split("&");
+            rules = datearray2filter(r[0], r[1]);
+            var jornadas = r[2].split("/");
+            
+            var data2 = jornadas.toString().split("-");
+            
+            for (var i in jornadas) {
+                $("#jornadas").empty();
+                $("#jornadas").append('<option>--</option>');
+                $("#jornadas").append('<option value=' + data2[0] + '>Dia: ' + data2[1] +" Hora Inicio: "+ data2[2] +" Hora Final: "+ data2[3] + '</option>');
+
+            }
+        },
+        error: function () {
+            mensajeErr("Error: No se pudo conectar con el servidor.");
+            $("#modalCalendario").modal("hide");
+        }
+    });
+    var filterFunction = function (date, node, rules) {
+        if (rules.indexOf("disabled" >= 0)) {
+
+        }
+    }
+    ;
+    calendar.set("customRenderer", {rules: rules, filterFunction: filterFunction});
+    calendar.set("disabledDatesRule", "disabled");
+    $('#Calendario').modal('show');
+}
 function Shijo() {
     $('#Shijo').hide();
 }
@@ -71,7 +108,32 @@ function verificar(td) {
                     $("#hijos").append('<option>--</option>');
                     $("#hijos").append('<option value=' + id + '>' + nombre + ' ' + apellido + '</option>');
                 }
-                $('#correcto').modal('show');
+                $.ajax({
+                    url: "/HospitalWeb/SHospital",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        "obtenerMedicos": hospital,
+                    },
+                    success: function (data) {
+                        if (data.length === 0) {
+                            alert("no medico")
+                            //$('#noEdad').modal('show');
+                        } else {
+
+                            for (var i in data) {
+                                $("#medicos").empty();
+                                $("#medicos").append('<option>--</option>');
+                                $("#medicos").append('<option value=' + data[i].id + '>' + data[i].nombre + ' ' + data[i].apellido + '</option>');
+                            }
+                            $('#correcto').modal('show');
+                        }
+                    },
+                    error: function () {
+                        console.log("Error");
+                    }
+
+                });
             }
         },
         error: function () {
@@ -82,7 +144,6 @@ function verificar(td) {
 }
 function horario(dia) {
     $('#Sdia').hide();
-
     $.ajax({
         url: "/HospitalWeb/SHospital",
         type: "POST",
@@ -115,9 +176,9 @@ function horario(dia) {
 
     });
 }
+
 function registrar() {
     var dia = $("#haDia").val().toString().trim();
-    var idHorario = $("#horarios").val().toString().trim();
     var hijo = $("#hijos").val().toString().trim();
     if (hijo === "") {
         $("#Shijo").show();
@@ -148,7 +209,6 @@ function registrar() {
                 $("#trD").append('<td >' + data[3] + '</td>');
                 $("#trD").append('<td >' + data[4] + '</td>');
                 $("#fin").modal();
-
             },
             error: function () {
                 console.log("Error");
@@ -157,4 +217,40 @@ function registrar() {
         });
     }
 }
+
+/* FIN CALENDARIO */
+
+function datearray2filter(dates, dias) {
+    var ret = {};
+    var partes = dates.split("#");
+    var fechas = [];
+    for (var j in partes) {
+
+        var f = partes[j].split("-");
+        fechas.push(new Date(f[0], f[1] - 1, f[2]));
+    }
+
+    for (var i in fechas) {
+        var d = new Date(fechas[i]),
+                y = d.getFullYear(),
+                m = d.getMonth();
+        if (!ret[y])
+            ret[y] = {};
+        if (!ret[y][m])
+            ret[y][m] = {};
+        ret[y][m][d.getDate()] = "disabled";
+    }
+    //editada
+    var a = "all";
+    if (!ret[a])
+        ret[a] = {};
+    if (!ret[a][a])
+        ret[a][a] = {};
+    if (!ret[a][a][a])
+        ret[a][a][a] = {};
+    ret[a][a][a][dias] = "disabled";
+    //fin
+    return ret;
+}
+;
 
