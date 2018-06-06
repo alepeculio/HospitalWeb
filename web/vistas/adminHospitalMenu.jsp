@@ -1,4 +1,5 @@
 
+<%@page import="Clases.Hospital"%>
 <%@page import="Clases.Usuario"%>
 <%@page import="Clases.Cliente"%>
 <%@page import="java.util.List"%>
@@ -20,12 +21,13 @@
         <jsp:include page="header.jsp"/>
 
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
-            <%Usuario u = (Usuario) request.getSession().getAttribute("usuario");%>
+            <%Usuario u = (Usuario) request.getSession().getAttribute("usuario");
+                Hospital h = (Hospital) request.getAttribute("hospital");  %>
 
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar paciente</a></li>
             <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar paciente</a></li>
             <hr>
-            <li><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>', 'Sus')">Suscripciones</a></li>
+            <li <%= (h.isPublico()) ? "class='hidden'": "" %>><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>', 'Sus')">Suscripciones</a></li>
             <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Registrar hijo al plan de vacunación</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>

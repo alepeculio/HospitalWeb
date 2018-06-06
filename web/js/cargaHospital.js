@@ -602,6 +602,18 @@ $("#modalIngresado").on ("hidden.bs.modal", function () {
     window.location.assign ("/HospitalWeb/SHospital?Administrador");
 });
 
+$("#modalModificado").on ("hidden.bs.modal", function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+$("#modalAdminBorradoConExito").on ("hidden.bs.modal", function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
+$("#modalBorrado").on ("hidden.bs.modal", function () {
+    window.location.assign ("/HospitalWeb/SHospital?Administrador");
+});
+
 $("#modalAdministradorIngresadoConExito").on ("hidden.bs.modal", function () {
     window.location.assign ("/HospitalWeb/SHospital?Administrador");
 });

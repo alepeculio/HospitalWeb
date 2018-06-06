@@ -229,7 +229,6 @@ $("#btnReservarTurno").click(function () {
             obtenerMedicos: hospitalSeleccionado.title
         },
         success: function (data) {
-
             if (data.length == 0) {
                 mensajeErr("No hay médicos en este hospital");
                 return;
@@ -284,6 +283,63 @@ $('#medicos').change(function () {
 });
 
 var medico, espec;
+//Calendario
+var calendar;
+YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
+
+    calendar = new Y.Calendar({
+        contentBox: "#mycalendar",
+        width: '340px',
+        showPrevMonth: false,
+        showNextMonth: false,
+        minimumDate: new Date(),
+        date: new Date()
+    }).render();
+    // Get a reference to Y.DataType.Date
+    var dtdate = Y.DataType.Date;
+
+
+
+    // Listen to calendar's selectionChange event.
+    calendar.on("selectionChange", function (ev) {
+
+        var newDate = ev.newSelection[0];
+
+        var comboJornada = document.getElementById("jornadas");
+
+        var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        var d = newDate;
+        var dia = dias[d.getDay()];
+        var comboDia = comboJornada.value.split(" ");
+
+        if (dia.localeCompare(comboDia[0]) != 0) {
+            document.getElementById('mensaje_jornadas').innerHTML = "El día seleccionado no coincide con el horario elegido";
+            return;
+        } else {
+            document.getElementById('mensaje_jornadas').innerHTML = "";
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/HospitalWeb/SHospital",
+            data: {
+                "obtenerHorarios": hospitalSeleccionado.title,
+                "dia": dtdate.format(newDate),
+                "medico": medico,
+                "especialidad": espec,
+                "horarioAtencion": comboJornada.value
+            },
+            success: function (data) {
+                mensaje(data, "refresh");
+            },
+            error: function () {
+                mensajeErr("Error: No se pudo conectar con el servidor.");
+            }
+        });
+
+    });
+});
+/* FIN CALENDARIO */
 
 $("#btnMedicos").click(function () {
 
@@ -340,65 +396,6 @@ $("#btnMedicos").click(function () {
 
 
 });
-
-//Calendario
-var calendar;
-
-YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
-
-    calendar = new Y.Calendar({
-        contentBox: "#mycalendar",
-        width: '340px',
-        showPrevMonth: false,
-        showNextMonth: false,
-        minimumDate: new Date(),
-        date: new Date()
-    }).render();
-    // Get a reference to Y.DataType.Date
-    var dtdate = Y.DataType.Date;
-
-
-
-    // Listen to calendar's selectionChange event.
-    calendar.on("selectionChange", function (ev) {
-
-        var newDate = ev.newSelection[0];
-
-        var comboJornada = document.getElementById("jornadas");
-
-        var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-        var d = newDate;
-        var dia = dias[d.getDay()];
-        var comboDia = comboJornada.value.split(" ");
-
-        if (dia.localeCompare(comboDia[0]) != 0) {
-            document.getElementById('mensaje_jornadas').innerHTML = "El día seleccionado no coincide con el horario elegido";
-            return;
-        } else {
-            document.getElementById('mensaje_jornadas').innerHTML = "";
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/HospitalWeb/SHospital",
-            data: {
-                "obtenerHorarios": hospitalSeleccionado.title,
-                "dia": dtdate.format(newDate),
-                "medico": medico,
-                "especialidad": espec,
-                "horarioAtencion": comboJornada.value
-            },
-            success: function (data) {
-                mensaje(data, "refresh");
-            },
-            error: function () {
-                mensajeErr()("Error: No se pudo conectar con el servidor.");
-            }
-        });
-
-    });
-});
-/* FIN CALENDARIO */
 
 function datearray2filter(dates, dias) {
     var ret = {};
