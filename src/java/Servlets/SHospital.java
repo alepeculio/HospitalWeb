@@ -142,7 +142,7 @@ public class SHospital extends HttpServlet {
             long idEmpleado = Long.valueOf(request.getParameter("medico"));
             String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.ATENCION);
             String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.ATENCION);
-            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital);
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital, TipoTurno.ATENCION);
             String resultado = fechas + "&" + dias + "&" + jornadas;
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
