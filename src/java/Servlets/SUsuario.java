@@ -298,10 +298,35 @@ public class SUsuario extends HttpServlet {
                     response.getWriter().write(mensajeBajaCliente);
                     break;
                 case "obtEmpleados":
-                    List<Empleado> empleados = cusuario.obtenerEmpleados();
-                    String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
+                    Usuario adminObtEmpl = (Usuario) request.getSession().getAttribute("usuario");
+                    Hospital hospitalObtEmpl = CAdministradores.obtenerHospitalAdministrador(adminObtEmpl.getCi());
+                    String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hospitalObtEmpl.getEmpleados());
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
+                    break;
+
+                case "obtEmpleadosTodos":
+                    Usuario adminObtEmplT = (Usuario) request.getSession().getAttribute("usuario");
+                    Hospital hospitalObtEmplT = CAdministradores.obtenerHospitalAdministrador(adminObtEmplT.getCi());
+                    List<Empleado> empleados = cusuario.obtenerEmpleados(hospitalObtEmplT.getId());
+                    String empleadosTodosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
+                    response.setContentType("application/json");
+                    response.getWriter().write(empleadosTodosJson);
+                    break;
+                case "vincularMedicoHospital":
+                    String idMedico = request.getParameter("idMedico");
+                    Usuario adminVincMedHos = (Usuario) request.getSession().getAttribute("usuario");
+                    Hospital hospitalVincMedHos = CAdministradores.obtenerHospitalAdministrador(adminVincMedHos.getCi());
+                    hospitalVincMedHos.agregarEmpleado(CUsuario.getEmpleado(Long.valueOf(idMedico)));
+                    String mensajeVincularMedH = "";
+                    if (Singleton.getInstance().merge(hospitalVincMedHos)) {
+                        mensajeVincularMedH = "OK";
+                    } else {
+                        mensajeVincularMedH = "ERR";
+                    }
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(mensajeVincularMedH);
                     break;
                 case "eliminarEmpleado":
                     String idEmplEliminar = request.getParameter("idEmpleado");

@@ -29,10 +29,9 @@
                 </library>
                 <library dirs="200">
                     <file>${libs.Mail.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${libs.Mail.classpath}</file>
+                    <file>${libs.Activation.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

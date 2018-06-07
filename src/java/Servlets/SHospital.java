@@ -95,6 +95,7 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("ingresarNuevo") != null) {
             Hospital h = new Hospital();
             h.setNombre(URLDecoder.decode(request.getParameter("nombre"), "UTF-8"));
+            h.setActivado(true);
             h.setDirectora(URLDecoder.decode(request.getParameter("directora"), "UTF-8"));
             h.setPublico(request.getParameter("tipo").equals("on"));
             h.setCorreo(URLDecoder.decode(request.getParameter("correo"), "UTF-8"));
@@ -135,7 +136,7 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             String s = "";
             try {
-                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado), especialidad, horario);
+                s = CHospital.agregarTurno(hospital, u.getId(), dia, Long.valueOf(ciEmpleado), especialidad, Long.valueOf(horario));
             } catch (ParseException ex) {
                 Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -149,7 +150,7 @@ public class SHospital extends HttpServlet {
             long idEmpleado = Long.valueOf(request.getParameter("medico"));
             String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.ATENCION);
             String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.ATENCION);
-            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital,TipoTurno.ATENCION);
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital, TipoTurno.ATENCION);
             String resultado = fechas + "&" + dias + "&" + jornadas;
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
@@ -161,7 +162,7 @@ public class SHospital extends HttpServlet {
             long idEmpleado = Long.valueOf(request.getParameter("medico"));
             String fechas = CHospital.obtenerFechasOcupadasJorge(idEmpleado, h.getId(), TipoTurno.VACUNACION);
             String dias = CHospital.obtenerDiasNoDisponibles(idEmpleado, h.getId(), TipoTurno.VACUNACION);
-            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital,TipoTurno.VACUNACION);
+            String jornadas = CHospital.obtenerHoras(idEmpleado, hospital, TipoTurno.VACUNACION);
             String resultado = fechas + "&" + dias + "&" + jornadas;
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
@@ -293,6 +294,16 @@ public class SHospital extends HttpServlet {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(result);
             response.setContentType("application/json");
             response.getWriter().write(json);
+        } else if (request.getParameter("disponible") != null) {
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+
+            String hInicio = request.getParameter("horaInicio");
+            String hFin = request.getParameter("horaFin");
+            long medico = Long.valueOf(request.getParameter("medico"));
+            String dia = request.getParameter("diaaaaaa");
+
+            response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible(hInicio, hFin, medico, dia));
         }
     }
 }

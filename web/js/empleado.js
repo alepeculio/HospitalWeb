@@ -168,6 +168,25 @@ function finalizarHA(idHA) {
     });
 }
 
-function cancelarTurno(idTurno){
-   $("#turno"+idTurno).remove();
+function cancelarTurno(idTurno) {
+
+    $.ajax({
+        type: "POST",
+        url: "/HospitalWeb/SEmpleado?accion=cancelarTurno",
+        data: {
+            idTurno: idTurno
+        },
+        success: function (data) {
+            if (data == "OK") {
+                $("#turno" + idTurno).remove();
+            } else {
+                alert("error success");
+            }
+        },
+        error: function () {
+            alert("no se pudo conectar con el servidor")
+        }
+    });
+
+
 }
