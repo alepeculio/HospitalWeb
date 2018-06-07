@@ -305,13 +305,13 @@ public class SHospital extends HttpServlet {
         } else if (request.getParameter("disponible") != null) {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
-            
+
             String hInicio = request.getParameter("horaInicio");
             String hFin = request.getParameter("horaFin");
             long medico = Long.valueOf(request.getParameter("medico"));
             String dia = request.getParameter("diaaaaaa");
-            
-            response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible (hInicio, hFin, medico, dia));
+
+            response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible(hInicio, hFin, medico, dia));
         }
     }
 }
