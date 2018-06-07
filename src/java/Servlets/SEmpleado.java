@@ -48,6 +48,13 @@ public class SEmpleado extends HttpServlet {
                     response.setCharacterEncoding("UTF-8");
                     response.getWriter().write((CEmpleado.finalizarHA(idHAfinalizar)) ? "OK" : "ERR");
                     break;
+                case "cancelarTurno":
+                    String turno = request.getParameter("idTurno");
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(CEmpleado.cancelarTurno(Integer.valueOf(turno)) ? "OK" : "ERR");
+                    break;
+
             }
         }
     }
