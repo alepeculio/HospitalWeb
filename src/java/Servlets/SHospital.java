@@ -283,22 +283,13 @@ public class SHospital extends HttpServlet {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(listafinal);
             response.setContentType("application/json");
             response.getWriter().write(json);
-        } else if (request.getParameter("idHorario") != null) {
+        } else if (request.getParameter("Reservar") != null) {
             long idHijo = Long.valueOf(request.getParameter("hijo"));
             Cliente c = CCliente.getCliente(idHijo);
-            System.out.println(idHijo);
             long idH = Long.valueOf(request.getParameter("idHorario"));
             long idHospital = Long.valueOf(request.getParameter("idHospital"));
             String nombreC = c.getNombre();
             Object[] result = CCliente.ReservarTurnoVacunacion(nombreC, idH, idHospital);
-            String mensaje = "Se reservo hora de Vacunacion para su  hijo " + result[0] + " " + result[1] + ". La hora es " + result[4] + " con el medico " + result[2] + " " + result[3];
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    CCorreo.enviar("brian.gomez2016@outlook.com", "Hospital Web-Registro Vacuna-", mensaje);
-                }
-            }).start();
-
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(result);
             response.setContentType("application/json");
             response.getWriter().write(json);

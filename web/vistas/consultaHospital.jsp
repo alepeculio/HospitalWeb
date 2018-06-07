@@ -8,7 +8,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-
         <link rel="stylesheet" href="css/ConsultaHospital.css" type="text/css">
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
@@ -42,9 +41,8 @@
             <div class="row"  style="position:relative" >
                 <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%; margin-left: 20% "  >
                     <div class="panel-heading">
-
-                        <a><%=h.getNombre()%></a> </div>
-
+                        <a><%=h.getNombre()%></a> 
+                    </div>
                     <div class="panel-body" id="div2">
                         <h5>Directoro/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
                         <h5>Direccin: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
@@ -64,11 +62,14 @@
                     </div>
                     <div id="div1">
                         <div class="row" >
-                            <% for (Empleado e : empleados) {%>
+                            <% for (Empleado e : empleados) {
+                                    if (e.isActivo()) {
+                            %>
                             <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
                                 <img onclick="mostrarDatosMedico(<%=e.getId()%>)" src="img/doctor  5.png" alt="Avatar" id="foto" >
                                 <h4><b onclick="mostrarDatosMedico(<%=e.getId()%>)"><%=e.getNombre()%> <%=e.getApellido()%></b></h4> 
-                                <%}%>
+                                <%}
+                                    }%>
                             </div>
                         </div>
                     </div>
@@ -334,26 +335,19 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body ">
-                            <fieldset >
-                                <div class="form-group">
-                                    <label for="listaDeshabilitada">Hijo para vacunar</label>
-                                    <select class="form-control" id="hijos" required >
-                                        <option>Lista deshabilitada</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="listaDeshabilitada">Medico</label>
-                                    <select class="form-control" id="medicos" required >
-                                        <option>Lista deshabilitada</option>
-                                    </select>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">Seleccione un horario</div>
-                                    <ul class="list-group listCliP">
-                                        <li class="list-group-item">Horario 1</li>
-                                        <li class="list-group-item">Horario</li>
-                                    </ul>
-                            </fieldset>
+
+                            <div class="form-group">
+                                <label for="listaDeshabilitada">Hijo para vacunar</label>
+                                <select class="form-control" id="hijos" required >
+                                    <option>Lista deshabilitada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="listaDeshabilitada">Medico</label>
+                                <select class="form-control" id="medicos" required >
+                                    <option>Lista deshabilitada</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
@@ -381,17 +375,19 @@
                             </div>
                             <br>
                             <!--end prueba-->
+                            <label class="list-group-item-action">Seleccionar Horario</label>   
+                            <div class="list-group" id="jornadas"> 
+                            </div>  
                             <div class="row" style="text-align:center;">
                                 <strong>Horarios</strong>
-                                <select id="jornadas">
+                                <select >
                                 </select>
                             </div>
                             <br>
-                            <div class="modal-footer" style="text-align: center;">
-                                <div class="row" style="text-align: center">
-                                    <strong id="mensaje_jornadas"></strong>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
+                            <button class="btn btn-success"  name="aceptar" onclick="Reservar()">Reservar</button>
                         </div>
                     </div>
                 </div>
@@ -461,6 +457,7 @@
     <script>
                                 var hospital = "<%=h.getNombre()%>";
                                 var idhospital = <%=h.getId()%>;
+                                var horario = "";
     </script>
 </html>
 

@@ -4,15 +4,20 @@ img {
     border: 2px solid #1b6d85;
     border-radius: 110px
 }
-
+button {
+    padding-bottom: 1px;
+    padding-top: 1px;
+    
+}
 #foto{
     max-width: 100%; 
     height: auto;
     border-radius: 110px;
 }
-.listCliP li:hover{
-    background-color:#e2dada;
-    cursor:pointer;
+.hr{
+    margin-top:1px;
+    margin-bottom: 1px;
+    
 }
 #vacuna{
 
