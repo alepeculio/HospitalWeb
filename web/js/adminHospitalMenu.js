@@ -573,13 +573,14 @@ function telefonoCorrecto(telefono) {
 ////------------------------------------------------------------------------------------------------------------------------
 //Relacionar con hijo
 
-var cargado = ["Cli", "CliP", "MedE", "MedHA", "MedHAE"];
+var cargado = ["Cli", "CliP", "MedE", "MedHA", "MedHAE", "MedVinc"];
 cargado["Cli"] = false;
 cargado["CliP"] = false;
 cargado["MedE"] = false;
 cargado["MedHA"] = false;
 cargado["MedHAE"] = false;
 cargado["Sus"] = false;
+cargado["MedVinc"] = false;
 
 function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
     if (cargado[tipo] === true) {
@@ -668,13 +669,14 @@ function buscar(inputid, listaid) {
     }
 }
 
-var seleccionado = ["Cli", "CliP", "CliH", "MedE", "MedHA", "MedHAE"];
+var seleccionado = ["Cli", "CliP", "CliH", "MedE", "MedHA", "MedHAE", "MedVinc"];
 seleccionado["Cli"] = "";
 seleccionado["CliP"] = "";
 seleccionado["CliH"] = "";
 seleccionado["MedE"] = "";
 seleccionado["MedHA"] = "";
 seleccionado["MedHAE"] = "";
+seleccionado["MedVinc"] = "";
 
 function seleccionar(nombreFila, id, tipo) {
     if (seleccionado[tipo] === id) {
@@ -876,6 +878,81 @@ function cargarMedicos(idLista, nombreFila, tipo) {
     });
 }
 
+function cargarMedicosTodos(idLista, nombreFila, tipo) {
+    if (cargado[tipo] === true) {
+        return;
+    }
+    $.ajax({
+        url: "/HospitalWeb/SUsuario?accion=obtEmpleadosTodos",
+        type: "POST",
+        dataType: 'json',
+        data: {
+        },
+        success: function (data) {
+            var ul = document.getElementById(idLista);
+            $(ul).empty();
+            if (data.length === 0) {
+                var li1 = document.createElement("li");
+                var a1 = document.createElement("a");
+                a1.appendChild(document.createTextNode("No hay médicos"));
+                li1.setAttribute("class", "list-group-item");
+                ul.appendChild(li1);
+                li1.appendChild(a1);
+            }
+            for (var i = 0; i < data.length; i++) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.appendChild(document.createTextNode(data[i].nombre + " " + data[i].apellido));
+                li.setAttribute("id", nombreFila + data[i].id);
+                li.setAttribute("class", "list-group-item");
+                li.setAttribute("onclick", "seleccionar" + "('" + nombreFila + "','" + data[i].id + "','" + tipo + "')");
+                ul.appendChild(li);
+                li.appendChild(a);
+            }
+            setCargado(tipo);
+        }
+    });
+}
+
+$("#btnVincularMedicoHospital").click(function () {
+    pregunta("Desea vincular el medico a este Hospital?", "vincularMedicoHospital");
+});
+
+function vincularMedicoHospital() {
+    if (seleccionado["MedVinc"] === "") {
+        var texto = document.getElementById("modalIUMensaje");
+        texto.innerHTML = "No seleccionó ningun paciente";
+        texto.style.color = "red";
+        $("#modalIngresarUsuario").modal("show");
+    } else {
+        $.ajax({
+            url: "/HospitalWeb/SUsuario?accion=vincularMedicoHospital",
+            type: "POST",
+            data: {
+                idMedico: seleccionado["MedVinc"],
+
+            },
+            success: function (data) {
+                var texto = document.getElementById("modalIUMensaje");
+                if (data === "ERR") {
+                    texto.innerHTML = "No se pudo vincular el médico al hospital ";
+                    texto.style.color = "red";
+                    $("#modalIngresarUsuario").modal("show");
+                } else {
+                    texto.innerHTML = "Médico vinculado correctamente";
+                    texto.style.color = "green";
+                    $("#modalIngresarUsuario").modal("show");
+                    deseleccionar("vincMedFila", "MedVinc");
+                    setNoCargado("MedVinc");
+                    cargarMedicosTodos('VincMedicoHospital', 'vincMedFila', 'MedVinc');
+                }
+            }
+        });
+
+    }
+}
+
+
 $("#btnEliminarMedico").click(function () {
     pregunta("Desea eliminar el medico?", "eliminarMedicoDeVerdad");
 });
@@ -987,17 +1064,38 @@ $("#btnIngresarHA").click(function () {
         type: "POST",
         url: "/HospitalWeb/SHospital",
         data: {
-            calcularTiempo: "si",
+            disponible: "si",
             horaInicio: hInicio,
             horaFin: hFin,
-            cant: cant,
-            tipo: tipo
+            medico: med,
+            diaaaaaa: dia
         },
         success: function (data) {
-            if (data == "ERR") {
-                mensajeErr("La hora de fin debe ser una hora posterior a la hora de inicio");
+            if (data === "OK") {
+                $.ajax({
+                    type: "POST",
+                    url: "/HospitalWeb/SHospital",
+                    data: {
+                        calcularTiempo: "si",
+                        horaInicio: hInicio,
+                        horaFin: hFin,
+                        cant: cant,
+                        tipo: tipo
+                    },
+                    success: function (data) {
+                        if (data == "ERR") {
+                            mensajeErr("La hora de fin debe ser una hora posterior a la hora de inicio");
+                        } else {
+                            pregunta("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+                        }
+                    },
+                    error: function () {
+                        mensajeErr("No se pudo contactar el servidor");
+                    }
+                });
             } else {
-                pregunta("Este horario deja " + data + " minutos de consulta por paciente", "agregarHA", "'" + med + "', '" + dia + "', '" + hInicio + "', '" + hFin + "', '" + cant + "', '" + tipo + "'");
+                $("#pinfosobrelapa").html(data);
+                $("#modalsobrelapan").modal("show");
             }
         },
         error: function () {
@@ -1061,14 +1159,14 @@ function cargarHorariosAtencion() {
                 haNum--;
             }
             haNum = 0;
-            if (data.length === 0) {
-                $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
-                $("#mensajeNoHay").show();
-            } else
-                $("#mensajeNoHay").hide();
 
+            console.log(data);
+            var mos = 0;
             for (var i = 0; i < data.length; i++) {
                 var nuevo = $("#ha" + haNum).clone();
+                if (data[i].eliminado)
+                    continue;
+                mos++;
                 nuevo.prop("hidden", false);
                 nuevo.attr("id", "ha" + (haNum + 1));
                 nuevo.find(".haDia").html(data[i].dia);
@@ -1076,10 +1174,23 @@ function cargarHorariosAtencion() {
                 nuevo.find(".haHF").html(data[i].horaFin.replace("Dec 31, 1899 ", "").replace(":00 ", " "));
                 nuevo.find(".haTipo").html(data[i].tipo === "VACUNACION" ? "Vacunación" : "Atención");
                 nuevo.find(".haCant").html(data[i].clientesMax);
-                nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
+                console.log(data[i].desactivado);
+                if (data[i].desactivado === true) {
+                    nuevo.find(".haBoton").prop("disabled", true);
+                    nuevo.find(".haBoton").attr("title", "Esperando a que terminen todos los turnos pendientes");
+                } else {
+                    nuevo.find(".haBoton").prop("disabled", false);
+                    nuevo.find(".haBoton").attr("onclick", "eliminarHA(" + data[i].id + ")");
+                }
                 nuevo.insertAfter($("#ha" + haNum));
                 haNum++;
             }
+
+            if (mos === 0) {
+                $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
+                $("#mensajeNoHay").show();
+            } else
+                $("#mensajeNoHay").hide();
         },
         error: function () {
             texto.innerHTML = "Error: No se puedo cargar el horario de atencion";

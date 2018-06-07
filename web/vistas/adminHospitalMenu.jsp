@@ -22,15 +22,16 @@
 
         <ul class="nav nav-pills nav-stacked col-md-3 panel">
             <%Usuario u = (Usuario) request.getSession().getAttribute("usuario");
-                Hospital h = (Hospital) request.getAttribute("hospital");  %>
+                Hospital h = (Hospital) request.getAttribute("hospital");%>
 
             <li class="active"><a href="#ingresarCliente" data-toggle="tab">Ingresar paciente</a></li>
             <li><a href="#eliminarCliente" data-toggle="tab" onclick="cargarClientes('listCli', 'clienteFila', 'Cli', 'no');">Eliminar paciente</a></li>
             <hr>
-            <li <%= (h.isPublico()) ? "class='hidden'": "" %>><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>', 'Sus')">Suscripciones</a></li>
+            <li <%= (h.isPublico()) ? "class='hidden'" : ""%>><a href="#suscripciones" data-toggle="tab" onclick="cargarSuscripciones('<%=u.getId()%>', 'Sus')">Suscripciones</a></li>
             <li><a href="#relacionarHijo" data-toggle="tab" onclick="cargarClientes('listCliP', 'clientePFila', 'CliP', 'si')">Registrar hijo al plan de vacunación</a></li>
             <hr>
             <li><a href="#ingresarMedico" data-toggle="tab">Ingresar médico</a></li>
+            <li><a href="#vincularMedicoHospital" data-toggle="tab" onclick ="cargarMedicosTodos('VincMedicoHospital', 'vincMedFila', 'MedVinc')">Vincular médico a hospital</a></li>
             <li><a href="#eliminarMedico" data-toggle="tab" onclick ="cargarMedicos('listMedE', 'medicoEFila', 'MedE')">Eliminar médico</a></li>
             <hr>
             <li><a href="#ingresarHA" data-toggle="tab" onclick="cargarMedicos('listMedHA', 'medicoHAFila', 'MedHA')">Agregar horario de atención</a></li>
@@ -400,6 +401,28 @@
             </div>
 
 
+             <!-- Pestaña vincular medico a hospital-->
+            <div class="tab-pane pestania text-center" id="vincularMedicoHospital">
+                <h2>Vincular médico al hospital</h2>
+                <hr>
+                <form>
+                    <label>Seleccione el medico</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="buscarVincuMedInput" onkeyup="buscar('buscarVincuMedInput', 'VincMedicoHospital')" placeholder="Buscar">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div>
+
+                    <ul class="list-group listCliP" id="VincMedicoHospital">
+                        <li class="list-group-item"><a>Cargando...</a></li>
+                    </ul>
+                    <br>
+                  
+                    <button type="button" id="btnVincularMedicoHospital" class="btn btn-lg btn-success btn-block">Vincular</button> 
+                </form>
+            </div>
+            
             <!-- Pestaña eliminar medico -->
             <div class="tab-pane pestania" id="eliminarMedico">
                 <h2>Eliminar médico</h2>
@@ -539,6 +562,25 @@
                     </div>
                     <div class="modal-footer centrarIUBoton">
                         <button class="btn btn-info" data-dismiss="modal" id="btnPregBorrarAdminConfirmar">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--Notificacion de ingresar usuario -->
+        <div class="modal fade" id="modalsobrelapan" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="color: red">Horario del medico esta ocupado</h4>
+                    </div>
+                    <div class="modal-footer" id="pinfosobrelapa" style="text-align: left">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-info" data-dismiss="modal">Aceptar</button>
                     </div>
                 </div>
             </div>
