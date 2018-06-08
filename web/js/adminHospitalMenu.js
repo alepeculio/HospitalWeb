@@ -945,6 +945,7 @@ function vincularMedicoHospital() {
                     deseleccionar("vincMedFila", "MedVinc");
                     setNoCargado("MedVinc");
                     cargarMedicosTodos('VincMedicoHospital', 'vincMedFila', 'MedVinc');
+                    setNoCargado("MedE");
                 }
             }
         });
@@ -986,6 +987,7 @@ function eliminarMedicoDeVerdad() {
                     setNoCargado("CliP");
                     setNoCargado("MedHA");
                     setNoCargado("MedHAE");
+                    setNoCargado("MedVinc");
 
                 }
             }
