@@ -331,7 +331,7 @@ public class SUsuario extends HttpServlet {
                 case "eliminarEmpleado":
                     String idEmplEliminar = request.getParameter("idEmpleado");
                     String mensajeBajaEmpleado;
-                    if (cusuario.bajaEmpleado(idEmplEliminar)) {
+                    if (CAdministradores.getAdminByUsuario(((Usuario) request.getSession().getAttribute("usuario")).getId()).getHospital().eliminarEmpleado (idEmplEliminar)) {
                         mensajeBajaEmpleado = "OK";
                     } else {
                         mensajeBajaEmpleado = "ERR";
