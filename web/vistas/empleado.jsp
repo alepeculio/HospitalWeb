@@ -79,7 +79,9 @@
 
                             <% List<HorarioAtencion> hsa = empleado.getHorariosAtencions();
                                 if (hsa != null && hsa.size() > 0) {
-                                    for (HorarioAtencion ha : hsa) {%>
+                                    for (HorarioAtencion ha : hsa) {
+                                        if(!ha.isEliminado()){
+                            %>
                             <tr>
                                 <td><%= ha.getHospital().getNombre()%></td>
                                 <td><%= ha.getDia()%></td>
@@ -169,7 +171,7 @@
                                 </td>
                             </tr>
                             <%}
-                            } else {%>
+                            }} else {%>
                             <tr>
                                 <td colspan="9">No tiene horarios de atención definidos</td>
                             </tr> 
