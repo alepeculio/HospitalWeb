@@ -80,7 +80,7 @@
                             <% List<HorarioAtencion> hsa = empleado.getHorariosAtencions();
                                 if (hsa != null && hsa.size() > 0) {
                                     for (HorarioAtencion ha : hsa) {
-                                        if(!ha.isEliminado()){
+                                        if (!ha.isEliminado() && ha.getHospital().getEmpleados().contains(empleado)) {
                             %>
                             <tr>
                                 <td><%= ha.getHospital().getNombre()%></td>
@@ -94,7 +94,7 @@
                                     } else {
                                         out.println(ha.getClienteActual());
                                         out.println("<script type='text/javascript'>setTurnoActual('" + ha.getId() + "','Turno Activo');</script>");
-
+                                        
                                     }%></td>
                                 <td><%= StringUtils.capitalize(ha.getTipo().toString().toLowerCase().replace("o", "ó"))%></td>
                                 <td><a class="btn btn-primary" data-toggle="collapse" data-target="#turnos<%=ha.getId()%>">Ver <span class="glyphicon glyphicon-menu-down"></span></a></td>                    
@@ -106,7 +106,7 @@
                                             out.println("<span class='glyphicon glyphicon-hourglass' title='Pendiente'></span>");
                                         } else {
                                             out.println("<span class='glyphicon glyphicon-ok' title='Finalizado' style='color:green;'></span>");
-
+                                            
                                         }
                                     %>
                                 </td>
@@ -126,7 +126,7 @@
                                                     <th></th>
                                                 </tr>
                                                 <% List<Turno> turnos = ha.getTurnos();
-
+                                                    
                                                     if (turnos != null && turnos.size() > 0) {
                                                         for (Turno turno : turnos) {
                                                 %>
@@ -136,7 +136,7 @@
                                                     <td id="estado<%=turno.getId()%>" >
                                                         <%
                                                             EstadoTurno estado = turno.getEstado();
-
+                                                            
                                                             if (estado == EstadoTurno.INICIADO) {
                                                                 out.println("<span class='glyphicon glyphicon-play' title='Iniciado'></span>");
                                                             } else if (estado == EstadoTurno.PENDIENTE) {
@@ -149,7 +149,7 @@
                                                         %>
                                                     </td>
                                                     <td id="btnEstado">
-                                                        <%
+                                                        <%    
                                                             if (estado == EstadoTurno.INICIADO) {
                                                                 out.println("<button class='btn btn-danger' id='btnFinalizado" + turno.getId() + "' onclick='actualizarHA(\"" + turno.getId() + "\",\"FINALIZADO\",\"" + ha.getId() + "\",\"" + turno.getNumero() + "\")'>Finalizar <span class='glyphicon glyphicon-stop'></span></button>");
                                                             } else if (estado == EstadoTurno.PENDIENTE) {
@@ -171,7 +171,8 @@
                                 </td>
                             </tr>
                             <%}
-                            }} else {%>
+                                }
+                            } else {%>
                             <tr>
                                 <td colspan="9">No tiene horarios de atención definidos</td>
                             </tr> 
@@ -248,7 +249,7 @@
                             %>
                         </li>
                         <li class="list-group-item text-right"><span class="pull-left"><strong>Dirección</strong></span>
-                            <%
+                            <%    
                                 if (tipo.equals("Empleado")) {
                                     out.println(empleado.getCalle() + " " + empleado.getNumero() + " " + ((empleado.getApartamento() != 0) ? "Apto. " + empleado.getApartamento() : ""));
                                 } else if (tipo.equals("Cliente")) {
