@@ -916,6 +916,8 @@ function cargarMedicosTodos(idLista, nombreFila, tipo) {
 
 $("#btnVincularMedicoHospital").click(function () {
     pregunta("Desea vincular el medico a este Hospital?", "vincularMedicoHospital");
+    setNoCargado("MedHA");
+    setNoCargado("MedHAE");
 });
 
 function vincularMedicoHospital() {
