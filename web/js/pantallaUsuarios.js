@@ -386,6 +386,7 @@ $("#btnMedicos").click(function () {
             "medico": medico,
         },
         success: function (data) {
+            console.log (data);
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
             var jornadas = r[2].split("/");
