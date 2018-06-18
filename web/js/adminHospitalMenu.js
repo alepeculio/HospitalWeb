@@ -599,7 +599,7 @@ function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
             if (data.length === 0) {
                 var li1 = document.createElement("li");
                 var a1 = document.createElement("a");
-                a1.appendChild(document.createTextNode("No hay clientes"));
+                a1.appendChild(document.createTextNode("No hay pacientes"));
                 li1.setAttribute("class", "list-group-item");
                 ul.appendChild(li1);
                 li1.appendChild(a1);
