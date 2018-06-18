@@ -173,9 +173,15 @@ function centrarHospital(hospital) {
 $("#btnVerInfo").click(function () {
     window.location = "/HospitalWeb/SHospital?verHospital=" + hospitalSeleccionado.title;
 });
+
 $("#btnSuscripcion").click(function () {
-    preguntaMensaje("Desea solicitar suscripcion en " + hospitalSeleccionado.title + "?", "Cantidad de meses", "solicitarSuscripcion");
+    $("#modalSusMeses").modal("show");
 });
+
+$("#btnPreguntaMensajeAceptar").click(function () {
+    solicitarSuscripcion($("#mesesCant").val());
+});
+
 function solicitarSuscripcion(cant) {
     $.ajax({
         type: "POST",
@@ -183,7 +189,7 @@ function solicitarSuscripcion(cant) {
         data: {
             accion: "solicitarSus",
             nomHosp: hospitalSeleccionado.title,
-            cant: $("#" + cant).val()
+            cant: cant
         },
         success: function (data) {
             if (data !== "OK") {
@@ -191,10 +197,12 @@ function solicitarSuscripcion(cant) {
                 return;
             }
             $("#modalOpciones").modal("hide");
-            mensaje("La solicitud de suscripcion fue enviada")
+            mensaje("La solicitud de suscripcion fue enviada");
+            $("#mesesCant").val("1");
         },
         error: function () {
             mensajeErr("Error: No se pudo solicitar la suscripcion.");
+            $("#mesesCant").val("1");
         }
     });
 }
@@ -386,7 +394,7 @@ $("#btnMedicos").click(function () {
             "medico": medico,
         },
         success: function (data) {
-            console.log (data);
+            console.log(data);
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
             var jornadas = r[2].split("/");

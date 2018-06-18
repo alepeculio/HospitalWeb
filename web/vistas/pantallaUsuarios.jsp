@@ -145,6 +145,40 @@
             </div>
         </div>
 
+
+        <div class="modal fade" id="modalSusMeses" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title"></h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Cantidad de meses</label>
+                            <select id="mesesCant">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success" data-dismiss="modal" id="btnPreguntaMensajeAceptar">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- CIERRA MODAL TURNO -->
 
         <jsp:include page="include_js.html"/>
