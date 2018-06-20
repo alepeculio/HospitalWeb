@@ -356,6 +356,7 @@
                     </div>
                 </div>
             </div>
+            finDos
             <!-- Modal -->
             <div class="modal fade" id="Calendario" role="dialog">
                 <div class="modal-dialog modal-md">
@@ -375,14 +376,9 @@
                             </div>
                             <br>
                             <!--end prueba-->
-                            <label class="list-group-item-action">Seleccionar Horario</label>   
+                            <label class="list-group-item-action">Seleccionar Horario</label><span id="spanHorario" style="color:red; visibility: hidden">(Debe sellecionar un horario)</span>  
                             <div class="list-group" id="jornadas"> 
                             </div>  
-                            <div class="row" style="text-align:center;">
-                                <strong>Horarios</strong>
-                                <select >
-                                </select>
-                            </div>
                             <br>
                         </div>
                         <div class="modal-footer">
@@ -438,11 +434,20 @@
                 </div>
             </div>
             <!-- Modal -->
-            <div class="modal fade bd-example-modal-sm" id="fecha"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm" style="margin-top:15vh">
+            <div class="modal fade" id="finDos" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
                     <div class="modal-content">
-                        <div class="yui3-skin-sam" align="center">
-                            <div id="mycalendar"></div>
+                        <div class="modal-header">	
+                            <h4 class="modal-title">Registro Vacuna</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body ">
+                            <h3>Su hijo ya tiene un turno de vacunacion este dia</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
                         </div>
                     </div>
                 </div>

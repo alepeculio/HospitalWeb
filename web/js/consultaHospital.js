@@ -6,16 +6,13 @@ var idMedico;
 var dia;
 var idHijo;
 
-function Shijo() {
-    $('#Shijo').hide();
-}
-function Shorario() {
-    $('#Shorario').hide();
-}
+
 function hr(id) {
+    $('#spanHorario').css('visibility', 'hidden');
     horario = id;
 }
 //Calendario 
+var DiaFinal = "";
 YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 
     calendar = new Y.Calendar({
@@ -31,41 +28,56 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
     // Listen to calendar's selectionChange event.
     calendar.on("selectionChange", function (ev) {
         var newDate = ev.newSelection[0];
+        var dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+        var d = newDate;
+        DiaFinal = dias[d.getDay()];
         dia = dtdate.format(newDate);
+        $("#jornadas").empty();
+        for (var i in jornadas) {
+            var data2 = jornadas[i].toString().split("-");
+            if (data2[1] == DiaFinal) {
+                console.log(data2);
+                $("#jornadas").append('<button type="button" class="list-group-item list-group-item-action hr" onclick="hr(' + data2[0] + ')">Dia: ' + data2[1] + " Hora Inicio: " + data2[2] + " Hora Final: " + data2[3] + '</button>');
+            }
+        }
     });
 });
 /* FIN CALENDARIO */
 
 
 //Dias Calendario
+var jornadas = "";
 function fecha() {
     var rules;
+    idHijo = $("#hijos").val().toString().trim();
     idMedico = $("#medicos").val().toString().trim();
-    $.ajax({
+    if(idMedico == "--"){
+        $('#spanMedico').css('visibility', 'visible');
+        return;
+    }
+    if(idHijo == "--"){
+        $('#spanHijo').css('visibility', 'visible');
+        return;
+    }
+    /*$.ajax({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         async: false,
         data: {
             "horariosOcupadosVacunacion": hospital,
-            "medico": idMedico
+            "medico": idMedico,
         },
         success: function (data) {
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
-            var jornadas = r[2].split("/");
-            $("#jornadas").empty();
-            console.log(jornadas);
-            for (var i in jornadas) {
-                var data2 = jornadas[i].toString().split("-");
-                console.log(data2);
-                $("#jornadas").append('<button type="button" class="list-group-item list-group-item-action hr" onclick="hr(' + data2[0] + ')">Dia: ' + data2[1] + " Hora Inicio: " + data2[2] + " Hora Final: " + data2[3] + '</button>');
-            }
+            jornadas = r[2].split("/");
+
         },
         error: function () {
             mensajeErr("Error: No se pudo    conectar con el servidor.");
-            $("#modalCalendario").modal("hide");
+            $("#Calendario").modal("hide");
         }
-    });
+    });*/
     var filterFunction = function (date, node, rules) {
         if (rules.indexOf("disabled" >= 0)) {
 
@@ -74,6 +86,8 @@ function fecha() {
     ;
     calendar.set("customRenderer", {rules: rules, filterFunction: filterFunction});
     calendar.set("disabledDatesRule", "disabled");
+
+    $('#correcto').modal('hide');
     $('#Calendario').modal('show');
 }
 
@@ -115,7 +129,6 @@ function verificar(td) {
                             alert("no medico")
                             //$('#noEdad').modal('show');
                         } else {
-
                             for (var i in data) {
                                 $("#medicos").empty();
                                 $("#medicos").append('<option>--</option>');
@@ -140,35 +153,48 @@ function verificar(td) {
 
 //Reservar turno de vacunacion 
 function Reservar() {
-    idHijo = $("#hijos").val().toString().trim();
-    console.log(idMedico);
-    console.log(horario);
-    console.log(idhospital);
-    console.log(idHijo);
-    console.log(dia);
-    /*$.ajax({
-     url: "/HospitalWeb/SHospital",
-     type: "POST",
-     data: {
-     "Reservar": "Yes",
-     "hijo": hijo,
-     "idHospital": idhospital,
-     "dia": dia
-     },
-     success: function (data) {
-     $('#correcto').modal('toggle');
-     $("#trC").append('<td >' + data[0] + '</td>');
-     $("#trC").append('<td >' + data[1] + '</td>');
-     $("#trD").append('<td >' + data[2] + '</td>');
-     $("#trD").append('<td >' + data[3] + '</td>');
-     $("#trD").append('<td >' + data[4] + '</td>');
-     $("#fin").modal();
-     },
-     error: function () {
-     console.log("Error");
-     }
-     
-     });*/
+ 
+    if (horario == "") {
+        $('#spanHorario').css('visibility', 'visible');
+        return;
+    }
+
+    $.ajax({
+        url: "/HospitalWeb/SHospital",
+        type: "POST",
+        data: {
+            "Reservar": "Yes",
+            "idHorario": horario,
+            "idHijo": idHijo,
+            "idHospital": idhospital,
+            "dia": dia
+        },
+        success: function (data) {
+
+            $('#Calendario').modal('hide');
+            if (data[0] == "no") {
+                idMedico = "";
+                dia = "";
+                idHijo = "";
+                $("#finDos").modal('show');
+            } else {
+                idMedico = "";
+                dia = "";
+                idHijo = "";
+                $("#trC").append('<td >' + data[0] + '</td>');
+                $("#trC").append('<td >' + data[1] + '</td>');
+                $("#trD").append('<td >' + data[2] + '</td>');
+                $("#trD").append('<td >' + data[3] + '</td>');
+                $("#trD").append('<td >' + data[4] + '</td>');
+                $("#fin").modal();
+            }
+
+        },
+        error: function () {
+            console.log("Error");
+        }
+
+    });
 
 }
 
