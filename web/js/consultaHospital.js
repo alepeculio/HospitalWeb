@@ -27,6 +27,7 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
     var dtdate = Y.DataType.Date;
     // Listen to calendar's selectionChange event.
     calendar.on("selectionChange", function (ev) {
+        $('#SelectHora').removeAttr('hidden');
         var newDate = ev.newSelection[0];
         var dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
         var d = newDate;
@@ -44,22 +45,34 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 });
 /* FIN CALENDARIO */
 
-
+$("#hijos").change(function() {
+   $('#spanHijo').css('visibility', 'hidden');
+});
+$( "#medicos" ).change(function() {
+  $('#spanMedico').css('visibility', 'hidden');
+});
 //Dias Calendario
 var jornadas = "";
 function fecha() {
     var rules;
     idHijo = $("#hijos").val().toString().trim();
     idMedico = $("#medicos").val().toString().trim();
-    if(idMedico == "--"){
+
+    if (idMedico == "--" && idHijo == "--") {
         $('#spanMedico').css('visibility', 'visible');
-        return;
-    }
-    if(idHijo == "--"){
         $('#spanHijo').css('visibility', 'visible');
         return;
     }
-    /*$.ajax({
+    if (idMedico == "--") {
+        $('#spanMedico').css('visibility', 'visible');
+        return;
+    }
+
+    if (idHijo == "--") {
+        $('#spanHijo').css('visibility', 'visible');
+        return;
+    }
+    $.ajax({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         async: false,
@@ -77,7 +90,7 @@ function fecha() {
             mensajeErr("Error: No se pudo    conectar con el servidor.");
             $("#Calendario").modal("hide");
         }
-    });*/
+    });
     var filterFunction = function (date, node, rules) {
         if (rules.indexOf("disabled" >= 0)) {
 
@@ -129,6 +142,7 @@ function verificar(td) {
                             alert("no medico")
                             //$('#noEdad').modal('show');
                         } else {
+
                             for (var i in data) {
                                 $("#medicos").empty();
                                 $("#medicos").append('<option>--</option>');
@@ -153,7 +167,7 @@ function verificar(td) {
 
 //Reservar turno de vacunacion 
 function Reservar() {
- 
+
     if (horario == "") {
         $('#spanHorario').css('visibility', 'visible');
         return;
