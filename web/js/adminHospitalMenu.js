@@ -599,7 +599,7 @@ function cargarClientes(idLista, nombreFila, tipo, conEmpleados) {
             if (data.length === 0) {
                 var li1 = document.createElement("li");
                 var a1 = document.createElement("a");
-                a1.appendChild(document.createTextNode("No hay clientes"));
+                a1.appendChild(document.createTextNode("No hay pacientes"));
                 li1.setAttribute("class", "list-group-item");
                 ul.appendChild(li1);
                 li1.appendChild(a1);
@@ -916,6 +916,8 @@ function cargarMedicosTodos(idLista, nombreFila, tipo) {
 
 $("#btnVincularMedicoHospital").click(function () {
     pregunta("Desea vincular el medico a este Hospital?", "vincularMedicoHospital");
+    setNoCargado("MedHA");
+    setNoCargado("MedHAE");
 });
 
 function vincularMedicoHospital() {
@@ -945,6 +947,7 @@ function vincularMedicoHospital() {
                     deseleccionar("vincMedFila", "MedVinc");
                     setNoCargado("MedVinc");
                     cargarMedicosTodos('VincMedicoHospital', 'vincMedFila', 'MedVinc');
+                    setNoCargado("MedE");
                 }
             }
         });
@@ -986,6 +989,7 @@ function eliminarMedicoDeVerdad() {
                     setNoCargado("CliP");
                     setNoCargado("MedHA");
                     setNoCargado("MedHAE");
+                    setNoCargado("MedVinc");
 
                 }
             }
