@@ -249,9 +249,8 @@ $("#btnReservarTurno").click(function () {
                 }
 
 
-
+                $("#especialidad").empty();
                 for (var j in medicos[0].especialidades) {
-                    $("#especialidad").empty();
                     $("#especialidad").append('<option>General</option>');
                     $("#especialidad").append('<option value=' + medicos[0].especialidades[j] + '> ' + medicos[0].especialidades[j] + '</option>');
                 }

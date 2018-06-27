@@ -2,6 +2,16 @@
 
 //Calendario
 var calendar;
+var idMedico;
+var dia;
+var idHijo;
+
+function hr(id) {
+    $('#spanHorario').css('visibility', 'hidden');
+    horario = id;
+}
+//Calendario 
+var DiaFinal = "";
 YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 
     calendar = new Y.Calendar({
@@ -16,56 +26,68 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
     var dtdate = Y.DataType.Date;
     // Listen to calendar's selectionChange event.
     calendar.on("selectionChange", function (ev) {
+        $('#SelectHora').removeAttr('hidden');
         var newDate = ev.newSelection[0];
-        $.ajax({
-            type: "POST",
-            url: "/HospitalWeb/SHospital",
-            data: {
-                "obtenerHorarios": hospitalSeleccionado.title,
-                "dia": dtdate.format(newDate),
-                "medico": medico,
-                "especialidad": espec,
-                "horarioAtencion": comboJornada.value
-            },
-            success: function (data) {
-                mensaje(data, "refresh");
-            },
-            error: function () {
-                mensajeErr("Error: No se pudo conectar con el servidor.");
+        var dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+        var d = newDate;
+        DiaFinal = dias[d.getDay()];
+        dia = dtdate.format(newDate);
+        $("#jornadas").empty();
+        for (var i in jornadas) {
+            var data2 = jornadas[i].toString().split("-");
+            if (data2[1] == DiaFinal) {
+                console.log(data2);
+                $("#jornadas").append('<button type="button" class="list-group-item list-group-item-action hr" onclick="hr(' + data2[0] + ')">Dia: ' + data2[1] + " Hora Inicio: " + data2[2] + " Hora Final: " + data2[3] + '</button>');
             }
-        });
+        }
     });
 });
 /* FIN CALENDARIO */
 
+$("#hijos").change(function () {
+    $('#spanHijo').css('visibility', 'hidden');
+});
+$("#medicos").change(function () {
+    $('#spanMedico').css('visibility', 'hidden');
+});
+//Dias Calendario
+var jornadas = "";
 function fecha() {
     var rules;
-    var medico = $("#medicos").val().toString().trim();
+    idHijo = $("#hijos").val().toString().trim();
+    idMedico = $("#medicos").val().toString().trim();
+
+    if (idMedico == "--" && idHijo == "--") {
+        $('#spanMedico').css('visibility', 'visible');
+        $('#spanHijo').css('visibility', 'visible');
+        return;
+    }
+    if (idMedico == "--") {
+        $('#spanMedico').css('visibility', 'visible');
+        return;
+    }
+
+    if (idHijo == "--") {
+        $('#spanHijo').css('visibility', 'visible');
+        return;
+    }
     $.ajax({
         type: "POST",
         url: "/HospitalWeb/SHospital",
         async: false,
         data: {
             "horariosOcupadosVacunacion": hospital,
-            "medico": medico,
+            "medico": idMedico,
         },
         success: function (data) {
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
-            var jornadas = r[2].split("/");
-            
-            var data2 = jornadas.toString().split("-");
-            
-            for (var i in jornadas) {
-                $("#jornadas").empty();
-                $("#jornadas").append('<option>--</option>');
-                $("#jornadas").append('<option value=' + data2[0] + '>Dia: ' + data2[1] +" Hora Inicio: "+ data2[2] +" Hora Final: "+ data2[3] + '</option>');
+            jornadas = r[2].split("/");
 
-            }
         },
         error: function () {
-            mensajeErr("Error: No se pudo conectar con el servidor.");
-            $("#modalCalendario").modal("hide");
+            mensajeErr("Error: No se pudo    conectar con el servidor.");
+            $("#Calendario").modal("hide");
         }
     });
     var filterFunction = function (date, node, rules) {
@@ -76,14 +98,13 @@ function fecha() {
     ;
     calendar.set("customRenderer", {rules: rules, filterFunction: filterFunction});
     calendar.set("disabledDatesRule", "disabled");
+
+    $('#correcto').modal('hide');
     $('#Calendario').modal('show');
 }
-function Shijo() {
-    $('#Shijo').hide();
-}
-function Shorario() {
-    $('#Shorario').hide();
-}
+
+
+//Verificar Edad
 function verificar(td) {
     var vacuna = td.split("-");
     $.ajax({
@@ -120,10 +141,9 @@ function verificar(td) {
                             alert("no medico")
                             //$('#noEdad').modal('show');
                         } else {
-
+                            $("#medicos").empty();
+                            $("#medicos").append('<option>--</option>');
                             for (var i in data) {
-                                $("#medicos").empty();
-                                $("#medicos").append('<option>--</option>');
                                 $("#medicos").append('<option value=' + data[i].id + '>' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                             }
                             $('#correcto').modal('show');
@@ -142,83 +162,54 @@ function verificar(td) {
 
     });
 }
-function horario(dia) {
-    $('#Sdia').hide();
+
+//Reservar turno de vacunacion 
+function Reservar() {
+
+    if (horario == "") {
+        $('#spanHorario').css('visibility', 'visible');
+        return;
+    }
+
     $.ajax({
         url: "/HospitalWeb/SHospital",
         type: "POST",
-        dataType: 'json',
         data: {
-            "dia": dia,
-            "hospital": hospital
-        }
-        ,
-        success: function (data) {
-            console.log(data);
-            if (data.length > 0) {
-                for (var i = 0; i < data.length; i++) {
-                    var id = data[i][0].id;
-                    var nombre = data[i][1].nombre;
-                    var apellido = data[i][1].apellido;
-                    var horainicio = data[i][0].horaInicio;
-                    var horafin = data[i][0].horaFin;
-                    $("#horarios").empty();
-                    $("#horarios").append('<option>--</option>');
-                    $("#horarios").append('<option value=' + id + '>Doctor: ' + nombre + ' ' + apellido + ' | Dispoible De: ' + horainicio + ' - Hasta: ' + horafin + '</option>');
-                }
-            } else {
-                $("#horarios").append('<option value=no>No hay horarios dispoibles para este dia </option>');
-            }
+            "Reservar": "Yes",
+            "idHorario": horario,
+            "idHijo": idHijo,
+            "idHospital": idhospital,
+            "dia": dia
         },
-        error: function () {
-            console.log("Error");
-        }
+        success: function (data) {
 
-    });
-}
-
-function registrar() {
-    var dia = $("#haDia").val().toString().trim();
-    var hijo = $("#hijos").val().toString().trim();
-    if (hijo === "") {
-        $("#Shijo").show();
-    }
-    if (idHorario === "") {
-        $("#Shorario").show();
-    }
-    if (idHorario === "no") {
-        $("#Shorario").show();
-    }
-    if (dia === "") {
-        $("#Sdia").show();
-    }
-    if (dia !== "" && idHorario !== "" && idHorario !== "no" && hijo !== "") {
-        $.ajax({
-            url: "/HospitalWeb/SHospital",
-            type: "POST",
-            data: {
-                "idHorario": idHorario,
-                "hijo": hijo,
-                "idHospital": idhospital
-            },
-            success: function (data) {
-                $('#correcto').modal('toggle');
+            $('#Calendario').modal('hide');
+            if (data[0] == "no") {
+                idMedico = "";
+                dia = "";
+                idHijo = "";
+                $("#finDos").modal('show');
+            } else {
+                idMedico = "";
+                dia = "";
+                idHijo = "";
                 $("#trC").append('<td >' + data[0] + '</td>');
                 $("#trC").append('<td >' + data[1] + '</td>');
                 $("#trD").append('<td >' + data[2] + '</td>');
                 $("#trD").append('<td >' + data[3] + '</td>');
                 $("#trD").append('<td >' + data[4] + '</td>');
                 $("#fin").modal();
-            },
-            error: function () {
-                console.log("Error");
             }
 
-        });
-    }
+        },
+        error: function () {
+            console.log("Error");
+        }
+
+    });
+
 }
 
-/* FIN CALENDARIO */
 
 function datearray2filter(dates, dias) {
     var ret = {};
