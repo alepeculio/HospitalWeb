@@ -694,6 +694,7 @@ function seleccionar(nombreFila, id, tipo) {
 
     seleccionado[tipo] = id;
     if (tipo === "CliP") {
+        seleccionado["CliH"] = "";
         cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
     }
     if (tipo === "MedHAE")
