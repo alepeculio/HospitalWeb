@@ -22,8 +22,10 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -50,11 +52,12 @@ public class SHospital extends HttpServlet {
             if (request.getSession().getAttribute("usuario") != null) {
                 Usuario user = (Usuario) request.getSession().getAttribute("usuario");
                 Cliente c = CCliente.getClientebyUsuario(user.getId());
-                Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
-                List<Empleado> empleados;
-                empleados = h.getEmpleados();
+                Hospital h = CHospital.obtenerHospital(request.getParameter("verHospital"));
+                List<Empleado> empleados = h.getEmpleados();
+                Set<Empleado> norepet = new HashSet<>();
+                norepet.addAll(empleados);
                 request.setAttribute("cliente", c);
-                request.setAttribute("empleados", empleados);
+                request.setAttribute("empleados", norepet);
                 request.setAttribute("hospital", h);
                 request.getRequestDispatcher("vistas/consultaHospital.jsp").forward(request, response);
             } else {
@@ -167,9 +170,8 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(resultado);
         } else if (request.getParameter("obtenerMedicos") != null) {
-
             Hospital h = CHospital.obtenerHospital(request.getParameter("obtenerMedicos"));
-            List<Empleado> empleados = h.getEmpleados();
+            Set<Empleado> empleados = h.getEmpleadosConHRVacunacion();
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
             response.setContentType("application/json");
             response.getWriter().write(json);

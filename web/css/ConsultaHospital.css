@@ -4,13 +4,13 @@ img {
     border: 2px solid #1b6d85;
     border-radius: 110px
 }
-button {
-    padding-bottom: 1px;
-    padding-top: 1px;
 
+button {
+    /*! padding-bottom: 1px; */
+    /*! padding-top: 1px; */
 }
-span{
-    margin-left: 3vw;
+modal span{
+    margin-left: 2vw;
 }
 #foto{
     max-width: 100%; 
@@ -20,6 +20,12 @@ span{
 .hr{
     margin-top:1px;
     margin-bottom: 1px;
+
+}
+.info{
+border-color:#1b6d85; 
+max-height:70% ; 
+width: 60%;
 
 }
 #vacuna{
@@ -82,25 +88,12 @@ span{
     width:100%;
 }
 
-
-#Hlogo{
-    position: static;
-    align-self: center;
-
-}
 .logo{
-    margin-bottom: 10vh;
+    text-align: center;
+    margin-bottom: 5vh;
 }
 
 @media (max-width: 820px){
-
-
-    #Hlogo{
-
-        margin-left: 62px;
-
-    }
-
 
     #div2 {
         overflow:scroll;
