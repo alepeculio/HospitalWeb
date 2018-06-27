@@ -17,7 +17,7 @@
                 window.location.assign("/HospitalWeb/SUsuario?accion=menuAdmin");
         </script>
     </head>
-    <body background="img/fondo.png">
+    <body background="img/fondo.png" style="padding: 0; margin: 0;">
         <jsp:include page="header.jsp"/>
 
         <ul class="nav nav-pills nav-stacked col-md-3 panel">

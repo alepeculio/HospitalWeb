@@ -791,8 +791,9 @@ $("#btnVincularCliente").click(function () {
                     texto.innerHTML = "Hijo ingresado al plan correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
-                    deseleccionar("clientePFila", "CliP");
                     deseleccionar("clienteHFila", "CliH");
+                    deseleccionar("clientePFila", "CliP");
+                    
                 }
             }
         });

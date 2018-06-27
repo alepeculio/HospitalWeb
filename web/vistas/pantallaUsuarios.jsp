@@ -147,7 +147,7 @@
 
 
         <div class="modal fade" id="modalSusMeses" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header text-center">
                         <h4 class="modal-title"></h4>
