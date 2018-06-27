@@ -29,7 +29,7 @@
           
         <!-- Icono Hospital -->
 
-        <div align="center" class="logo">
+        <div class="logo">
             <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar"  >
         </div>
         <!-- Hospital-->
