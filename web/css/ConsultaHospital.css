@@ -29,7 +29,6 @@ width: 60%;
 
 }
 #vacuna{
-
     background-image: url(../img/click.png);
     background-repeat: no-repeat;
     background-size: 25px;
@@ -38,10 +37,15 @@ width: 60%;
 }
 #doctor{
     border: 1px solid black;
-    
 }
+
+#doctor:hover{
+    cursor:pointer;
+}
+
 #vacuna:hover{
     background-size: 29px;
+    cursor:pointer;
 }
 #margin{   
     margin-bottom: 10vh;
