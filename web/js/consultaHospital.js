@@ -6,7 +6,6 @@ var idMedico;
 var dia;
 var idHijo;
 
-
 function hr(id) {
     $('#spanHorario').css('visibility', 'hidden');
     horario = id;
