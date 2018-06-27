@@ -67,13 +67,13 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-8 form-group">
-                            <input required class="form-control" placeholder="C.I. (Sin Guion)" type="text" id="ci">
+                            <input required class="form-control" placeholder="C.I. (Sin Guion)" type="numeric" pattern="[0-9]{7}" id="ci">
                             <small id="ciError" class="text-danger" hidden>
                                 Error!
                             </small>
                         </div>  
                         <div class="col-sm-4 form-group">
-                            <input required class="form-control" placeholder="-" type="text" id="digitoVer">
+                            <input required class="form-control" placeholder="-" type="numeric" pattern="[0-9]{1}" id="digitoVer">
                         </div>
                     </div>
                     <div class="form-group">

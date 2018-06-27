@@ -171,7 +171,7 @@ public class SHospital extends HttpServlet {
             response.getWriter().write(resultado);
         } else if (request.getParameter("obtenerMedicos") != null) {
             Hospital h = CHospital.obtenerHospital(request.getParameter("obtenerMedicos"));
-            Set<Empleado> empleados = h.getEmpleadosConHRVacunacion();
+            List<Empleado> empleados = h.getEmpleadosActivos();
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
             response.setContentType("application/json");
             response.getWriter().write(json);

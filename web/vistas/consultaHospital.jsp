@@ -42,7 +42,7 @@
                     </div>
                     <div class="panel-body" id="div2" align="left">
                         <h5>Directoro/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
-                        <h5>Direccin: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
+                        <h5>Direccin: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SUsuario?accion=mapaUsuario&nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
                         <h5>Teléfono: <%=h.getTelefono()%> </h5>
                         <h5>Correo electrónico institucional:<a class="negrita" href="mailto:<%=h.getCorreo()%>"><%=h.getCorreo()%></a> </h5> 
                     </div>
