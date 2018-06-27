@@ -7,7 +7,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <jsp:include page="include_css.html"/>
         <jsp:include page="include_js.html"/>
-        <title>Registrar Usuario</title>
+        <title>Panel administrador</title>
         <link rel="stylesheet" href="styles/cargaHospital.css">
         
         <script>
