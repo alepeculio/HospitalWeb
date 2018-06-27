@@ -19,50 +19,50 @@ function initMapa() {
         disableDefaultUI: true
         ,
         styles: [
+        {
+            "featureType": "administrative",
+            "elementType": "geometry",
+            "stylers": [
             {
-                "featureType": "administrative",
-                "elementType": "geometry",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "landscape",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "poi",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "poi.medical",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    },
-                    {
-                        "weight": 5
-                    }
-                ]
-            },
-            {
-                "featureType": "transit",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
+                "visibility": "off"
             }
+            ]
+        },
+        {
+            "featureType": "landscape",
+            "stylers": [
+            {
+                "visibility": "off"
+            }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "stylers": [
+            {
+                "visibility": "off"
+            }
+            ]
+        },
+        {
+            "featureType": "poi.medical",
+            "stylers": [
+            {
+                "visibility": "off"
+            },
+            {
+                "weight": 5
+            }
+            ]
+        },
+        {
+            "featureType": "transit",
+            "stylers": [
+            {
+                "visibility": "off"
+            }
+            ]
+        }
         ]
     };
     mapa = new google.maps.Map(document.getElementById("mapa"), opciones);
@@ -89,7 +89,7 @@ function initMapa() {
             posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
         });
     } else
-        posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
+    posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
     for (var i = 0; i < hospitales.length; i++) {
         var marcador = new google.maps.Marker({
             position: new google.maps.LatLng(hospitales[i][1], hospitales[i][2]),
@@ -163,8 +163,8 @@ $("#btnBuscar").click(function () {
             return;
         }
 
-    mensajeErr("No hay ningun hospital con ese nombre");
-});
+        mensajeErr("No hay ningun hospital con ese nombre");
+    });
 function centrarHospital(hospital) {
     mapa.setCenter(hospital.position);
     mapa.setZoom(16);
@@ -243,9 +243,8 @@ $("#btnReservarTurno").click(function () {
             } else {
 
                 medicos = data;
-
+                $("#medicos").empty();
                 for (var i in data) {
-                    $("#medicos").empty();
                     $("#medicos").append('<option value=' + data[i].id + '> ' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                 }
 
@@ -286,17 +285,6 @@ $('#medicos').change(function () {
             }
         }
 
-        //var nombreMedico = medicos[i].nombre + " " + medicos[i].apellido;
-
-        //if (nombreMedico.localeCompare(comboMedicos.value) == 0) {
-
-        // for (var j in medicos[i].especialidades) {
-        //   l++;
-        //   comboEspecialidad.options[j] = new Option(medicos[i].especialidades[j]);
-        // }
-
-        // comboEspecialidad.options[l] = new Option("General");
-        // }
     }
 });
 
@@ -373,12 +361,6 @@ $("#btnMedicos").click(function () {
     var medicoValor = document.getElementById("medicos").value;
     espec = document.getElementById("especialidad").value;
     medico = medicoValor;
-//    for (var i in medicos) {
-//        var a = medicos[i].nombre + " " + medicos[i].apellido;
-//        if (a.localeCompare(medicoValor) == 0) {
-//            medico = medicos[i].id;
-//        }
-//    }
 
     $("#modalMedicos").modal("hide");
 
@@ -399,13 +381,16 @@ $("#btnMedicos").click(function () {
             rules = datearray2filter(r[0], r[1]);
             var jornadas = r[2].split("/");
             $("#jornadas").empty();
+            if(jornadas != "" || jornadas.length == 0){
+                $("#jornadas").append('<option>'+'Este médico no posee horarios'+'</option>');
+            }
             for (var i in jornadas) {
                 jornadas_array.push(jornadas[i]);
                 var batman = jornadas[i].split("-");
                 $("#jornadas").append('<option value=' + batman[0] + '>' + batman[1] + " - " + batman[2] + " - " + batman[3] + '</option>');
             }
+            
 
-            console.log(jornadas_array);
         },
         error: function () {
             mensajeErr("Error: No se pudo conectar con el servidor.");
@@ -440,8 +425,8 @@ function datearray2filter(dates, dias) {
 
     for (var i in fechas) {
         var d = new Date(fechas[i]),
-                y = d.getFullYear(),
-                m = d.getMonth();
+        y = d.getFullYear(),
+        m = d.getMonth();
         if (!ret[y])
             ret[y] = {};
         if (!ret[y][m])
