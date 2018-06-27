@@ -44,11 +44,11 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 });
 /* FIN CALENDARIO */
 
-$("#hijos").change(function() {
-   $('#spanHijo').css('visibility', 'hidden');
+$("#hijos").change(function () {
+    $('#spanHijo').css('visibility', 'hidden');
 });
-$( "#medicos" ).change(function() {
-  $('#spanMedico').css('visibility', 'hidden');
+$("#medicos").change(function () {
+    $('#spanMedico').css('visibility', 'hidden');
 });
 //Dias Calendario
 var jornadas = "";
@@ -141,10 +141,9 @@ function verificar(td) {
                             alert("no medico")
                             //$('#noEdad').modal('show');
                         } else {
-
+                            $("#medicos").empty();
+                            $("#medicos").append('<option>--</option>');
                             for (var i in data) {
-                                $("#medicos").empty();
-                                $("#medicos").append('<option>--</option>');
                                 $("#medicos").append('<option value=' + data[i].id + '>' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                             }
                             $('#correcto').modal('show');

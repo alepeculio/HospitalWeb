@@ -243,16 +243,14 @@ $("#btnReservarTurno").click(function () {
             } else {
 
                 medicos = data;
-
+                $("#medicos").empty();
                 for (var i in data) {
-                    $("#medicos").empty();
                     $("#medicos").append('<option value=' + data[i].id + '> ' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                 }
 
 
-
+                $("#especialidad").empty();
                 for (var j in medicos[0].especialidades) {
-                    $("#especialidad").empty();
                     $("#especialidad").append('<option>General</option>');
                     $("#especialidad").append('<option value=' + medicos[0].especialidades[j] + '> ' + medicos[0].especialidades[j] + '</option>');
                 }
