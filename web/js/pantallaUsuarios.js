@@ -90,6 +90,13 @@ function initMapa() {
         });
     } else
     posInicial = new google.maps.LatLng(-32.3209812, -58.0799678);
+    
+
+    var url = new URL(window.location.toString());
+    var c = url.searchParams.get("nombreH");
+    
+    var centrar = null;
+    
     for (var i = 0; i < hospitales.length; i++) {
         var marcador = new google.maps.Marker({
             position: new google.maps.LatLng(hospitales[i][1], hospitales[i][2]),
@@ -104,7 +111,13 @@ function initMapa() {
             clickHospital(this);
         });
         marcadores.push(marcador);
+        
+        if (c != null && c == hospitales[i][0])
+            centrar = marcador;
     }
+    
+    if (centrar != null)
+        mapa.setCenter(centrar.position);
 }
 
 function clickHospital(hospital) {
