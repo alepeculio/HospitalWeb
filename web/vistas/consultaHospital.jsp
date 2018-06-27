@@ -1,3 +1,4 @@
+<%@page import="java.util.Set"%>
 <%@page import="Clases.Cliente"%>
 <%@page import="Clases.Empleado"%>
 <%@page import="java.util.List"%>
@@ -16,7 +17,7 @@
 
         <%
             Hospital h = (Hospital) request.getAttribute("hospital");
-            List<Empleado> empleados = (List<Empleado>) request.getAttribute("empleados");
+            Set<Empleado> empleados = (Set<Empleado>) request.getAttribute("empleados");
             Cliente c = (Cliente) request.getAttribute("cliente");
 
         %>
@@ -312,7 +313,7 @@
                         <h3>Edad Incompatible.</h3>
                         <h4>Las vacunas se dan a cierta edad.</h4> 
                         <p>Si usted tiene algun hijo con la edad correcta puede registrar a su hijo haciendo clic en Registrar Hijo.</p>
-                        <p>  Luego de registrar su hijo podra reservar un turno para vacunarlo</p> 
+                        <p>Luego de registrar su hijo podra reservar un turno para vacunarlo</p> 
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
@@ -333,7 +334,7 @@
                     <div class="modal-body ">
 
                         <div class="form-group">
-                            <label for="listaDeshabilitada">Hijo para vacunar</label><span id="spanHijo" style="color:red; visibility: hidden ">(Debe selecionar una fecha)</span>
+                            <label for="listaDeshabilitada">Hijo para vacunar</label><span id="spanHijo" style="color:red; visibility: hidden ">(Debe selecionar un hijo)</span>
                             <select class="form-control" id="hijos" required >
                                 <option>Lista deshabilitada</option>
                             </select>
