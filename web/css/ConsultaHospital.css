@@ -4,13 +4,24 @@ img {
     border: 2px solid #1b6d85;
     border-radius: 110px
 }
+button {
+    padding-bottom: 1px;
+    padding-top: 1px;
 
+}
+span{
+    margin-left: 3vw;
+}
 #foto{
     max-width: 100%; 
     height: auto;
     border-radius: 110px;
 }
+.hr{
+    margin-top:1px;
+    margin-bottom: 1px;
 
+}
 #vacuna{
 
     background-image: url(../img/click.png);
@@ -21,13 +32,13 @@ img {
 }
 #doctor{
     border: 1px solid black;
-
+    
 }
 #vacuna:hover{
     background-size: 29px;
 }
 #margin{   
-    margin-bottom: 5%;
+    margin-bottom: 10vh;
     position: relative;
 }
 .Tvacuna th{
@@ -70,14 +81,15 @@ img {
     margin-left: 1px;
     width:100%;
 }
-.vl {
-    border-left: 2px solid #1b6d85;
 
-}
 
 #Hlogo{
+    position: static;
+    align-self: center;
 
-    margin-left: 41%;
+}
+.logo{
+    margin-bottom: 10vh;
 }
 
 @media (max-width: 820px){

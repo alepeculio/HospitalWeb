@@ -8,9 +8,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-
         <link rel="stylesheet" href="css/ConsultaHospital.css" type="text/css">
-        <title>TODO supply a title</title>
+        <title>Ponelo Vos</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="js/yui-min.js"></script>
@@ -26,25 +25,20 @@
 
 
     <body background="img/fondo.png">
-
-
-        <div class="vl" style="margin-left: 49%; height:200%; position:absolute;   margin-top: 6%;"></div>
+        <jsp:include page="header.jsp"/>
+          
         <!-- Icono Hospital -->
-        <div id="margin" >
-            <div class="row">
-                <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar" style="margin-top: 5%;" >
-            </div>
+
+        <div align="center" class="logo">
+            <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar"  >
         </div>
-
-
         <!-- Hospital-->
-        <div id="margin">
-            <div class="row"  style="position:relative" >
-                <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%; margin-left: 20% "  >
+        <div align="center">
+            <div class="row"  >
+                <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%;"  >
                     <div class="panel-heading">
-
-                        <a><%=h.getNombre()%></a> </div>
-
+                        <a><%=h.getNombre()%></a> 
+                    </div>
                     <div class="panel-body" id="div2">
                         <h5>Directoro/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
                         <h5>Direccin: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SHospital?nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
@@ -56,29 +50,33 @@
         </div>
         <!-- Doctores-->
 
-        <div id="margin">
+        <div align="center">
             <div class="row">
-                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%; margin-left: 20%"  >
+                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%"  >
                     <div class="panel-heading">
                         <a>Lista De Doctores</a>
                     </div>
                     <div id="div1">
                         <div class="row" >
-                            <% for (Empleado e : empleados) {%>
+                            <% for (Empleado e : empleados) {
+                                    if (e.isActivo()) {
+                            %>
                             <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
                                 <img onclick="mostrarDatosMedico(<%=e.getId()%>)" src="img/doctor  5.png" alt="Avatar" id="foto" >
                                 <h4><b onclick="mostrarDatosMedico(<%=e.getId()%>)"><%=e.getNombre()%> <%=e.getApellido()%></b></h4> 
-                                <%}%>
                             </div>
+                            <%}%>
+                            <%}%>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
             <!-- Vacunas -->
 
-            <div id="margin">
-                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%; margin-left: 20% "  >
+       
+                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%;margin-left: 20%;"  >
                     <div class="panel-heading">
                         <a>Vacunas</a>
                     </div>
@@ -279,7 +277,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
 
             <!-- Modal -->
             <div class="modal fade" id="noHijos" role="dialog">
@@ -334,20 +331,19 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body ">
-                            <fieldset >
-                                <div class="form-group">
-                                    <label for="listaDeshabilitada">Hijo para vacunar</label>
-                                    <select class="form-control" id="hijos" required >
-                                        <option>Lista deshabilitada</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="listaDeshabilitada">Medico</label>
-                                    <select class="form-control" id="medicos" required >
-                                        <option>Lista deshabilitada</option>
-                                    </select>
-                                </div>
-                            </fieldset>
+
+                            <div class="form-group">
+                                <label for="listaDeshabilitada">Hijo para vacunar</label><span id="spanHijo" style="color:red; visibility: hidden ">(Debe selecionar una fecha)</span>
+                                <select class="form-control" id="hijos" required >
+                                    <option>Lista deshabilitada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="listaDeshabilitada">Medico</label><span id="spanMedico" style="color:red; visibility: hidden ">(Debe selecionar un medico)</span>
+                                <select class="form-control" id="medicos" required >
+                                    <option>Lista deshabilitada</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
@@ -356,6 +352,7 @@
                     </div>
                 </div>
             </div>
+            finDos
             <!-- Modal -->
             <div class="modal fade" id="Calendario" role="dialog">
                 <div class="modal-dialog modal-md">
@@ -368,6 +365,7 @@
                         <div class="modal-body">
                             <div class="row" style="text-align: center;">
                                 <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
+                                <span id="spanFecha" style="color:red; visibility: hidden ">(Debe selecionar una fecha)</span>
                             </div>
                             <br>
                             <div class="yui3-skin-sam" align="center">
@@ -375,17 +373,17 @@
                             </div>
                             <br>
                             <!--end prueba-->
-                            <div class="row" style="text-align:center;">
-                                <strong>Horarios</strong>
-                                <select id="jornadas">
-                                </select>
+                            <div class="row" style="text-align: center;">
+                                <strong hidden id="SelectHora">Seleccione un horario.</strong>
+                                <span id="spanHorario" style="color:red; visibility: hidden ">(Debe selecionar un horario)</span>  
                             </div>
+                            <div class="list-group" id="jornadas"> 
+                            </div>  
                             <br>
-                            <div class="modal-footer" style="text-align: center;">
-                                <div class="row" style="text-align: center">
-                                    <strong id="mensaje_jornadas"></strong>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
+                            <button class="btn btn-success"  name="aceptar" onclick="Reservar()">Reservar</button>
                         </div>
                     </div>
                 </div>
@@ -436,11 +434,20 @@
                 </div>
             </div>
             <!-- Modal -->
-            <div class="modal fade bd-example-modal-sm" id="fecha"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm" style="margin-top:15vh">
+            <div class="modal fade" id="finDos" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
                     <div class="modal-content">
-                        <div class="yui3-skin-sam" align="center">
-                            <div id="mycalendar"></div>
+                        <div class="modal-header">	
+                            <h4 class="modal-title">Registro Vacuna</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body ">
+                            <h3>Su hijo ya tiene un turno de vacunacion este dia</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
                         </div>
                     </div>
                 </div>
@@ -455,6 +462,7 @@
     <script>
                                 var hospital = "<%=h.getNombre()%>";
                                 var idhospital = <%=h.getId()%>;
+                                var horario = "";
     </script>
 </html>
 
