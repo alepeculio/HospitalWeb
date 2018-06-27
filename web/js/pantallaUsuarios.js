@@ -112,12 +112,14 @@ function initMapa() {
         });
         marcadores.push(marcador);
         
-        if (c != null && c == hospitales[i][0])
+        if (c !== null && c === hospitales[i][0])
             centrar = marcador;
     }
     
-    if (centrar != null)
+    if (centrar !== null) {
         mapa.setCenter(centrar.position);
+        mapa.setZoom(15);
+    }
 }
 
 function clickHospital(hospital) {
