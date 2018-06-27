@@ -300,7 +300,13 @@ public class SUsuario extends HttpServlet {
                 case "obtEmpleados":
                     Usuario adminObtEmpl = (Usuario) request.getSession().getAttribute("usuario");
                     Hospital hospitalObtEmpl = CAdministradores.obtenerHospitalAdministrador(adminObtEmpl.getCi());
-                    String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(hospitalObtEmpl.getEmpleados());
+                    // el hospitalObtEmpl.getEmpleados() te da cada empleado repetido 3 veces, anda a saber porque carajo, entonces ahi lo metemos en una lista sin repetir
+                    List<Empleado> resultEmple = new ArrayList<>();
+                    for (Empleado eeee : hospitalObtEmpl.getEmpleados()) {
+                        if (!resultEmple.contains(eeee))
+                            resultEmple.add(eeee);
+                    }
+                    String empleadosJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(resultEmple);
                     response.setContentType("application/json");
                     response.getWriter().write(empleadosJson);
                     break;

@@ -1,6 +1,5 @@
 package Servlets;
 
-
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.EstadoTurno;
@@ -273,7 +272,7 @@ public class SHospital extends HttpServlet {
             String dia = String.valueOf(request.getParameter("dia"));
             Object[] result = null;
             try {
-                result = CCliente.ReservarTurnoVacunacion(idHijo,idHorario,idHospital,dia);
+                result = CCliente.ReservarTurnoVacunacion(idHijo, idHorario, idHospital, dia);
             } catch (ParseException ex) {
                 Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -287,7 +286,7 @@ public class SHospital extends HttpServlet {
             String hFin = request.getParameter("horaFin");
             long medico = Long.valueOf(request.getParameter("medico"));
             String dia = request.getParameter("diaaaaaa");
-           // response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible(hInicio, hFin, medico, dia));
+            response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible(hInicio, hFin, medico, dia));
         }
     }
 }
