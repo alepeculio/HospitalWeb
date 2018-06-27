@@ -1,6 +1,5 @@
 package Servlets;
 
-
 import Clases.Cliente;
 import Clases.Empleado;
 import Clases.EstadoTurno;
@@ -51,9 +50,8 @@ public class SHospital extends HttpServlet {
             if (request.getSession().getAttribute("usuario") != null) {
                 Usuario user = (Usuario) request.getSession().getAttribute("usuario");
                 Cliente c = CCliente.getClientebyUsuario(user.getId());
-                Hospital h = CHospital.obtenerHospital(URLDecoder.decode(request.getParameter("verHospital"), "UTF-8"));
-                List<Empleado> empleados;
-                empleados = h.getEmpleados();
+                Hospital h = CHospital.obtenerHospital(request.getParameter("verHospital"));
+                List<Empleado> empleados = h.getEmpleados();
                 request.setAttribute("cliente", c);
                 request.setAttribute("empleados", empleados);
                 request.setAttribute("hospital", h);
@@ -168,10 +166,15 @@ public class SHospital extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(resultado);
         } else if (request.getParameter("obtenerMedicos") != null) {
-
             Hospital h = CHospital.obtenerHospital(request.getParameter("obtenerMedicos"));
             List<Empleado> empleados = h.getEmpleados();
-            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleados);
+            List<Empleado> empleadosConHorarios = new ArrayList<>();
+            for (Empleado e : empleados) {
+                if(!e.getHorariosAtencions().isEmpty()){
+                    empleadosConHorarios.add(e);
+                }
+            }
+            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(empleadosConHorarios);
             response.setContentType("application/json");
             response.getWriter().write(json);
 
@@ -273,7 +276,7 @@ public class SHospital extends HttpServlet {
             String dia = String.valueOf(request.getParameter("dia"));
             Object[] result = null;
             try {
-                result = CCliente.ReservarTurnoVacunacion(idHijo,idHorario,idHospital,dia);
+                result = CCliente.ReservarTurnoVacunacion(idHijo, idHorario, idHospital, dia);
             } catch (ParseException ex) {
                 Logger.getLogger(SHospital.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -287,7 +290,7 @@ public class SHospital extends HttpServlet {
             String hFin = request.getParameter("horaFin");
             long medico = Long.valueOf(request.getParameter("medico"));
             String dia = request.getParameter("diaaaaaa");
-           // response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible(hInicio, hFin, medico, dia));
+            response.getWriter().write(CHospital.chequearDisponibilidadDeHorarioDeAtencionParaPoderIngresarElMismoSiEsQueEstaDisponible(hInicio, hFin, medico, dia));
         }
     }
 }
