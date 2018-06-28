@@ -467,3 +467,12 @@ function refresh() {
     $("#modalCalendario").modal("hide");
     window.location.assign("/HospitalWeb/SUsuario?accion=mapaUsuario");
 }
+
+var awesomplete = new Awesomplete(document.getElementById("txtBuscar"), {
+  minChars: 0
+});
+$('#txtBuscar').on('focus', function() {
+  awesomplete.evaluate();
+});
+
+document.getElementById("txtBuscar").focus();
