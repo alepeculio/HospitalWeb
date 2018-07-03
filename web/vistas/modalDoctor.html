@@ -43,12 +43,13 @@
                     $("#modalDatosMedicoNombreCompleto").html (data.nombre + " " + data.apellido);
                     $("#modalDatosMedicoEmail").html (data.usuario.correo);
                     $("#modalDatosMedicoEspecialidades").html ("");
-                    if (data.especialidades != undefined)
-                        for (var i = 1; i < data.especialidades.length; i++) {
+                    console.log (data.especialidades);
+                    if (data.especialidades != undefined && data.especialidades.length > 0)
+                        for (var i = 0; i < data.especialidades.length; i++) {
                             $("#modalDatosMedicoEspecialidades").append ("<li>" + data.especialidades[i] + "</li>");
                         }
                     else
-                        $("#modalDatosMedicoEspecialidades").append ("<li>-</li>");
+                        $("#modalDatosMedicoEspecialidades").append ("<li>Medico General</li>");
                         
                     $("#modalDatosMedico").modal ("show");
                 }

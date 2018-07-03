@@ -4,13 +4,13 @@ img {
     border: 2px solid #1b6d85;
     border-radius: 110px
 }
-button {
-    padding-bottom: 1px;
-    padding-top: 1px;
 
+button {
+    /*! padding-bottom: 1px; */
+    /*! padding-top: 1px; */
 }
-span{
-    margin-left: 3vw;
+.modal span{
+    margin-left: 2vw;
 }
 #foto{
     max-width: 100%; 
@@ -22,8 +22,13 @@ span{
     margin-bottom: 1px;
 
 }
-#vacuna{
+.info{
+border-color:#1b6d85; 
+max-height:70% ; 
+width: 60%;
 
+}
+#vacuna{
     background-image: url(../img/click.png);
     background-repeat: no-repeat;
     background-size: 25px;
@@ -32,10 +37,15 @@ span{
 }
 #doctor{
     border: 1px solid black;
-    
 }
+
+#doctor:hover{
+    cursor:pointer;
+}
+
 #vacuna:hover{
     background-size: 29px;
+    cursor:pointer;
 }
 #margin{   
     margin-bottom: 10vh;
@@ -82,25 +92,12 @@ span{
     width:100%;
 }
 
-
-#Hlogo{
-    position: static;
-    align-self: center;
-
-}
 .logo{
-    margin-bottom: 10vh;
+    text-align: center;
+    margin-bottom: 5vh;
 }
 
 @media (max-width: 820px){
-
-
-    #Hlogo{
-
-        margin-left: 62px;
-
-    }
-
 
     #div2 {
         overflow:scroll;
@@ -110,6 +107,3 @@ span{
         width: 445px;
     }
 }
-
-
-

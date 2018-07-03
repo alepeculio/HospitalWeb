@@ -147,7 +147,7 @@
 
 
         <div class="modal fade" id="modalSusMeses" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header text-center">
                         <h4 class="modal-title"></h4>
@@ -184,12 +184,12 @@
         <jsp:include page="include_js.html"/>
         <jsp:include page="dialogos.html"/>
         <script src="js/yui-min.js"></script>
+        <script src="js/awesomplete.js" type="text/javascript"></script>
         <script src="js/pantallaUsuarios.js"></script>
         <%  for (Hospital h : hospitales) {%>
         <script>
             agregarHospital('<%= h.getNombre()%>', <%= h.getLatitud()%>, <%= h.getLongitud()%>);</script>
             <%  }%>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1gnU_q4aEtnUkQGKyZbaT--TH76oRL-4&callback=initMapa" async defer></script>
-        <script src="js/awesomplete.js" type="text/javascript" async></script>
     </body>
 </html>

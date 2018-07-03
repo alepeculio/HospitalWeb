@@ -44,11 +44,11 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
 });
 /* FIN CALENDARIO */
 
-$("#hijos").change(function() {
-   $('#spanHijo').css('visibility', 'hidden');
+$("#hijos").change(function () {
+    $('#spanHijo').css('visibility', 'hidden');
 });
-$( "#medicos" ).change(function() {
-  $('#spanMedico').css('visibility', 'hidden');
+$("#medicos").change(function () {
+    $('#spanMedico').css('visibility', 'hidden');
 });
 //Dias Calendario
 var jornadas = "";
@@ -80,6 +80,7 @@ function fecha() {
             "medico": idMedico,
         },
         success: function (data) {
+            console.log(data);
             var r = data.split("&");
             rules = datearray2filter(r[0], r[1]);
             jornadas = r[2].split("/");
@@ -121,12 +122,12 @@ function verificar(td) {
             } else if (data === "no") {
                 $('#noHijos').modal('show');
             } else {
+                $("#hijos").empty();
+                $("#hijos").append('<option>--</option>');
                 for (var i = 0; i < data.length; i++) {
                     var id = data[i].id;
                     var nombre = data[i].nombre;
                     var apellido = data[i].apellido;
-                    $("#hijos").empty();
-                    $("#hijos").append('<option>--</option>');
                     $("#hijos").append('<option value=' + id + '>' + nombre + ' ' + apellido + '</option>');
                 }
                 $.ajax({
@@ -134,17 +135,17 @@ function verificar(td) {
                     type: "POST",
                     dataType: 'json',
                     data: {
-                        "obtenerMedicos": hospital,
+                        "obtenerMedicosconHRV": hospital,
                     },
                     success: function (data) {
                         if (data.length === 0) {
-                            alert("no medico")
-                            //$('#noEdad').modal('show');
-                        } else {
+                            //agregar modal no medico
+                            alert("no medico");
 
+                        } else {
+                            $("#medicos").empty();
+                            $("#medicos").append('<option>--</option>');
                             for (var i in data) {
-                                $("#medicos").empty();
-                                $("#medicos").append('<option>--</option>');
                                 $("#medicos").append('<option value=' + data[i].id + '>' + data[i].nombre + ' ' + data[i].apellido + '</option>');
                             }
                             $('#correcto').modal('show');
@@ -194,6 +195,7 @@ function Reservar() {
                 idMedico = "";
                 dia = "";
                 idHijo = "";
+                $("#trC").empty();
                 $("#trC").append('<td >' + data[0] + '</td>');
                 $("#trC").append('<td >' + data[1] + '</td>');
                 $("#trD").append('<td >' + data[2] + '</td>');

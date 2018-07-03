@@ -153,11 +153,13 @@ $(function () {
     }
 
     var anio = document.getElementById("anio");
-    var anioMed = document.getElementById("anioMed");
     for (var i = 1900; i <= new Date().getFullYear(); i++) {
         var opt = document.createElement("option");
         opt.innerHTML = opt.value = i;
         anio.appendChild(opt);
+    }
+    var anioMed = document.getElementById("anioMed");
+    for (var i = 1900; i <= new Date().getFullYear() - 20; i++) {
         var optMed = document.createElement("option");
         optMed.innerHTML = opt.value = i;
         anioMed.appendChild(optMed);
@@ -346,11 +348,11 @@ function altaCliente(ci, digitoVer) {
                 var texto = document.getElementById("modalIUMensaje");
 
                 if (data === "ERR") {
-                    texto.innerHTML = "El cliente no se pudo ingresar al sistema";
+                    texto.innerHTML = "El paciente no se pudo ingresar al sistema";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else if (data === "OK") {
-                    texto.innerHTML = "El cliente ha sido ingresado correctamente";
+                    texto.innerHTML = "El paciente ha sido ingresado correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
                     $("#formIC")[0].reset();
@@ -692,6 +694,7 @@ function seleccionar(nombreFila, id, tipo) {
 
     seleccionado[tipo] = id;
     if (tipo === "CliP") {
+        seleccionado["CliH"] = "";
         cargarHijos(seleccionado[tipo], "listCliH", "clienteHFila", "CliH");
     }
     if (tipo === "MedHAE")
@@ -789,8 +792,9 @@ $("#btnVincularCliente").click(function () {
                     texto.innerHTML = "Hijo ingresado al plan correctamente";
                     texto.style.color = "green";
                     $("#modalIngresarUsuario").modal("show");
-                    deseleccionar("clientePFila", "CliP");
                     deseleccionar("clienteHFila", "CliH");
+                    deseleccionar("clientePFila", "CliP");
+                    
                 }
             }
         });
