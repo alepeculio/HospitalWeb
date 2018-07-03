@@ -26,20 +26,16 @@
 
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>
-
-        <div class="vl" style="margin-left: 49%; height:200%; position:absolute;   margin-top: 6%;"></div>
+          
         <!-- Icono Hospital -->
-        <div id="margin" >
-            <div class="row">
-                <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar" style="margin-top: 5%;" >
-            </div>
+
+        <div align="center" class="logo">
+            <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar"  >
         </div>
-
-
         <!-- Hospital-->
-        <div id="margin">
-            <div class="row"  style="position:relative" >
-                <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%; margin-left: 20% "  >
+        <div align="center">
+            <div class="row"  >
+                <div class="panel panel-default" style="border-color:#1b6d85; max-height:70% ; width: 60%;"  >
                     <div class="panel-heading">
                         <a><%=h.getNombre()%></a> 
                     </div>
@@ -54,9 +50,9 @@
         </div>
         <!-- Doctores-->
 
-        <div id="margin">
+        <div align="center">
             <div class="row">
-                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%; margin-left: 20%"  >
+                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%"  >
                     <div class="panel-heading">
                         <a>Lista De Doctores</a>
                     </div>
@@ -68,18 +64,19 @@
                             <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
                                 <img onclick="mostrarDatosMedico(<%=e.getId()%>)" src="img/doctor  5.png" alt="Avatar" id="foto" >
                                 <h4><b onclick="mostrarDatosMedico(<%=e.getId()%>)"><%=e.getNombre()%> <%=e.getApellido()%></b></h4> 
-                                <%}
-                                    }%>
                             </div>
+                            <%}%>
+                            <%}%>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
             <!-- Vacunas -->
 
-            <div id="margin">
-                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%; margin-left: 20% "  >
+       
+                <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%;margin-left: 20%;"  >
                     <div class="panel-heading">
                         <a>Vacunas</a>
                     </div>
@@ -280,7 +277,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
 
             <!-- Modal -->
             <div class="modal fade" id="noHijos" role="dialog">
@@ -337,13 +333,13 @@
                         <div class="modal-body ">
 
                             <div class="form-group">
-                                <label for="listaDeshabilitada">Hijo para vacunar</label>
+                                <label for="listaDeshabilitada">Hijo para vacunar</label><span id="spanHijo" style="color:red; visibility: hidden ">(Debe selecionar una fecha)</span>
                                 <select class="form-control" id="hijos" required >
                                     <option>Lista deshabilitada</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="listaDeshabilitada">Medico</label>
+                                <label for="listaDeshabilitada">Medico</label><span id="spanMedico" style="color:red; visibility: hidden ">(Debe selecionar un medico)</span>
                                 <select class="form-control" id="medicos" required >
                                     <option>Lista deshabilitada</option>
                                 </select>
@@ -369,6 +365,7 @@
                         <div class="modal-body">
                             <div class="row" style="text-align: center;">
                                 <strong>Seleccione un dia en el calendario para ver sus horarios.</strong>
+                                <span id="spanFecha" style="color:red; visibility: hidden ">(Debe selecionar una fecha)</span>
                             </div>
                             <br>
                             <div class="yui3-skin-sam" align="center">
@@ -376,7 +373,10 @@
                             </div>
                             <br>
                             <!--end prueba-->
-                            <label class="list-group-item-action">Seleccionar Horario</label><span id="spanHorario" style="color:red; visibility: hidden">(Debe sellecionar un horario)</span>  
+                            <div class="row" style="text-align: center;">
+                                <strong hidden id="SelectHora">Seleccione un horario.</strong>
+                                <span id="spanHorario" style="color:red; visibility: hidden ">(Debe selecionar un horario)</span>  
+                            </div>
                             <div class="list-group" id="jornadas"> 
                             </div>  
                             <br>
