@@ -62,7 +62,7 @@
                             <% for (Empleado e : empleados) {
                                     if (e.isActivo()) {
                             %>
-                            <div class="col-md-4 col-sm-12 " id="doctor" align="center">         
+                            <div class="col-md-4 col-sm-12 " id="doctor" align="center" title="Ver datos del médico">         
                                 <img onclick="mostrarDatosMedico(<%=e.getId()%>)" src="img/doctor  5.png" alt="Avatar" id="foto" >
                                 <h4><b onclick="mostrarDatosMedico(<%=e.getId()%>)"><%=e.getNombre()%> <%=e.getApellido()%></b></h4> 
                             </div>
