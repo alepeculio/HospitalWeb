@@ -85,8 +85,8 @@
                             <tr>
                                 <td><%= ha.getHospital().getNombre()%></td>
                                 <td><%= ha.getDia()%></td>
-                                <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraInicio())%></td>
-                                <td><%= new SimpleDateFormat("hh:mm").format(ha.getHoraFin())%></td>
+                                <td><%= new SimpleDateFormat("HH:mm").format(ha.getHoraInicio())%></td>
+                                <td><%= new SimpleDateFormat("HH:mm").format(ha.getHoraFin())%></td>
                                 <td><%= ha.getClientesMax()%></td>
                                 <td id="ca<%= ha.getId()%>"><%if (ha.getClienteActual() == 0) {
                                         out.println("-");
