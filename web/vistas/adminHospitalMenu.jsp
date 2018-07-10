@@ -406,7 +406,7 @@
                 <h2>Vincular médico al hospital</h2>
                 <hr>
                 <form>
-                    <label>Seleccione el medico</label>
+                    <label>Seleccione el médico</label>
                     <div class="input-group">
                         <input class="form-control" type="text" id="buscarVincuMedInput" onkeyup="buscar('buscarVincuMedInput', 'VincMedicoHospital')" placeholder="Buscar">
                         <span class="input-group-btn">
@@ -426,7 +426,7 @@
             <!-- Pestaña eliminar medico -->
             <div class="tab-pane pestania" id="eliminarMedico">
                 <h2>Eliminar médico</h2>
-                <label>Seleccione el medico a eliminar</label>
+                <label>Seleccione el médico a eliminar</label>
                 <div class="input-group">
                     <input class="form-control" type="text" id="buscarMedEInput" onkeyup="buscar('buscarMedEInput', 'listMedE')" placeholder="Buscar">
                     <span class="input-group-btn">
@@ -546,7 +546,7 @@
                     </tbody>
                 </table>
                 <div id="mensajeNoHay">
-                    Seleccione un medico
+                    Seleccione un médico
                 </div>
             </div>
         </div>
@@ -575,7 +575,7 @@
                 <div class="modal-content">
                     <div class="modal-header text-center">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" style="color: red">Horario del medico esta ocupado</h4>
+                        <h4 class="modal-title" style="color: red">Horario del médico esta ocupado</h4>
                     </div>
                     <div class="modal-footer" id="pinfosobrelapa" style="text-align: left">
                     </div>

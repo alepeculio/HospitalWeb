@@ -18,11 +18,11 @@
             Hospital h = (Hospital) request.getAttribute("hospital");
             Set<Empleado> empleados = (Set<Empleado>) request.getAttribute("empleados");
             Cliente c = (Cliente) request.getAttribute("cliente");
+            
         %>
     </head>
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>
-
         <!-- Icono Hospital -->
 
         <div  class="logo">
@@ -36,7 +36,7 @@
                         <a><%=h.getNombre()%></a> 
                     </div>
                     <div class="panel-body" id="div2" align="left">
-                        <h5>Directoro/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
+                        <h5>Director/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
                         <h5>Dirección: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SUsuario?accion=mapaUsuario&nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
                         <h5>Teléfono: <%=h.getTelefono()%> </h5>
                         <h5>Correo electrónico institucional:<a class="negrita" href="mailto:<%=h.getCorreo()%>"><%=h.getCorreo()%></a> </h5> 
@@ -54,15 +54,16 @@
                     </div>
                     <div id="div1">
                         <div class="row" >
-                            <% for (Empleado e : empleados) {
+                            <% int i = 1;
+                                for (Empleado e : empleados) {
                                     if (e.isActivo()) {
                             %>
                             <div class="col-md-4 col-sm-12 " id="doctor" align="center" title="Ver datos del médico">         
-                                <img onclick="mostrarDatosMedico(<%=e.getId()%>)" src="img/doctor  5.png" alt="Avatar" id="foto" >
+                                <img onclick="mostrarDatosMedico(<%=e.getId()%>)" src="img/avatar<%=i%>.png" alt="Avatar" id="foto" >
                                 <h4><b onclick="mostrarDatosMedico(<%=e.getId()%>)"><%=e.getNombre()%> <%=e.getApellido()%></b></h4> 
                             </div>
                             <%}%>
-                            <%}%>
+                            <%if(i==6)i=1;else i++;}%>
                         </div>
                     </div>
                 </div>

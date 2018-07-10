@@ -492,7 +492,7 @@ function altaMedico(ci, digitoVer) {
                 var texto = document.getElementById("modalIUMensaje");
 
                 if (data === "ERR") {
-                    texto.innerHTML = "El medico no se pudo ingresar al sistema";
+                    texto.innerHTML = "El médico no se pudo ingresar al sistema";
                     texto.style.color = "red";
                     $("#modalIngresarUsuario").modal("show");
                 } else if (data === "OK") {
@@ -724,7 +724,7 @@ function deseleccionar(nombreFila, tipo) {
             haNum--;
         }
         haNum = 0;
-        $("#mensajeNoHay").html("Seleccione un medico");
+        $("#mensajeNoHay").html("Seleccione un médico");
         $("#mensajeNoHay").show();
     }
 }
@@ -919,7 +919,7 @@ function cargarMedicosTodos(idLista, nombreFila, tipo) {
 }
 
 $("#btnVincularMedicoHospital").click(function () {
-    pregunta("Desea vincular el medico a este Hospital?", "vincularMedicoHospital");
+    pregunta("¿Desea vincular el médico a este Hospital?", "vincularMedicoHospital");
     setNoCargado("MedHA");
     setNoCargado("MedHAE");
 });
@@ -961,13 +961,13 @@ function vincularMedicoHospital() {
 
 
 $("#btnEliminarMedico").click(function () {
-    pregunta("Desea eliminar el medico?", "eliminarMedicoDeVerdad");
+    pregunta("¿Desea eliminar el médico?", "eliminarMedicoDeVerdad");
 });
 
 function eliminarMedicoDeVerdad() {
     if (seleccionado["MedE"] === "") {
         var texto = document.getElementById("modalIUMensaje");
-        texto.innerHTML = "No seleccionó ningun medico";
+        texto.innerHTML = "No seleccionó ningun médico";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
     } else {
@@ -1010,7 +1010,7 @@ $("#btnIngresarHA").click(function () {
     var med = seleccionado["MedHA"];
 
     if (med === "") {
-        texto.innerHTML = "Seleccione un medico";
+        texto.innerHTML = "Seleccione un médico";
         texto.style.color = "red";
         $("#modalIngresarUsuario").modal("show");
         return;
@@ -1128,18 +1128,18 @@ function agregarHA(med, dia, hInicio, hFin, cant, tipo) {
         },
         success: function (data) {
             if (data === "ERR") {
-                texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+                texto.innerHTML = "Error: No se puedo ingresar el horario de atención";
                 texto.style.color = "red";
                 $("#modalIngresarUsuario").modal("show");
             } else {
-                texto.innerHTML = "Horario de atencion ingresado!";
+                texto.innerHTML = "Horario de atención ingresado!";
                 texto.style.color = "green";
                 $("#modalIngresarUsuario").modal("show");
                 $("#formHA")[0].reset();
             }
         },
         error: function () {
-            texto.innerHTML = "Error: No se puedo ingresar el horario de atencion";
+            texto.innerHTML = "Error: No se puedo ingresar el horario de atención";
             texto.style.color = "red";
             $("#modalIngresarUsuario").modal("show");
         }
@@ -1195,13 +1195,13 @@ function cargarHorariosAtencion() {
             }
 
             if (mos === 0) {
-                $("#mensajeNoHay").html("El medico seleccionado no tiene horarios de atencion");
+                $("#mensajeNoHay").html("El médico seleccionado no tiene horarios de atención");
                 $("#mensajeNoHay").show();
             } else
                 $("#mensajeNoHay").hide();
         },
         error: function () {
-            texto.innerHTML = "Error: No se puedo cargar el horario de atencion";
+            texto.innerHTML = "Error: No se puedo cargar el horario de atención";
             texto.style.color = "red";
             $("#modalIngresarUsuario").modal("show");
         }
@@ -1209,7 +1209,7 @@ function cargarHorariosAtencion() {
 }
 
 function eliminarHA(id) {
-    pregunta("Desea eliminar el horario de atencion?", "eliminarHADeVerdad", id);
+    pregunta("¿Desea eliminar el horario de atención?", "eliminarHADeVerdad", id);
 }
 
 function eliminarHADeVerdad(id) {
@@ -1223,18 +1223,18 @@ function eliminarHADeVerdad(id) {
         },
         success: function (data) {
             if (data === "OK") {
-                texto.innerHTML = "Horario de atencion eliminado";
+                texto.innerHTML = "Horario de atención eliminado";
                 texto.style.color = "green";
                 cargarHorariosAtencion();
                 $("#modalIngresarUsuario").modal("show");
             } else {
-                texto.innerHTML = "Error: No se puedo eliminar el horario de atencion";
+                texto.innerHTML = "Error: No se puedo eliminar el horario de atención";
                 texto.style.color = "red";
                 $("#modalIngresarUsuario").modal("show");
             }
         },
         error: function () {
-            texto.innerHTML = "Error: No se puedo eliminar el horario de atencion";
+            texto.innerHTML = "Error: No se puedo eliminar el horario de atención";
             texto.style.color = "red";
             $("#modalIngresarUsuario").modal("show");
         }

@@ -25,15 +25,15 @@
             <div id="leyenda">
                 <h3>Ayuda</h3>
                 <img src="img/icono_h.png" class="imgLeyenda"><text>Hospital Registrado</text>
-                <p>Click en un hospital registrado para ver su informacion.</p>
+                <p>Click en un hospital registrado para ver su información.</p>
                 <hr>
                 <img src="img/icono_mas.png" class="imgLeyenda"><text>Nuevo Hospital</text>
-                <p>Click en alguna parte del mapa para agregar un nuevo hospital, luego click en el boton 'Cargar Hospital'.</p>
+                <p>Click en alguna parte del mapa para agregar un nuevo hospital, luego click en el boton 'Cargar hospital'.</p>
             </div>
         </div>
         
         <div id="divBotones" class="fondo boton">
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalIngresar" id="btnConfirmar" disabled>Cargar Hospital</button>
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalIngresar" id="btnConfirmar" disabled>Cargar hospital</button>
         </div>
 
         <!-- Panel ingresar informacion de nuevo hospital -->
@@ -42,7 +42,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Cargar Hospital</h4>
+                        <h4 class="modal-title">Cargar hospital</h4>
                     </div>
                     <form onsubmit="return false">
                         <div class="modal-body">
@@ -62,18 +62,18 @@
                             </div>
                             <label>Tipo</label>
                             <div class="form-group">
-                                <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" checked name="tipo" id="tipo">
+                                <input type="checkbox" data-toggle="toggle" data-on="Público" data-off="Privado" data-width="100%" checked name="tipo" id="tipo">
                             </div>
                             
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Correo Hospital</label>
+                                    <label>Correo hospital</label>
                                     <div class="form-group" id="correoHospitalParent">
                                         <input required class="form-control" placeholder="Correo Hospital" type="text" id="correo" name="correoHospital">
                                     </div>
                                 </div>
                                 <div class="col-sm-6" id="telefonoHospitalParent">
-                                    <label>Telefono Hospital</label>
+                                    <label>Telefono hospital</label>
                                     <div class="form-group">
                                         <input required class="form-control" placeholder="Telefono Hospital" type="text" id="telefono" name="telefonoHospital">
                                     </div>
@@ -88,11 +88,11 @@
                             <div class="form-group" id="calleParent">
                                 <input required class="form-control" placeholder="Calle" type="text" id="calle" name="calle">
                             </div>
-                            <label>Nro. Calle</label>
+                            <label>Nro. calle</label>
                             <div class="form-group" id="numeroParent">
                                 <input required class="form-control" placeholder="Nro. Calle" type="text" id="numero" name="nro">
                             </div>
-                            <label>Posicion</label>
+                            <label>Posición</label>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -122,7 +122,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <button type="button" class="btn btn-info" data-dismiss="modal" id="btnAdministradore">Administradores</button>
-                            <h3 class="modal-title">Informacion Hospital</h3>
+                            <h3 class="modal-title">Información hospital</h3>
                         </div>
                         <div class="modal-body">
 
@@ -143,20 +143,20 @@
                             
                             <label>Tipo</label>
                             <div class="form-group">
-                                <input type="checkbox" data-toggle="toggle" data-on="Publico" data-off="Privado" data-width="100%" name="tipo" id="dettipo">
+                                <input type="checkbox" data-toggle="toggle" data-on="Público" data-off="Privado" data-width="100%" name="tipo" id="dettipo">
                             </div>
                             
 
 
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Correo Hospital</label>
+                                    <label>Correo hospital</label>
                                     <div class="form-group" id="detcorreoHospitalParent">
                                         <input required class="form-control" placeholder="Correo Hospital" type="text" id="detcorreo" name="correoHospital">
                                     </div>
                                 </div>
                                 <div class="col-sm-6" id="dettelefonoHospitalParent">
-                                    <label>Telefono Hospital</label>
+                                    <label>Teléfono hospital</label>
                                     <div class="form-group">
                                         <input required class="form-control" placeholder="Telefono Hospital" type="text" id="dettelefono" name="telefonoHospital">
                                     </div>
@@ -171,11 +171,11 @@
                             <div class="form-group" id="detcalleParent">
                                 <input required class="form-control" placeholder="Calle" type="text" id="detcalle" readonly name="calle">
                             </div>
-                            <label>Nro. Calle</label>
+                            <label>Nro. calle</label>
                             <div class="form-group" id="detnumeroParent">
                                 <input required class="form-control" placeholder="Nro. Calle" type="text" id="detnumero" readonly name="nro">
                             </div>
-                            <label>Posicion</label>
+                            <label>Posición</label>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -190,7 +190,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-danger" id="btnBorrarHospital">Borrar Hospital</button>
+                            <button class="btn btn-danger" id="btnBorrarHospital">Borrar hospital</button>
                             <button class="btn btn-default" id="btnModificarHospital" data-toggle="collapse" data-target="#divBtnConfirmar">Modificar</button>
                             <div id="divBtnConfirmar" class="collapse">
                                 <button class="btn btn-success" id="btnModificarConrfirmar">Confirmar</button>
@@ -230,7 +230,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button role="button" class="btn btn-danger" data-dismiss="modal" id="btnCerrarAdministradores">Atras</button>
+                            <button role="button" class="btn btn-danger" data-dismiss="modal" id="btnCerrarAdministradores">Atrás</button>
                             <button class="btn btn-success" id="btnAgregarNuevoAdministradores">Agregar Nuevo</button>
                         </div>
                     </form>
@@ -259,7 +259,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h2 class="modal-title">Eliminar el Administrador?</h2>
+                        <h2 class="modal-title">¿Eliminar el administrador?</h2>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
@@ -275,7 +275,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h2 class="modal-title">Borrar Hospital?</h2>
+                        <h2 class="modal-title">Borrar hospital?</h2>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
@@ -291,7 +291,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Hospital Borrado</h4>
+                        <h4 class="modal-title">Hospital borrado</h4>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success" id="btnBorrado">Aceptar</button>
@@ -306,7 +306,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Hospital Ingresado!</h4>
+                        <h4 class="modal-title">Hospital ingresado!</h4>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success" data-dismiss="modal" id="btnAceptarIngreso">Aceptar</button>
@@ -321,7 +321,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Administrador Borrado!</h4>
+                        <h4 class="modal-title">Administrador borrado!</h4>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success" data-dismiss="modal" id="btnABCE">Aceptar</button>
@@ -336,7 +336,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Admin Asignado!</h4>
+                        <h4 class="modal-title">Admin asignado!</h4>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success" data-dismiss="modal" id="btnAceptarAdministradorYaAgregado">Aceptar</button>
@@ -366,7 +366,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Hospital Modificado!</h4>
+                        <h4 class="modal-title">Hospital modificado!</h4>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success" data-dismiss="modal" id="btnAceptarModificado">Aceptar</button>

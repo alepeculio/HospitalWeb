@@ -187,7 +187,7 @@ function Reservar() {
         },
         success: function (data) {
 
-            
+            $('#Calendario').modal('hide');
             if (data[0] == "no") {
                 dia = "";
                 $("#finDos").modal('show');
@@ -212,7 +212,6 @@ function Reservar() {
     });
 
 }
-
 
 
 function datearray2filter(dates, dias) {

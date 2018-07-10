@@ -21,7 +21,7 @@
                 <div class="col-sm-5">
                     <div class="panel" style="padding: 20px">
                         <h1>
-                            Inicie Sesión!
+                            Inicie sesión!
                         </h1>
                         </br>
                         <form accept-charset="UTF-8" role="form" method="POST" action="/HospitalWeb/SUsuario?accion=login">
@@ -42,7 +42,7 @@
                                     out.println("<div style='text-align: center;padding-top:3pt; padding-bottom:6pt; color:red; font-size:11pt; font-weight:bold'>" + mensaje_error + "</div>");
                                 }%>
 
-                            <input class="btn btn-lg btn-success btn-block" type="submit" value="Iniciar Sesion">
+                            <input class="btn btn-lg btn-success btn-block" type="submit" value="Iniciar sesión">
                         </form>
                     </div>
 
