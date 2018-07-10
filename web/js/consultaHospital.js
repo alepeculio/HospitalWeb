@@ -10,10 +10,11 @@ function hr(id) {
     $('#spanHorario').css('visibility', 'hidden');
     horario = id;
 }
+
+
 //Calendario 
 var DiaFinal = "";
 YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
-
     calendar = new Y.Calendar({
         contentBox: "#mycalendar",
         width: '340px',
@@ -28,7 +29,7 @@ YUI().use('calendar', 'datatype-date', 'cssbutton', function (Y) {
     calendar.on("selectionChange", function (ev) {
         $('#SelectHora').removeAttr('hidden');
         var newDate = ev.newSelection[0];
-        var dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+        var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         var d = newDate;
         DiaFinal = dias[d.getDay()];
         dia = dtdate.format(newDate);
@@ -102,6 +103,7 @@ function fecha() {
 
     $('#correcto').modal('hide');
     $('#Calendario').modal('show');
+    
 }
 
 
@@ -185,11 +187,9 @@ function Reservar() {
         },
         success: function (data) {
 
-            $('#Calendario').modal('hide');
+            
             if (data[0] == "no") {
-                idMedico = "";
                 dia = "";
-                idHijo = "";
                 $("#finDos").modal('show');
             } else {
                 idMedico = "";
@@ -212,6 +212,7 @@ function Reservar() {
     });
 
 }
+
 
 
 function datearray2filter(dates, dias) {
@@ -246,5 +247,5 @@ function datearray2filter(dates, dias) {
     //fin
     return ret;
 }
-;
+
 

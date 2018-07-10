@@ -14,26 +14,22 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="js/yui-min.js"></script>
-
         <%
             Hospital h = (Hospital) request.getAttribute("hospital");
             Set<Empleado> empleados = (Set<Empleado>) request.getAttribute("empleados");
             Cliente c = (Cliente) request.getAttribute("cliente");
         %>
-
     </head>
-
-
     <body background="img/fondo.png">
         <jsp:include page="header.jsp"/>
 
         <!-- Icono Hospital -->
 
-        <div class="logo">
+        <div  class="logo">
             <img id="Hlogo" src="img/hospital.jpg"  alt="Avatar"  >
         </div>
         <!-- Hospital-->
-        <div align="center">
+        <div class="contenedor" align="center">
             <div class="row"  >
                 <div class="panel panel-default info" >
                     <div class="panel-heading" >
@@ -41,7 +37,7 @@
                     </div>
                     <div class="panel-body" id="div2" align="left">
                         <h5>Directoro/a: <a class="negrita"> <%=h.getDirectora()%></a></h5>
-                        <h5>Direccin: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SUsuario?accion=mapaUsuario&nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
+                        <h5>Dirección: <%=h.getCalle()%>  <%=h.getNumero()%> <a href="SUsuario?accion=mapaUsuario&nombreH=<%=h.getNombre()%>" > Ver En Mapa</a></h5>
                         <h5>Teléfono: <%=h.getTelefono()%> </h5>
                         <h5>Correo electrónico institucional:<a class="negrita" href="mailto:<%=h.getCorreo()%>"><%=h.getCorreo()%></a> </h5> 
                     </div>
@@ -50,11 +46,11 @@
         </div>
         <!-- Doctores-->
 
-        <div align="center">
+        <div class="contenedor" align="center">
             <div class="row">
                 <div class="panel panel-default" style="border-color:#1b6d85;  width: 60%"  >
                     <div class="panel-heading">
-                        <a>Lista De Doctores</a>
+                        <a>Lista de doctores</a>
                     </div>
                     <div id="div1">
                         <div class="row" >
@@ -81,10 +77,10 @@
                 <a>Vacunas</a>
             </div>
             <div id="div2">
-                <table  class="Tvacuna">                   
+                <table class="Tvacuna">                   
                     <tr id="edad">
                         <th style="border-top: hidden; border-left: hidden"></th>
-                        <th style="border-top: hidden;border-left: hidden" COLSPAN=7>Edad en meses</th>
+                            <th style="border-top: hidden;border-left: hidden" COLSPAN=7>Edad en meses</th>
                         <th style="border-top: hidden;border-left: hidden; border-right: hidden" COLSPAN=2 >Edad en año</th>
                     </tr>
                     <tr id="numero">
@@ -349,12 +345,12 @@
 
         <!-- Modal -->
         <div class="modal fade" id="Calendario" role="dialog">
-            <div class="modal-dialog modal-md">
+            <div class="modal-dialog ">
                 <div class="modal-content">
                     <div class="modal-header" style="text-align: center;">
                         <strong>Calendario de horarios</strong>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <!--prueba-->
+                        <button type="button" class="close"onClick="window.location.reload()" data-dismiss="modal">&times;</button>
+                      
                     </div>
                     <div class="modal-body">
                         <div class="row" style="text-align: center;">
@@ -376,7 +372,7 @@
                         <br>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
+                        <button class="btn btn-danger" onClick="window.location.reload()" data-dismiss="modal" name="aceptar" style="float: left" >Salir</button>
                         <button class="btn btn-success"  name="aceptar" onclick="Reservar()">Reservar</button>
                     </div>
                 </div>
@@ -390,7 +386,7 @@
                 <div class="modal-content">
                     <div class="modal-header">	
                         <h4 class="modal-title">Registro Vacuna</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" onClick="window.location.reload()" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body ">
                         <h2 style="text-align: center ; color:green" >Se ha registrado correctamente</h2>
@@ -423,7 +419,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-default" data-dismiss="modal" name="aceptar" >Salir</button>
+                        <button class="btn btn-default" onClick="window.location.reload()" data-dismiss="modal" name="aceptar" >Salir</button>
                     </div>
                 </div>
             </div>
@@ -431,7 +427,6 @@
         <!-- Modal -->
         <div class="modal fade" id="finDos" role="dialog">
             <div class="modal-dialog">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">	
